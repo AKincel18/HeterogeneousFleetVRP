@@ -1,11 +1,15 @@
 package app;
 
-import com.sun.javafx.runtime.VersionInfo;
+import constants.StringConst;
+import input.DataReader;
 
 public class App {
 
     public static void main(String[] args) {
-        System.out.println("Java Version: " + System.getProperty("java.version"));
-        System.out.println(("JavaFX Version: " + VersionInfo.getVersion()));
+        DataReader dataReader = new DataReader(StringConst.FILE_NAME);
+        dataReader.readData();
+
+        dataReader.getCities().forEach( c -> System.out.println(c.getName() + " = " + c.getAmount()));
+        dataReader.getVehicles().forEach( v -> System.out.println(v.getName() + " = " + v.getAmount()));
     }
 }
