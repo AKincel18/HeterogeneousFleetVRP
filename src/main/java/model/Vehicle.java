@@ -1,13 +1,10 @@
 package model;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import java.util.List;
 
 @NoArgsConstructor
-@Getter
-@Setter
-public class Vehicle {
-    private String name;
-    private double amount;
+public class Vehicle extends ModelCommon {
+    private List<City> route;
 }

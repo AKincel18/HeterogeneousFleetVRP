@@ -5,9 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
-@Getter
-@Setter
-public class City {
-    private String name;
-    private double amount;
+public class City extends ModelCommon {
+    @Getter @Setter private boolean isVisited;
 }

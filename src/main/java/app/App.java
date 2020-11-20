@@ -1,5 +1,6 @@
 package app;
 
+import algorithms.genetic.GeneticAlgorithm;
 import constants.StringConst;
 import input.DataReader;
 
@@ -9,7 +10,10 @@ public class App {
         DataReader dataReader = new DataReader(StringConst.FILE_NAME);
         dataReader.readData();
 
-        dataReader.getCities().forEach( c -> System.out.println(c.getName() + " = " + c.getAmount()));
-        dataReader.getVehicles().forEach( v -> System.out.println(v.getName() + " = " + v.getAmount()));
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(
+                dataReader.getCities(),
+                dataReader.getVehicles());
+        geneticAlgorithm.initRoutes();
+
     }
 }
