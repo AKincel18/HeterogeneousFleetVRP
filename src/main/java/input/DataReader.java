@@ -1,15 +1,19 @@
 package input;
 
 import constants.StringConst;
+import exceptions.NotValidDataException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import model.City;
+import model.Coords;
+import model.Depot;
 import model.Vehicle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import utils.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,6 +29,7 @@ public class DataReader {
     private final String fileName;
     @Getter private List<City> cities = new ArrayList<>();
     @Getter private List<Vehicle> vehicles = new ArrayList<>();
+    @Getter private Depot depot = new Depot();
 
 
     public void readData(){
@@ -35,46 +40,77 @@ public class DataReader {
             Workbook workbook = new XSSFWorkbook(inputStream);
 
             Sheet sheet = workbook.getSheet(StringConst.NAME_OF_SHEET);
-
+            boolean header = true;
             for (Row nextRow : sheet) {
                 Iterator<Cell> cellIterator = nextRow.cellIterator();
-                City city = new City();
-                Vehicle vehicle = new Vehicle();
+                City city = City.builder().coords(new Coords()).build();
+                Vehicle vehicle = Vehicle.builder().build();
                 while (cellIterator.hasNext()) {
                     Cell nextCell = cellIterator.next();
                     int columnIndex = nextCell.getColumnIndex();
 
-                    switch (columnIndex) {
-                        case 0:
-                            city.setName((String) getCellValue(nextCell));
-                            break;
-                        case 1:
-                            city.setAmount((double) getCellValue(nextCell));
-                            break;
-                        case 3:
-                            vehicle.setName((String) getCellValue(nextCell));
-                            break;
-                        case 4:
-                            vehicle.setAmount((double) getCellValue(nextCell));
-                            break;
-                    }
+                    if (getCellValue(nextCell) == null || header)
+                        break;
+
+
+                        switch (columnIndex) {
+                            case 0:
+                                city.setName((String) getCellValue(nextCell));
+                                break;
+                            case 1:
+                                city.setAmount((double) getCellValue(nextCell));
+                                break;
+                            case 2:
+                                city.getCoords().setLatitude((double) getCellValue(nextCell));
+                                break;
+                            case 3:
+                                city.getCoords().setLongitude((double) getCellValue(nextCell));
+                                break;
+                            case 5:
+                                vehicle.setName((String) getCellValue(nextCell));
+                                break;
+                            case 6:
+                                vehicle.setAmount((double) getCellValue(nextCell));
+                                break;
+                            case 8:
+                                depot.setName((String) getCellValue(nextCell));
+                                break;
+                            case 9:
+                                depot.getCoords().setLatitude((double) getCellValue(nextCell));
+                                break;
+                            case 10:
+                                depot.getCoords().setLongitude((double) getCellValue(nextCell));
+                                break;
+                        }
+
 
 
                 }
-                if (city.isNotNull()) {
-                    cities.add(city);
-                }
-                if (vehicle.isNotNull()) {
-                    vehicles.add(vehicle);
+                try {
+                    city.validDataCity();
+                    if (!city.isNullCity())
+                        cities.add(city);
+                } catch (NotValidDataException e) {
+                    System.out.println(e.getMessage());
+                    return;
                 }
 
+                try{
+                    vehicle.validData();
+                    if (!vehicle.isNull())
+                        vehicles.add(vehicle);
+                } catch (NotValidDataException e) {
+                    System.out.println(e.getMessage());
+                    return;
+                }
 
+                header = false;
             }
 
             workbook.close();
             inputStream.close();
 
-            //writeData();
+            writeData();
 
         }
         catch (IOException e) {
@@ -99,11 +135,14 @@ public class DataReader {
     }
 
     private void writeData(){
-        System.out.println("Cities:");
-        cities.forEach( c -> System.out.println(c.getName() + " = " + c.getAmount()));
-        System.out.println();
-        System.out.println();
-        System.out.println("Vehicles");
-        vehicles.forEach( v -> System.out.println(v.getName() + " = " + v.getAmount()));
+
+        Utils.buildTitleOnConsole("Cities");
+        cities.forEach(c -> System.out.println(c.toString()));
+        //cities.forEach( c -> System.out.println(c.getName() + " = " + c.getAmount()));
+        Utils.buildTitleOnConsole("Vehicles");
+        vehicles.forEach(v -> System.out.println(v.toString()));
+        Utils.buildTitleOnConsole("Depot");
+        System.out.println(depot.toString());
+
     }
 }

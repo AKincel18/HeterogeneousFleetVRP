@@ -1,10 +1,10 @@
 package model;
 
-import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
-@NoArgsConstructor
+@SuperBuilder
 public class Vehicle extends ModelCommon {
     private List<City> route;
 }
