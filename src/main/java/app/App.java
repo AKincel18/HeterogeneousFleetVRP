@@ -13,7 +13,8 @@ public class App {
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(
                 dataReader.getCities(),
                 dataReader.getVehicles(),
-                dataReader.getDepot());
+                dataReader.getDepot(),
+                10);
         geneticAlgorithm.initRoutes();
 
     }

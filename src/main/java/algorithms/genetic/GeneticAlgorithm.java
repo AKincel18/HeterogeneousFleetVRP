@@ -9,6 +9,7 @@ import utils.Utils;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static utils.Utils.countDistance;
 
@@ -18,23 +19,53 @@ public class GeneticAlgorithm {
     private final List<City> cities;
     private final List<Vehicle> vehicles;
     private final Depot depot;
+    private final int populationSize;
 
-    private Map<Vehicle, List<City>> vehiclesRoute = new HashMap<>();
+
+    private Individual individual;
+    private List<Individual> population = new ArrayList<>();
+
 
     public void initRoutes() {
 
         City startAndEndCity = getDepotByCity();
-        //init map and add start city
-        vehicles.forEach( v -> vehiclesRoute.put(v, new ArrayList<City>(Collections.singletonList(startAndEndCity))));
 
-        initPopulation();
+        for (int i = 0; i < populationSize; i++) {
+            //init map and add start city
+            individual = new Individual();
+            individual.initMap(vehicles, startAndEndCity);
+            //vehicles.forEach( v -> individual.put(v, new ArrayList<City>(Collections.singletonList(startAndEndCity))));
+            initPopulation();
 
-        //add end city
-        for (Vehicle vehicle : vehiclesRoute.keySet())
-            Objects.requireNonNull(vehiclesRoute.computeIfPresent(vehicle, (key, value) -> vehiclesRoute.get(key))).add(startAndEndCity);
+            //add end city
 
-        writeRoutes();
+            individual.addEndCity();
+            population.add(individual);
+            countSumOfIndividual();
 
+            //todo: some not visited cities -> bug
+            if (cities.stream().anyMatch(c -> !c.isVisited())) {
+                Utils.buildTitleOnConsole("ERROR, some cities have been not visited");
+                cities.stream().filter(c -> !c.isVisited()).forEach(city -> System.out.print(city.getName() + " "));
+            }
+
+            cities.forEach(c -> c.setVisited(false));
+        }
+        writePopulation();
+        selection();
+
+
+    }
+
+    private void selection() {
+        //Utils.buildTitleOnConsole("SELECTION");
+        Selection selection = new Selection(population);
+        selection.createRanking();
+
+        //crossover(selection.getSelectedIndividuals());
+    }
+    private void crossover(List<Individual> selectedIndividuals) {
+        Utils.buildTitleOnConsole("Crossover");
 
     }
 
@@ -70,7 +101,7 @@ public class GeneticAlgorithm {
                 Vehicle vehicle = vehicles.get(generatedNumberVehicle.get());
                 City city = cities.get(generatedNumberCity);
                 if (isPossible(city, vehicle)) {
-                    Objects.requireNonNull(vehiclesRoute.computeIfPresent(vehicle, (key, value) -> vehiclesRoute.get(key))).add(city);
+                    Objects.requireNonNull(individual.getIndividual().computeIfPresent(vehicle, (key, value) -> individual.getIndividual().get(key))).add(city);
                     city.setVisited(true);
                 }
             });
@@ -85,7 +116,7 @@ public class GeneticAlgorithm {
     private boolean isPossible(City city, Vehicle vehicle) {
 
         double vehicleAmount = vehicle.getAmount();
-        List<City> routeVehicle = vehiclesRoute.get(vehicle);
+        List<City> routeVehicle = individual.getIndividual().get(vehicle);
 
         double sumAmount = countRouteAmount(routeVehicle);
         double cityAmount = city.getAmount();
@@ -94,7 +125,7 @@ public class GeneticAlgorithm {
     }
 
     private double countQuality(Vehicle vehicle) {
-        double amount = countRouteAmount(vehiclesRoute.get(vehicle));
+        double amount = countRouteAmount(individual.getIndividual().get(vehicle));
         return amount / vehicle.getAmount();
     }
 
@@ -104,7 +135,7 @@ public class GeneticAlgorithm {
 
 
     private double countRouteDistance(Vehicle vehicle) {
-        List<City> route = vehiclesRoute.get(vehicle);
+        List<City> route = individual.getIndividual().get(vehicle);
         double sumDistance = 0.0;
         for (int i = 0; i < route.size() - 1; i++) {
             sumDistance+= countDistance(route.get(i).getCoords(), route.get(i + 1).getCoords());
@@ -112,24 +143,38 @@ public class GeneticAlgorithm {
         return sumDistance;
     }
 
-    private void writeRoutes() {
+    private void countSumOfIndividual() {
 
-        Utils.buildTitleOnConsole("first population");
-        vehiclesRoute.forEach((vehicle, cities) -> {
-            System.out.print("Vehicle: " + vehicle.getName() + " = ");
-            if (cities.isEmpty())
-                System.out.print("No cities ");
-            else
-                cities.forEach(city -> System.out.print(city.getName() + " "));
-
-            System.out.print("quality = " + countQuality(vehicle));
-            System.out.println(", distance = " + countRouteDistance(vehicle));
+        AtomicReference<Double> sum = new AtomicReference<>(0.0);
+        individual.getIndividual().forEach((vehicle, cities) -> {
+            double routeDistance =  countRouteDistance(vehicle);
+            sum.updateAndGet(v -> v + routeDistance);
         });
+        individual.setSum(sum.get());
+    }
 
-        System.out.println();
-        //todo: some not visited cities -> bug
-        System.out.println("not visited cities: ");
-        cities.stream().filter(c -> !c.isVisited()).forEach(city -> System.out.print(city.getName() + " "));
+    private void writePopulation() {
+        AtomicInteger index = new AtomicInteger();
+        population.forEach(
+                p -> {
+                    Utils.buildTitleOnConsole("Generated " + index.getAndIncrement() + " individual");
+                    p.getIndividual().forEach((vehicle, cities) -> {
+
+
+                        System.out.print("Vehicle: " + vehicle.getName() + " = ");
+                        if (cities.isEmpty())
+                            System.out.print("No cities ");
+                        else
+                            cities.forEach(city -> System.out.print(city.getName() + " "));
+                        System.out.print("quality = " + countQuality(vehicle));
+                        System.out.println(", distance = " + countRouteDistance(vehicle));
+
+                    });
+                    System.out.println("Sum of distance = " + p.getSum());
+                }
+
+                );
+
     }
 
 }
