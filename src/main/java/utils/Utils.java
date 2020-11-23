@@ -3,6 +3,11 @@ package utils;
 import constants.StringConst;
 import model.Coords;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 public class Utils {
     /**
      * https://www.geeksforgeeks.org/program-distance-two-points-earth/
@@ -40,5 +45,11 @@ public class Utils {
         System.out.println(StringConst.SPACE_MARKER_BIG);
         System.out.println(StringConst.SPACE_MARKER_SMALL + title + StringConst.SPACE_MARKER_SMALL);
         System.out.println(StringConst.SPACE_MARKER_BIG);
+    }
+
+    public static List<Integer> generateListOfNumbers(int size) {
+        List<Integer> numbers = IntStream.rangeClosed(0, size - 1).boxed().collect(Collectors.toList());
+        Collections.shuffle(numbers);
+        return numbers;
     }
 }

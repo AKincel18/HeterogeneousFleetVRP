@@ -15,7 +15,7 @@ public class App {
                 dataReader.getVehicles(),
                 dataReader.getDepot(),
                 10);
-        geneticAlgorithm.initRoutes();
+        geneticAlgorithm.initPopulation();
 
     }
 }

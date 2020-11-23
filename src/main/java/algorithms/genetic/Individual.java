@@ -7,7 +7,6 @@ import model.City;
 import model.Vehicle;
 
 import java.util.*;
-
 @NoArgsConstructor
 public class Individual {
     @Getter private Map<Vehicle, List<City>> individual = new HashMap<>();
@@ -19,12 +18,11 @@ public class Individual {
 
     public void initMap(List<Vehicle> vehicles, City depot) {
         this.depot = depot;
-        vehicles.forEach( v -> individual.put(v, new ArrayList<City>(Collections.singletonList(depot))));
+        vehicles.forEach( v -> individual.put(v, new ArrayList<>(Collections.singletonList(depot))));
     }
 
     public void addEndCity() {
         for (Vehicle vehicle : individual.keySet())
             Objects.requireNonNull(individual.computeIfPresent(vehicle, (key, value) -> individual.get(key))).add(depot);
     }
-
 }

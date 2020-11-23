@@ -1,13 +1,15 @@
 package algorithms.genetic;
 
-import constants.StringConst;
 import lombok.RequiredArgsConstructor;
 import model.City;
 import model.Depot;
 import model.Vehicle;
+import utils.Decoder;
 import utils.Utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -24,9 +26,10 @@ public class GeneticAlgorithm {
 
     private Individual individual;
     private List<Individual> population = new ArrayList<>();
+    private Boolean[][] populationDecode;
 
 
-    public void initRoutes() {
+    public void initPopulation() {
 
         City startAndEndCity = getDepotByCity();
 
@@ -35,7 +38,7 @@ public class GeneticAlgorithm {
             individual = new Individual();
             individual.initMap(vehicles, startAndEndCity);
             //vehicles.forEach( v -> individual.put(v, new ArrayList<City>(Collections.singletonList(startAndEndCity))));
-            initPopulation();
+            generateIndividuals();
 
             //add end city
 
@@ -51,21 +54,27 @@ public class GeneticAlgorithm {
 
             cities.forEach(c -> c.setVisited(false));
         }
+
+
         writePopulation();
         selection();
+        for (int i =0; i < populationSize; i++)
+            writeTestDecoding(i);
 
 
     }
 
     private void selection() {
-        //Utils.buildTitleOnConsole("SELECTION");
-        Selection selection = new Selection(population);
+        Utils.buildTitleOnConsole("SELECTION");
+        Selection selection = new Selection(population, cities.size(), vehicles.size());
         selection.createRanking();
 
-        //crossover(selection.getSelectedIndividuals());
+        crossover(selection.getPairIndividuals());
     }
-    private void crossover(List<Individual> selectedIndividuals) {
+    private void crossover(List<PairIndividuals> pairIndividuals) {
         Utils.buildTitleOnConsole("Crossover");
+        GeneticOperations geneticOperations = new GeneticOperations(pairIndividuals, cities);
+        geneticOperations.crossover();
 
     }
 
@@ -77,35 +86,19 @@ public class GeneticAlgorithm {
                 .build();
     }
 
-    private void initPopulation() {
-
-        boolean[] drawVehicle = new boolean[vehicles.size()];
-        Random random = new Random();
-
-        AtomicInteger generatedNumberVehicle = new AtomicInteger();
-        vehicles.forEach(v -> {
-
-            do {
-                generatedNumberVehicle.set(random.nextInt(vehicles.size()));
-            } while (drawVehicle[generatedNumberVehicle.get()]);
-            drawVehicle[generatedNumberVehicle.get()] = true;
-
-            boolean[] drawCity = new boolean[cities.size()];
-            cities.forEach( c -> {
-                int generatedNumberCity;
-                do {
-                    generatedNumberCity = random.nextInt(cities.size());
-                } while (drawCity[generatedNumberCity]);
-                drawCity[generatedNumberCity] = true;
-
-                Vehicle vehicle = vehicles.get(generatedNumberVehicle.get());
-                City city = cities.get(generatedNumberCity);
+    private void generateIndividuals() {
+        List<Integer> vehiclesNumberGenerated = Utils.generateListOfNumbers(vehicles.size());
+        for (int i = 0; i < vehicles.size(); i++) {
+            List<Integer> citiesNumberGenerated = Utils.generateListOfNumbers(cities.size());
+            for (int j = 0; j < cities.size(); j++) {
+                Vehicle vehicle = vehicles.get(vehiclesNumberGenerated.get(i));
+                City city = cities.get(citiesNumberGenerated.get(j));
                 if (isPossible(city, vehicle)) {
                     Objects.requireNonNull(individual.getIndividual().computeIfPresent(vehicle, (key, value) -> individual.getIndividual().get(key))).add(city);
                     city.setVisited(true);
                 }
-            });
-        });
+            }
+        }
 
     }
 
@@ -175,6 +168,22 @@ public class GeneticAlgorithm {
 
                 );
 
+    }
+
+    private void writeTestDecoding(int numberPopulation) {
+        Individual individual = population.get(numberPopulation);
+        Decoder decoder = new Decoder(cities);
+        Integer [][] array = decoder.decodeIndividual(individual.getIndividual());
+
+        Utils.buildTitleOnConsole("Test decoding " + numberPopulation);
+        for (int i =0; i < 3; i++) {
+            System.out.println("Vehicle = " + individual.getIndividual().keySet().toArray()[i].toString());
+            for (int j = 0; j < cities.size(); j++) {
+                System.out.print(array[i][j] + ";");
+            }
+            System.out.println();
+
+        }
     }
 
 }
