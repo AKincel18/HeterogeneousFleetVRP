@@ -13,6 +13,5 @@ public class PairIndividuals {
     private final Individual individual2;
     private final int leftRange;
     private final int rightRange;
-    private final int whichVehicle;
     @Setter private PairIndividualsDecode pairIndividualsDecode;
 }

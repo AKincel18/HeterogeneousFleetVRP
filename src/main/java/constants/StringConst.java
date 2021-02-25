@@ -16,11 +16,9 @@ public class StringConst {
     public static final String LONGITUDE_NOT_VALID = "LONGITUDE_NOT_VALID";
 
     /**
-     * write data on console
+     * Genetic algorithm
      */
-    public static final String SPACE_MARKER_BIG = "-------------------------------------------------------------";
-    public static final String SPACE_MARKER_SMALL = "--------------------------";
-
+    public static final String INDIVIDUAL_NOT_FOUND = "Individual not found!";
 
 
 }

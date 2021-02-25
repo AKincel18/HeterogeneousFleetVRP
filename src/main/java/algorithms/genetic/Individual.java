@@ -1,18 +1,21 @@
 package algorithms.genetic;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import model.City;
 import model.Vehicle;
 
 import java.util.*;
 @NoArgsConstructor
 public class Individual {
-    @Getter private Map<Vehicle, List<City>> individual = new HashMap<>();
+    @Getter @Setter private Map<Vehicle, List<City>> individual = new HashMap<>();
     @Getter @Setter private Double sum = 0.0;
     @Getter @Setter private double reproductionProbability;
     @Getter @Setter private double circleSegment;
+    @Getter private int id;
+
+    public Individual(int id) {
+        this.id = id;
+    }
 
     private City depot;
 

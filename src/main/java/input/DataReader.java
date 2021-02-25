@@ -14,6 +14,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import utils.Utils;
+import utils.Writer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,10 +28,9 @@ import java.util.List;
 public class DataReader {
 
     private final String fileName;
-    @Getter private List<City> cities = new ArrayList<>();
-    @Getter private List<Vehicle> vehicles = new ArrayList<>();
-    @Getter private Depot depot = new Depot();
-
+    @Getter private final List<City> cities = new ArrayList<>();
+    @Getter private final List<Vehicle> vehicles = new ArrayList<>();
+    @Getter private final Depot depot = new Depot();
 
     public void readData(){
         try {
@@ -110,7 +110,7 @@ public class DataReader {
             workbook.close();
             inputStream.close();
 
-            writeData();
+            Writer.writeInputData(cities, vehicles, depot);
 
         }
         catch (IOException e) {
@@ -132,17 +132,5 @@ public class DataReader {
         }
 
         return null;
-    }
-
-    private void writeData(){
-
-        Utils.buildTitleOnConsole("Cities");
-        cities.forEach(c -> System.out.println(c.toString()));
-        //cities.forEach( c -> System.out.println(c.getName() + " = " + c.getAmount()));
-        Utils.buildTitleOnConsole("Vehicles");
-        vehicles.forEach(v -> System.out.println(v.toString()));
-        Utils.buildTitleOnConsole("Depot");
-        System.out.println(depot.toString());
-
     }
 }
