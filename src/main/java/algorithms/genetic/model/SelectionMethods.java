@@ -1,4 +1,4 @@
-package algorithms.genetic;
+package algorithms.genetic.model;
 
 public enum SelectionMethods {
     RouletteWheel,

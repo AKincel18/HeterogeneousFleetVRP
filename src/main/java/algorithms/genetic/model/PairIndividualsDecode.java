@@ -1,4 +1,4 @@
-package algorithms.genetic;
+package algorithms.genetic.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,6 +6,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class PairIndividualsDecode {
-    Integer [][] individual1;
-    Integer [][] individual2;
+    private Integer [][] individual1;
+    private Integer [][] individual2;
 }

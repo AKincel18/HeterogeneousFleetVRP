@@ -1,15 +1,14 @@
 package algorithms.genetic;
 
+import algorithms.genetic.model.Individual;
+import algorithms.genetic.model.PairIndividuals;
 import exceptions.IndividualNotFoundException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import utils.Utils;
 import utils.Writer;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static constants.StringConst.INDIVIDUAL_NOT_FOUND;
@@ -62,23 +61,44 @@ public class Selection {
     private void generatePairsIndividual() {
         Writer.buildTitleOnConsole("Generate pairs");
         List<Integer> numbers = Utils.generateListOfNumbers(population.size());
-        Random random = new Random();
+
         pairIndividuals = new ArrayList<>();
-        int leftRange;
+        int id = 0;
         for (int i = 0; i < population.size(); i+=2) {
-            leftRange = random.nextInt(numberOfCity - 1); //without the last one
+//            int []ranges = calculateRanges();
+//            PairIndividuals selectedIndividualPair = new PairIndividuals(
+//                    selectedIndividuals.get(numbers.get(i)),
+//                    selectedIndividuals.get(numbers.get(i + 1)),
+//                    ranges[0], //left ranges
+//                    ranges[1] //right ranges
+//            );
+
             PairIndividuals selectedIndividualPair = new PairIndividuals(
                     selectedIndividuals.get(numbers.get(i)),
                     selectedIndividuals.get(numbers.get(i + 1)),
-                    leftRange,
-                    random.nextInt(numberOfCity) + leftRange
-            );
+                    new Random().nextInt(numberOfCity - 1) + 1, id);
+            id++;
             pairIndividuals.add(selectedIndividualPair);
             System.out.print("ind1 id = " + selectedIndividualPair.getIndividual1().getId());
             System.out.print("; ind2 id = " + selectedIndividualPair.getIndividual2().getId());
             System.out.println(", <" + selectedIndividualPair.getLeftRange() + ":" + selectedIndividualPair.getRightRange() + ">");
         }
 
+    }
+
+    private int[] calculateRanges() {
+        Random random = new Random();
+        int leftRange = random.nextInt(numberOfCity - 1); //without the last one
+        int rightRange = random.nextInt(numberOfCity);
+        if (leftRange == rightRange) {
+            rightRange += 1;
+        }
+        if (leftRange > rightRange) {
+            int temp = leftRange;
+            leftRange = rightRange;
+            rightRange = temp;
+        }
+        return new int[]{leftRange, rightRange};
     }
 
     private Individual findIndividual(double randomValue) throws IndividualNotFoundException {

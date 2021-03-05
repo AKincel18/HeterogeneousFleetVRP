@@ -1,6 +1,6 @@
 package utils;
 
-import algorithms.genetic.Individual;
+import algorithms.genetic.model.Individual;
 import model.City;
 import model.Depot;
 import model.Vehicle;
@@ -25,7 +25,7 @@ public class Writer {
         population.forEach(
                 p -> {
                     buildTitleOnConsole("Generated " + index.getAndIncrement() + " individual");
-                    p.getIndividual().forEach((vehicle, cities) -> {
+                    p.getRoutes().forEach((vehicle, cities) -> {
 
 
                         System.out.print("Vehicle: " + vehicle.getName() + " = ");
@@ -43,14 +43,15 @@ public class Writer {
         );
     }
 
-    public static void writeTestDecodingAndEncoding(List<Individual> population, List<City> cities, int vehicleNumber, Depot depot) {
+    public static void writeTestDecodingAndEncoding(List<Individual> population, List<City> cities, List<Vehicle> vehicles, Depot depot) {
+        int id = 0;
         for (Individual individual : population) {
             Decoder decoder = new Decoder(cities);
-            Integer [][] array = decoder.decodeIndividual(individual.getIndividual());
+            Integer [][] array = decoder.decodeIndividual(individual.getRoutes());
 
             buildTitleOnConsole("Test decoding " + individual.getId());
-            for (int i =0; i < vehicleNumber; i++) {
-                System.out.println("Vehicle = " + individual.getIndividual().keySet().toArray()[i].toString());
+            for (int i =0; i < vehicles.size(); i++) {
+                System.out.println("Vehicle = " + individual.getRoutes().keySet().toArray()[i].toString());
                 for (int j = 0; j < cities.size(); j++) {
                     System.out.print(array[i][j] + ";");
                 }
@@ -59,8 +60,8 @@ public class Writer {
 
             buildTitleOnConsole("Test encoding " + individual.getId());
             Encoder encoder = new Encoder(cities, array);
-            Map<Vehicle, List<City>> map = encoder.encodeIndividual(individual.getIndividual(), Utils.getDepotByCity(depot));
-            for (Map.Entry<Vehicle, List<City>> entry : map.entrySet()) {
+            Individual newInd = encoder.encodeIndividual(vehicles, Utils.getDepotByCity(depot), id);
+            for (Map.Entry<Vehicle, List<City>> entry : newInd.getRoutes().entrySet()) {
                 System.out.println("Vehicle = " + entry.getKey());
                 entry.getValue().forEach(city -> System.out.print(city.getName() + " "));
                 System.out.println();System.out.println();

@@ -1,5 +1,6 @@
 package utils;
 
+import algorithms.genetic.model.Individual;
 import model.City;
 import model.Coords;
 import model.Depot;
@@ -7,6 +8,8 @@ import model.Vehicle;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -91,5 +94,14 @@ public class Utils {
                 .amount(0.0)
                 .name(depot.getName())
                 .build();
+    }
+    public static double countSumOfIndividual(Individual individual) {
+
+        AtomicReference<Double> sum = new AtomicReference<>(0.0);
+        individual.getRoutes().forEach((vehicle, cities) -> {
+            double routeDistance =  Utils.countRouteDistance(cities);
+            sum.updateAndGet(v -> v + routeDistance);
+        });
+        return sum.get();
     }
 }

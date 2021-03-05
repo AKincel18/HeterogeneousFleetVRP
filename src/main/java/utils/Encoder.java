@@ -1,10 +1,13 @@
 package utils;
 
+import algorithms.genetic.model.Individual;
 import model.City;
 import model.Vehicle;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static utils.Utils.countSumOfIndividual;
 
 public class Encoder {
 
@@ -16,10 +19,11 @@ public class Encoder {
         this.decodedIndividual = decodedIndividual;
     }
 
-    public Map<Vehicle, List<City>> encodeIndividual(Map<Vehicle, List<City>> individual, City depot) {
-
+    public Individual encodeIndividual(List<Vehicle> vehicles, City depot, int id) {
+        Map<Vehicle, List<City>> individualRoutes = new HashMap<>();
         for (int i = 0; i < decodedIndividual.length; i++) {
-            Vehicle vehicle = (Vehicle) individual.keySet().toArray()[i];
+            final int finalI = i;
+            Vehicle vehicle = vehicles.stream().filter(v -> v.getId() == finalI).findFirst().orElse(null);
             List<City> route = new ArrayList<>(Collections.singleton(depot)); //set depot on first in a route
             List<PlaceCity> placeCities = new ArrayList<>();
             for (int j = 0; j < cities.size(); j++) {
@@ -33,8 +37,10 @@ public class Encoder {
 
             route.addAll(placeCities.stream().map(PlaceCity::getCity).collect(Collectors.toList()));
             route.add(depot); //set depot on last in a route
-            individual.put(vehicle, route);
+            individualRoutes.put(vehicle, route);
         }
+        Individual individual = new Individual(individualRoutes, depot, id);
+        individual.setSum(countSumOfIndividual(individual));
         return individual;
     }
 

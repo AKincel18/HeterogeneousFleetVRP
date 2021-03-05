@@ -13,7 +13,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import utils.Utils;
 import utils.Writer;
 
 import java.io.File;
@@ -41,10 +40,11 @@ public class DataReader {
 
             Sheet sheet = workbook.getSheet(StringConst.NAME_OF_SHEET);
             boolean header = true;
+            int vehicleId = 0;
             for (Row nextRow : sheet) {
                 Iterator<Cell> cellIterator = nextRow.cellIterator();
                 City city = City.builder().coords(new Coords()).build();
-                Vehicle vehicle = Vehicle.builder().build();
+                Vehicle vehicle = Vehicle.builder().id(vehicleId).build();
                 while (cellIterator.hasNext()) {
                     Cell nextCell = cellIterator.next();
                     int columnIndex = nextCell.getColumnIndex();
@@ -68,6 +68,7 @@ public class DataReader {
                                 break;
                             case 5:
                                 vehicle.setName((String) getCellValue(nextCell));
+                                vehicleId++;
                                 break;
                             case 6:
                                 vehicle.setAmount((double) getCellValue(nextCell));

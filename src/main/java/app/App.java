@@ -1,6 +1,7 @@
 package app;
 
 import algorithms.genetic.GeneticAlgorithm;
+import algorithms.genetic.model.Parameters;
 import constants.StringConst;
 import input.DataReader;
 
@@ -14,8 +15,12 @@ public class App {
                 dataReader.getCities(),
                 dataReader.getVehicles(),
                 dataReader.getDepot(),
-                10);
+                new Parameters(10, 10, 0.9, 0.05));
         geneticAlgorithm.start();
 
+
+
     }
+
+
 }
