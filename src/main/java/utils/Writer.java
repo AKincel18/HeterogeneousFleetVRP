@@ -1,6 +1,7 @@
 package utils;
 
 import algorithms.genetic.model.Individual;
+import commons.Result;
 import model.City;
 import model.Depot;
 import model.Vehicle;
@@ -8,6 +9,8 @@ import model.Vehicle;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static utils.Utils.sortRoutesByVehicleId;
 
 public class Writer {
 
@@ -25,48 +28,71 @@ public class Writer {
         population.forEach(
                 p -> {
                     buildTitleOnConsole("Generated " + index.getAndIncrement() + " individual");
-                    p.getRoutes().forEach((vehicle, cities) -> {
-
-
-                        System.out.print("Vehicle: " + vehicle.getName() + " = ");
-                        if (cities.isEmpty())
-                            System.out.print("No cities ");
-                        else
-                            cities.forEach(city -> System.out.print(city.getName() + " "));
-                        System.out.print("quality = " + Utils.countQuality(vehicle, cities));
-                        System.out.println(", distance = " + Utils.countRouteDistance(cities));
-
-                    });
-                    System.out.println("Sum of distance = " + Utils.roundNumber(p.getSum()));
+                    writeResult(new Result(p.getRoutes(), p.getSum()));
                 }
 
         );
     }
 
-    public static void writeTestDecodingAndEncoding(List<Individual> population, List<City> cities, List<Vehicle> vehicles, Depot depot) {
-        int id = 0;
+    public static void writeResult(Result result) {
+        result.setRoutes(sortRoutesByVehicleId(result.getRoutes())); //sort routes
+        result.getRoutes().forEach((vehicle, cities) -> {
+
+
+            System.out.print("Vehicle: " + vehicle.getName() + " = ");
+            if (cities.isEmpty())
+                System.out.print("No cities ");
+            else
+                cities.forEach(city -> System.out.print(city.getName() + " "));
+            System.out.print("quality = " + Utils.countQuality(vehicle, cities));
+            System.out.println(", distance = " + Utils.countRouteDistance(cities));
+
+        });
+        System.out.println("Sum of distance = " + Utils.roundNumber(result.getSum()));
+
+    }
+
+    public static void writeTestDecodingAndEncodingPopulation(List<Individual> population, List<City> cities,
+                                                              List<Vehicle> vehicles, Depot depot) {
+        //int id = 0;
         for (Individual individual : population) {
-            Decoder decoder = new Decoder(cities);
-            Integer [][] array = decoder.decodeIndividual(individual.getRoutes());
-
-            buildTitleOnConsole("Test decoding " + individual.getId());
-            for (int i =0; i < vehicles.size(); i++) {
-                System.out.println("Vehicle = " + individual.getRoutes().keySet().toArray()[i].toString());
-                for (int j = 0; j < cities.size(); j++) {
-                    System.out.print(array[i][j] + ";");
-                }
-                System.out.println();
-            }
-
-            buildTitleOnConsole("Test encoding " + individual.getId());
-            Encoder encoder = new Encoder(cities, array);
-            Individual newInd = encoder.encodeIndividual(vehicles, Utils.getDepotByCity(depot), id);
-            for (Map.Entry<Vehicle, List<City>> entry : newInd.getRoutes().entrySet()) {
-                System.out.println("Vehicle = " + entry.getKey());
-                entry.getValue().forEach(city -> System.out.print(city.getName() + " "));
-                System.out.println();System.out.println();
-            }
+            buildTitleOnConsole("Test decoding & encoding = " + individual.getId());
+            writeTestDecodingAndEncoding(cities, vehicles, depot, individual.getRoutes());
         }
+    }
+
+    public static void writeTestDecodingAndEncoding(List<City> cities, List<Vehicle> vehicles, Depot depot,
+                                                    Map<Vehicle, List<City>> routes) {
+        Decoder decoder = new Decoder(cities);
+        Integer [][] array = decoder.decodeResult(routes);
+
+        buildTitleOnConsole("Decoding");
+        for (int i =0; i < vehicles.size(); i++) {
+            System.out.println("Vehicle = " + routes.keySet().toArray()[i].toString());
+            for (int j = 0; j < cities.size(); j++) {
+                System.out.print(array[i][j] + ";");
+            }
+            System.out.println();
+        }
+
+        buildTitleOnConsole("Encoding");
+        Encoder encoder = new Encoder(cities, array);
+        Result result = encoder.encodeResult(vehicles, Utils.getDepotByCity(depot));
+        for (Map.Entry<Vehicle, List<City>> entry : result.getRoutes().entrySet()) {
+            System.out.println("Vehicle = " + entry.getKey());
+            entry.getValue().forEach(city -> System.out.print(city.getName() + " "));
+            System.out.println();System.out.println();
+        }
+    }
+
+    public static void writeDecodedResultInOneRow(Integer[][] decodedResult) {
+        for (Integer[] row : decodedResult) {
+            for (Integer number : row) {
+                System.out.print(number);
+            }
+            System.out.print("|");
+        }
+        System.out.println();
     }
 
     public static void buildTitleOnConsole(String title) {

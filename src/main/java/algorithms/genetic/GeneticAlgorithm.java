@@ -27,11 +27,12 @@ public class GeneticAlgorithm {
 
     public void start() {
         generatePopulation();
+        Writer.writeTestDecodingAndEncodingPopulation(population, cities, vehicles, depot);
         for (int i = 0; i < params.getIterationNumber(); i++) {
             Writer.buildTitleOnConsole("ITERATION = " + i);
             selection();
             geneticOperations();
-            //Writer.writeTestDecodingAndEncoding(population, cities, vehicles, depot);
+            Writer.writeTestDecodingAndEncodingPopulation(population, cities, vehicles, depot);
         }
     }
 

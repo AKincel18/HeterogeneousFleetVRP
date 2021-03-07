@@ -3,6 +3,7 @@ package algorithms.genetic;
 import algorithms.genetic.model.Individual;
 import algorithms.genetic.model.PairIndividuals;
 import algorithms.genetic.model.PairIndividualsDecode;
+import commons.Result;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import model.City;
@@ -34,15 +35,19 @@ public class GeneticOperations {
         pairIndividuals.forEach(p -> {
                     if (isCrossover()) {
                         p.setPairIndividualsDecode(new PairIndividualsDecode(
-                                decoder.decodeIndividual(p.getIndividual1().getRoutes()),
-                                decoder.decodeIndividual(p.getIndividual2().getRoutes())
+                                decoder.decodeResult(p.getIndividual1().getRoutes()),
+                                decoder.decodeResult(p.getIndividual2().getRoutes())
                         ));
                         randomCrossover(p.getPairIndividualsDecode(), p.getChangesNumber(), p.getId());
                         //partialMappedCrossover(p.getLeftRange(), p.getRightRange(), p.getPairIndividualsDecode(), i);
                     }
                     else {
+                        p.getIndividual1().setId(currentId);
                         newPopulation.add(p.getIndividual1());
+                        currentId++;
+                        p.getIndividual2().setId(currentId);
                         newPopulation.add(p.getIndividual2());
+                        currentId++;
                     }
                 }
         );
@@ -107,7 +112,8 @@ public class GeneticOperations {
 
     private void encodeResults(Integer[][] iDecode) {
         Encoder encoder = new Encoder(cities, iDecode);
-        newPopulation.add(encoder.encodeIndividual(vehicles, depot, currentId));
+        Result result = encoder.encodeResult(vehicles, depot);
+        newPopulation.add(new Individual(result, depot, currentId));
         currentId++;
     }
 

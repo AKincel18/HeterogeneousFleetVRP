@@ -50,7 +50,7 @@ public class Selection {
         try {
             for (int i = 0; i < population.size(); i++) {
                 Individual ind = findIndividual(Utils.roundNumber(random.nextDouble()));
-                System.out.println("choosed = " + ind.getCircleSegment() + "; individual id = " + ind.getId()); //for debugging
+                System.out.println("chosen = " + ind.getCircleSegment() + "; individual id = " + ind.getId()); //for debugging
                 selectedIndividuals.add(ind);
             }
         } catch (IndividualNotFoundException e) {
@@ -81,7 +81,8 @@ public class Selection {
             pairIndividuals.add(selectedIndividualPair);
             System.out.print("ind1 id = " + selectedIndividualPair.getIndividual1().getId());
             System.out.print("; ind2 id = " + selectedIndividualPair.getIndividual2().getId());
-            System.out.println(", <" + selectedIndividualPair.getLeftRange() + ":" + selectedIndividualPair.getRightRange() + ">");
+            System.out.println(", <" + selectedIndividualPair.getChangesNumber() + ">");
+            //System.out.println(", <" + selectedIndividualPair.getLeftRange() + ":" + selectedIndividualPair.getRightRange() + ">");
         }
 
     }
