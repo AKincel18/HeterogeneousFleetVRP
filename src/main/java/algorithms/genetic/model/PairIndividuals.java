@@ -11,16 +11,12 @@ import lombok.ToString;
 public class PairIndividuals {
     private final Individual individual1;
     private final Individual individual2;
-    private final int leftRange = 0;
-    private final int rightRange = 0;
-    private int changesNumber;
     private int id;
     @Setter private PairIndividualsDecode pairIndividualsDecode;
 
-    public PairIndividuals(Individual individual1, Individual individual2, int changesNumber, int id) {
+    public PairIndividuals(Individual individual1, Individual individual2, int id) {
         this.individual1 = individual1;
         this.individual2 = individual2;
-        this.changesNumber = changesNumber;
         this.id = id;
     }
 }

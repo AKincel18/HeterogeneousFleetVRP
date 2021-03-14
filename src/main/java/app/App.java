@@ -7,25 +7,25 @@ import algorithms.localsearch.model.LocalSearchMethod;
 import constants.StringConst;
 import input.DataReader;
 
+
 public class App {
 
     public static void main(String[] args) {
         DataReader dataReader = new DataReader(StringConst.FILE_NAME);
         dataReader.readData();
+        new GeneticAlgorithm(
+                dataReader.getCities(),
+                dataReader.getVehicles(),   
+                dataReader.getDepot(),
+                new Parameters(10, 10, 0.9, 0.05, 10)
+        ).start();
 
-//        new GeneticAlgorithm(
+//        new LocalSearchAlgorithm(
 //                dataReader.getCities(),
 //                dataReader.getVehicles(),
 //                dataReader.getDepot(),
-//                new Parameters(10, 10, 0.9, 0.05)
+//                LocalSearchMethod.GREEDY
 //        ).start();
-
-        new LocalSearchAlgorithm(
-                dataReader.getCities(),
-                dataReader.getVehicles(),
-                dataReader.getDepot(),
-                LocalSearchMethod.GREEDY
-        ).start();
 
 
     }

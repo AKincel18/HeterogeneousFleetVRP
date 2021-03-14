@@ -10,4 +10,5 @@ public class Parameters {
     private final int iterationNumber;
     private final double crossoverProbability;
     private final double mutationProbability;
+    private final double crossoverRepeatingNumber;
 }

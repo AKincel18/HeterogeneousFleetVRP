@@ -1,11 +1,14 @@
 package algorithms.genetic.model;
 
 import commons.Result;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import model.City;
 import model.Vehicle;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 @NoArgsConstructor
 @Getter
@@ -17,14 +20,11 @@ public class Individual extends Result {
 
     public Individual(Map<Vehicle, List<City>> routes, City depot, int id) {
         super(routes);
-        //this.result = new Result(routes);
         this.depot = depot;
         this.id = id;
     }
 
-    public Individual(Result result, City depot, int id) {
-        super(result);
+    public Individual(City depot) {
         this.depot = depot;
-        this.id = id;
     }
 }

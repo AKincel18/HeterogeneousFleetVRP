@@ -27,7 +27,7 @@ public class Writer {
         AtomicInteger index = new AtomicInteger();
         population.forEach(
                 p -> {
-                    buildTitleOnConsole("Generated " + index.getAndIncrement() + " individual");
+                    buildTitleOnConsole("Individual: " + index.getAndIncrement());
                     writeResult(new Result(p.getRoutes(), p.getSum()));
                 }
 
