@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import static algorithms.genetic.geneticoperations.Utils.isInRange;
 import static utils.Utils.checkIsAcceptableWeightAll;
+import static utils.Utils.getAnalyzed;
 
 @RequiredArgsConstructor
 public class Crossover {
@@ -257,20 +258,6 @@ public class Crossover {
         }
         return ind;
 
-    }
-
-    /**
-     * Draws a number to analyze vehicle or city
-     *
-     * @param analyzed array analyzed vehicles or cities
-     * @return number of vehicle or city to analyze
-     */
-    private int getAnalyzed(boolean[] analyzed) {
-        int pos;
-        do {
-            pos = new Random().nextInt(analyzed.length);
-        } while (analyzed[pos]);
-        return pos;
     }
 
     /**

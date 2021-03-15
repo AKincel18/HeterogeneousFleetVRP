@@ -181,4 +181,19 @@ public class Utils {
                 .sorted(Comparator.comparingInt(o -> o.getKey().getId()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
+
+
+    /**
+     * Draws a number to analyze vehicle or city
+     *
+     * @param analyzed array analyzed vehicles or cities
+     * @return number of vehicle or city to analyze
+     */
+    public static int getAnalyzed(boolean[] analyzed) {
+        int pos;
+        do {
+            pos = new Random().nextInt(analyzed.length);
+        } while (analyzed[pos]);
+        return pos;
+    }
 }

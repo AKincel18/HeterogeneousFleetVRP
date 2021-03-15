@@ -33,7 +33,8 @@ public class LocalSearchAlgorithm {
         Writer.buildTitleOnConsole("Generated random solve");
         Writer.writeResult(currentResult);
 
-        SolveFromNeighborhood solveFromNeighborhood = new SolveFromNeighborhood(cities, vehicles, depotCity, method, currentResult);
+        SolveFromNeighborhood solveFromNeighborhood = new SolveFromNeighborhood(cities, vehicles,
+                depotCity, method, currentResult);
         int iterationNumber = 0;
         do {
             Writer.buildTitleOnConsole("Iteration nr = " + iterationNumber);

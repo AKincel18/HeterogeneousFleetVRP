@@ -2,7 +2,7 @@ package algorithms.genetic;
 
 import algorithms.genetic.geneticoperations.GeneticOperations;
 import algorithms.genetic.model.Individual;
-import algorithms.genetic.model.Parameters;
+import algorithms.genetic.model.ParametersGA;
 import lombok.RequiredArgsConstructor;
 import model.City;
 import model.Depot;
@@ -19,7 +19,7 @@ public class GeneticAlgorithm {
     private final List<City> cities;
     private final List<Vehicle> vehicles;
     private final Depot depot;
-    private final Parameters params;
+    private final ParametersGA params;
 
     private List<Individual> population;
     private Selection selection;
