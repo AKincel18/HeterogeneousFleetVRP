@@ -108,4 +108,41 @@ public class Writer {
             System.out.print("-");
         }
     }
+
+    public static void writeTabuArray(int[][] tabuArray, int vecNumber, int cityNumber) {
+
+        System.out.printf("%-10s", "");
+        for (int i = 0; i < vecNumber; i++) {
+            for (int j = 0; j < cityNumber; j++) {
+                String text = String.valueOf(i) + String.valueOf(j);
+                System.out.printf("%-10s", text);
+            }
+        }
+
+        System.out.println();
+        System.out.println();
+
+        int vec = 0;
+        int city = 0;
+
+        for (int i = 0; i < tabuArray.length; i++) {
+            System.out.printf("%-10s", String.valueOf(vec) + String.valueOf(city));
+            for (int j = 0; j < tabuArray[i].length; j++) {
+                if (i == j) {
+                    System.out.printf("%-10s", 'X');
+                    //System.out.print("X     ");
+                }
+                else {
+                    System.out.printf("%-10s", String.valueOf(tabuArray[i][j]));
+                    //System.out.print(tabuArray[i][j] + "     ");
+                }
+            }
+            city++;
+            if (city == cityNumber) {
+                city = 0;
+                vec++;
+            }
+            System.out.println();
+        }
+    }
 }

@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class ParametersGA {
+public class ParametersGenetic {
     private final int populationSize;
     private final int iterationNumber;
     private final double crossoverProbability;

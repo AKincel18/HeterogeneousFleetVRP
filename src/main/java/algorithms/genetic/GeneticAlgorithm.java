@@ -2,7 +2,8 @@ package algorithms.genetic;
 
 import algorithms.genetic.geneticoperations.GeneticOperations;
 import algorithms.genetic.model.Individual;
-import algorithms.genetic.model.ParametersGA;
+import algorithms.genetic.model.ParametersGenetic;
+import commons.Algorithm;
 import lombok.RequiredArgsConstructor;
 import model.City;
 import model.Depot;
@@ -14,12 +15,12 @@ import java.util.List;
 import static utils.Utils.getDepotByCity;
 
 @RequiredArgsConstructor
-public class GeneticAlgorithm {
+public class GeneticAlgorithm implements Algorithm {
 
     private final List<City> cities;
     private final List<Vehicle> vehicles;
     private final Depot depot;
-    private final ParametersGA params;
+    private final ParametersGenetic params;
 
     private List<Individual> population;
     private Selection selection;

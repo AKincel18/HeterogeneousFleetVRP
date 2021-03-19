@@ -1,5 +1,6 @@
 package utils;
 
+import commons.Result;
 import model.City;
 import model.Coords;
 import model.Depot;
@@ -103,7 +104,7 @@ public class Utils {
         return roundNumber(sum.get());
     }
 
-    public static Map<Vehicle, List<City>> generateRandomResult(List<Vehicle> vehicles, List<City> cities, City depot) {
+    private static Map<Vehicle, List<City>> generateRandomRoutes(List<Vehicle> vehicles, List<City> cities, City depot) {
         boolean isAllCitiesVisited, isEmptyRoute;
         Map<Vehicle, List<City>> routes = new HashMap<>();
 
@@ -195,5 +196,11 @@ public class Utils {
             pos = new Random().nextInt(analyzed.length);
         } while (analyzed[pos]);
         return pos;
+    }
+
+    public static Result generateRandomResult(List<Vehicle> vehicles, List<City> cities, City depot) {
+        Map<Vehicle, List<City>> routes = generateRandomRoutes(vehicles, cities, depot);
+        double sum = countSumOfResult(routes);
+        return new Result(routes, sum);
     }
 }

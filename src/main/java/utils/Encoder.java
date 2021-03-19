@@ -1,6 +1,7 @@
 package utils;
 
 import commons.Result;
+import lombok.RequiredArgsConstructor;
 import model.City;
 import model.Vehicle;
 
@@ -9,15 +10,11 @@ import java.util.stream.Collectors;
 
 import static utils.Utils.countSumOfResult;
 
+@RequiredArgsConstructor
 public class Encoder {
 
     private final List<City> cities;
     private final Integer[][] decodedResult;
-
-    public Encoder(List<City> cities, Integer[][] decodedResult) {
-        this.cities = cities;
-        this.decodedResult = decodedResult;
-    }
 
     public Result encodeResult(List<Vehicle> vehicles, City depot) {
         Map<Vehicle, List<City>> routes = new HashMap<>();

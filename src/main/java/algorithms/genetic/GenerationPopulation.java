@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static utils.Utils.countSumOfResult;
-import static utils.Utils.generateRandomResult;
 
 @RequiredArgsConstructor
 public class GenerationPopulation {
@@ -28,7 +27,7 @@ public class GenerationPopulation {
         City startAndEndCity = Utils.getDepotByCity(depot);
         Individual individual;
         for (int i = 0; i < populationSize; i++) {
-            individual = new Individual(generateRandomResult(vehicles, cities, startAndEndCity), startAndEndCity, i);
+            individual = new Individual(Utils.generateRandomResult(vehicles, cities, startAndEndCity), startAndEndCity, i);
             //individual.addEndCity();
             population.add(individual);
             individual.setSum(countSumOfResult(individual.getRoutes()));

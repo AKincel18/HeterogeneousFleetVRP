@@ -28,6 +28,7 @@ public class City extends ModelCommon {
             throw new NotValidDataException(StringConst.LATITUDE_NOT_VALID);
         }
     }
+
     public boolean isNullCity() {
         return coords.getLatitude() == null && coords.getLongitude() == null && isNull();
     }
