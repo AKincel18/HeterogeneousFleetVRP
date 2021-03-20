@@ -28,9 +28,13 @@ public class SimulatedAnnealingAlgorithm implements Algorithm {
 
         Writer.buildTitleOnConsole("Generated random solution");
         Writer.writeResult(currentResult);
+        //int stopCondition = 5;
+        //int stopCondition = (vehicles.size() * cities.size());
         int stopCondition = (int) Math.sqrt(vehicles.size() * cities.size());
 
         double currentTemperature = new TemperatureZero(cities, vehicles, depotCity, currentResult, params).countTemperatureZero();
+        //double currentTemperature = 1000.0;
+
         Writer.buildTitleOnConsole("t0 = " + currentTemperature);
 
         SimAnnealingNeighborhoodSolution solutionFromNeighborhood = new SimAnnealingNeighborhoodSolution(cities, vehicles,
@@ -38,32 +42,34 @@ public class SimulatedAnnealingAlgorithm implements Algorithm {
         SolutionAnalysis analysis = new SolutionAnalysis(stopCondition);
         int iteration = 0;
         do {
-
+            boolean isImprovement = false;
             for (int i = 0; i < params.getIterationNumber(); i++) {
                 iteration++;
                 solutionFromNeighborhood.findSolutionFromNeighborhood();
-                boolean isFound = false;
                 if (solutionFromNeighborhood.isFoundNewResult()) {
-                    currentResult = analysis.findCurrentResult(currentResult, solutionFromNeighborhood.getCurrentResult(), currentTemperature);
+                    currentResult = analysis.findCurrentResult(currentResult,
+                            solutionFromNeighborhood.getCurrentResult(), currentTemperature);
                     if (analysis.isNewResult()) {
-                        isFound = true;
-                        //noImprovementCounter = 0; //new result was accepted
+                        isImprovement = true;
                     }
                     solutionFromNeighborhood.setCurrentResult(currentResult);
                 }
-                if (!isFound) {
-                    analysis.incrementNoImprovementCounter();
-                    if (analysis.isStop())
-                        break;
-                }
+            }
+            if (isImprovement) {
+                analysis.setNoImprovementCounter(0);
+            }
+            else {
+                analysis.checkFinish();
             }
 
             currentTemperature *= params.getCoolingFactor();
-        } while (!analysis.isStop());
+            System.out.println("distance = " + currentResult.getSum() + ", t = " + currentTemperature);
+        } while (!analysis.isStop()); //while (!analysis.isStop() && currentTemperature > 5);
 
         Writer.buildTitleOnConsole("FINAL RESULT");
         Writer.writeResult(currentResult);
         System.out.println("Iteration = " + iteration);
+        System.out.println("Temperature = " + currentTemperature);
 
     }
 

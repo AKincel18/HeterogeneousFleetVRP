@@ -25,13 +25,13 @@ public class LocalSearchNeighborhoodSolution extends SolutionFromNeighborhood {
     }
 
     public void findSolutionFromNeighborhood() {
-
+        isFoundSolutionInNeighborhood = false;
         isFoundBetterResult = false;
         currentDecodedResult =  new Decoder(cities).decodeResult(currentResult.getRoutes());
         bestNeighborhoodResult = new Result(currentResult);
 
-        Writer.buildTitleOnConsole("Base result");
-        Writer.writeDecodedResultInOneRow(currentDecodedResult);
+        //Writer.buildTitleOnConsole("Base result");
+        //Writer.writeDecodedResultInOneRow(currentDecodedResult);
         //Writer.buildTitleOnConsole("DECODED RESULT");
         //Writer.writeDecodedResultInOneRow(currentDecodedResult);
 
@@ -39,6 +39,7 @@ public class LocalSearchNeighborhoodSolution extends SolutionFromNeighborhood {
             findInTheSameVehicle(vehicle);
             if (method == LocalSearchMethod.GREEDY && isFoundBetterResult) {
                 System.out.println("STOP, FOUND BETTER SOLUTION");
+                Writer.writeResult(bestNeighborhoodResult);
                 currentResult = bestNeighborhoodResult;
                 return;
             }
@@ -48,6 +49,7 @@ public class LocalSearchNeighborhoodSolution extends SolutionFromNeighborhood {
                     findInOtherVehicles(currentDecodedResult, visitOrder, vehicle, city);
                     if (method == LocalSearchMethod.GREEDY && isFoundBetterResult) {
                         System.out.println("STOP, FOUND BETTER SOLUTION");
+                        Writer.writeResult(bestNeighborhoodResult);
                         currentResult = bestNeighborhoodResult;
                         return;
                     }
@@ -55,7 +57,8 @@ public class LocalSearchNeighborhoodSolution extends SolutionFromNeighborhood {
             }
         }
 
-        if (isFoundBetterResult) {
+        if (isFoundSolutionInNeighborhood) {
+            isFoundBetterResult = true;
             System.out.println("Found better solution in steepest: ");
             Writer.writeResult(bestNeighborhoodResult);
             currentResult = bestNeighborhoodResult;
@@ -72,7 +75,7 @@ public class LocalSearchNeighborhoodSolution extends SolutionFromNeighborhood {
                         exchangeSameVehicle(vehicle, city1, city2, visitOrder1, visitOrder2);
                         isFoundBetterResult = checkNewResultLocalSearch(vehicle, vehicle, city1, city2);
                         if (method == LocalSearchMethod.GREEDY && isFoundBetterResult) {
-                            System.out.println("STOP, FOUND BETTER SOLUTION");
+                            //System.out.println("STOP, FOUND BETTER SOLUTION");
                             return;
                         }
                     }
@@ -94,7 +97,7 @@ public class LocalSearchNeighborhoodSolution extends SolutionFromNeighborhood {
                         exchange(vehicle1, city1, vehicle2, city2, visitOrder);
                         isFoundBetterResult = checkNewResultLocalSearch(vehicle1, vehicle2, city1, city2);
                         if (method == LocalSearchMethod.GREEDY && isFoundBetterResult) {
-                            System.out.println("STOP, FOUND BETTER SOLUTION");
+                            //System.out.println("STOP, FOUND BETTER SOLUTION");
                             return;
                         }
                         // replaced higher number from one vehicle route to another vehicle route
@@ -106,7 +109,7 @@ public class LocalSearchNeighborhoodSolution extends SolutionFromNeighborhood {
                         exchangeZero(vehicle1, city1, vehicle2, city2, visitOrder);
                         isFoundBetterResult = checkNewResultLocalSearch(vehicle1, vehicle2, city1, city2);
                         if (method == LocalSearchMethod.GREEDY && isFoundBetterResult) {
-                            System.out.println("STOP, FOUND BETTER SOLUTION");
+                            //System.out.println("STOP, FOUND BETTER SOLUTION");
                             return;
                         }
                     }

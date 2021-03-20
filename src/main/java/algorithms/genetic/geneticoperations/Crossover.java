@@ -3,6 +3,7 @@ package algorithms.genetic.geneticoperations;
 import algorithms.genetic.model.Individual;
 import algorithms.genetic.model.PairIndividuals;
 import algorithms.genetic.model.PairIndividualsDecode;
+import algorithms.genetic.model.ParametersGenetic;
 import commons.Result;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -10,14 +11,12 @@ import lombok.Setter;
 import model.City;
 import model.Vehicle;
 import utils.Encoder;
-import utils.Writer;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static algorithms.genetic.geneticoperations.Utils.isInRange;
-import static utils.Utils.checkIsAcceptableWeightAll;
-import static utils.Utils.getAnalyzed;
+import static utils.Utils.*;
 
 @RequiredArgsConstructor
 public class Crossover {
@@ -25,18 +24,12 @@ public class Crossover {
     private final List<City> cities;
     private final List<Vehicle> vehicles;
     private final City depot;
-    private final double crossoverProbability;
-    private final double mutationProbability;
-    private final double crossoverRepeatingNumber;
-
+    private final ParametersGenetic params;
 
     private boolean isAcceptable1, isAcceptable2;
-    @Setter
-    private PairIndividuals currentPair;
-    @Getter
-    private Individual best1Individual;
-    @Getter
-    private Individual best2Individual;
+    @Setter private PairIndividuals currentPair;
+    @Getter private Individual best1Individual;
+    @Getter private Individual best2Individual;
 
     public void startCrossover(PairIndividualsDecode pairIndividualsDecode) {
 /*        Writer.buildTitleOnConsole("Before crossover: " + "id = " + id);
@@ -45,7 +38,7 @@ public class Crossover {
         int crossoverIteration = 0;
         Individual best1 = new Individual(depot);
         Individual best2 = new Individual(depot);
-        Mutation mutation = new Mutation(vehicles.size(), mutationProbability);
+        Mutation mutation = new Mutation(vehicles.size(), params.getMutationProbability());
         do {
 
             replaceVehicle(pairIndividualsDecode);
@@ -75,7 +68,7 @@ public class Crossover {
             analyzeReceivedResults(pairIndividualsDecode, best1, best2);
 
             crossoverIteration++;
-        } while (crossoverIteration != crossoverRepeatingNumber && (!isAcceptable1 || !isAcceptable2));
+        } while (crossoverIteration != params.getCrossoverRepeatingNumber() && (!isAcceptable1 || !isAcceptable2));
 
         addIndividualsToNewPopulation(best1, best2);
     }
@@ -176,42 +169,13 @@ public class Crossover {
     private void bugFixer(PairIndividualsDecode pairIndividualsDecode) {
 
         Integer[][] fixedInd1 = repairBugFix(pairIndividualsDecode.getIndividual1());
-        check(fixedInd1);
+        check(cities, vehicles, fixedInd1);
 
         Integer[][] fixedInd2 = repairBugFix(pairIndividualsDecode.getIndividual2());
-        check(fixedInd2);
+        check(cities, vehicles, fixedInd2);
 
         pairIndividualsDecode.setIndividual1(fixedInd1);
         pairIndividualsDecode.setIndividual2(fixedInd2);
-    }
-
-    /**
-     * Method to debugging: check if all rules are met
-     *
-     * @param fixedInd individual who should be fixed
-     */
-    private void check(Integer[][] fixedInd) {
-        boolean[] visited = new boolean[cities.size()];
-        for (int i = 0; i < vehicles.size(); i++) {
-            for (int j = 0; j < cities.size(); j++) {
-                if (fixedInd[i][j] != 0) {
-                    if (visited[j]) {
-                        Writer.writeDecodedResultInOneRow(fixedInd);
-                        System.out.println("City is visited more than once");
-                        System.exit(-1);
-                    }
-                    visited[j] = true;
-                }
-            }
-        }
-
-        for (boolean b : visited) {
-            if (!b) {
-                Writer.writeDecodedResultInOneRow(fixedInd);
-                System.out.println("Some city is no visited");
-                System.exit(-1);
-            }
-        }
     }
 
     /**
@@ -469,6 +433,6 @@ public class Crossover {
     }
 
     public boolean isCrossover() {
-        return isInRange(crossoverProbability);
+        return isInRange(params.getCrossoverProbability());
     }
 }

@@ -9,7 +9,9 @@ import model.Vehicle;
 import utils.Decoder;
 
 import java.util.List;
+import java.util.Random;
 
+import static utils.Utils.generateListOfNumbers;
 import static utils.Utils.getAnalyzed;
 
 public class SimAnnealingNeighborhoodSolution extends SolutionFromNeighborhood {
@@ -30,7 +32,10 @@ public class SimAnnealingNeighborhoodSolution extends SolutionFromNeighborhood {
         boolean[] vehicleAnalyzed = new boolean[vehicles.size()];
         do {
             int vehicle = getAnalyzed(vehicleAnalyzed);
-            findInTheSameVehicle(vehicle);
+            boolean findInTheSame = new Random().nextBoolean();
+            if (findInTheSame) {
+                findInTheSameVehicle(vehicle);
+            }
             vehicleAnalyzed[vehicle] = true;
             boolean[] cityAnalyzed = new boolean[cities.size()];
             int cityIterator = 0;
@@ -55,46 +60,59 @@ public class SimAnnealingNeighborhoodSolution extends SolutionFromNeighborhood {
     }
 
     private void findInTheSameVehicle(int vehicle1) {
-        for (int city1 = 0; city1 < cities.size(); city1++) {
-            if (currentDecodedResult[vehicle1][city1] != 0) {
-                for (int city2 = city1 + 1; city2 < cities.size(); city2++) {
-                    if (currentDecodedResult[vehicle1][city2] != 0) {
-                        int visitOrder1 = currentDecodedResult[vehicle1][city1];
-                        int visitOrder2 = currentDecodedResult[vehicle1][city2];
-                        exchangeSameVehicle(vehicle1, city1, city2, visitOrder1, visitOrder2);
-                        isFoundNewResult = checkNewResultSimulatedAnnealing();
-                        if (isFoundNewResult) {
-                            return;
-                        }
-                    }
-                }
-            }
 
+        int city1 = findFirstVisitedPlace(vehicle1);
+        int city2 = findSecondVisitedPlace(vehicle1, city1);
+        if (city1 != -1 && city2 != -1) {
+            int visitOrder1 = currentDecodedResult[vehicle1][city1];
+            int visitOrder2 = currentDecodedResult[vehicle1][city2];
+            exchangeSameVehicle(vehicle1, city1, city2, visitOrder1, visitOrder2);
+            isFoundNewResult = checkNewResultSimulatedAnnealing();
         }
+    }
+
+    private int findFirstVisitedPlace(int vehicle) {
+        List<Integer> randomCities = generateListOfNumbers(cities.size());
+        for (Integer city : randomCities) {
+            if (currentDecodedResult[vehicle][city] != 0) {
+                return city;
+            }
+        }
+        return -1;
+    }
+
+    private int findSecondVisitedPlace(int vehicle, int city1) {
+        List<Integer> randomCities = generateListOfNumbers(cities.size());
+        for (Integer city : randomCities) {
+            if (currentDecodedResult[vehicle][city] != 0 && city != city1) {
+                return city;
+            }
+        }
+        return -1;
     }
 
     private void findInOtherVehiclesRandom(Integer[][] decodedResult, int visitOrder,
                                            int vehicle1, int city1) {
         boolean[] vehicleAnalyzed = new boolean[vehicles.size()];
-        int vecIterator = 0;
+        vehicleAnalyzed[vehicle1] = true; //not finding in the same vehicle
+        int vecIterator = 1;
         do {
             int vehicle2 = getAnalyzed(vehicleAnalyzed);
+//            if (vehicle1 == vehicle2)
+//                continue;
             vehicleAnalyzed[vehicle2] = true;
-            boolean[] cityAnalyzed = new boolean[cities.size()];
-            int cityIterator = 0;
-            do {
-                int city2 = getAnalyzed(cityAnalyzed);
-                cityAnalyzed[city2] = true;
-
+            //not find in the same vehicle
+            for (int city2 = 0; city2 < cities.size(); city2++) {
                 int foundVisitOrder = decodedResult[vehicle2][city2];
                 //find the same visit order and in vehicle with higher id (with prev id was searched before)
-                if (foundVisitOrder == visitOrder && vehicle2 > vehicle1) {
+                if (foundVisitOrder == visitOrder) {
                     exchange(vehicle1, city1, vehicle2, city2, visitOrder);
                     isFoundNewResult = checkNewResultSimulatedAnnealing();
                     if (isFoundNewResult) {
                         //System.out.println("Find new solution");
                         return;
                     }
+
                     // replaced higher number from one vehicle route to another vehicle route
                     // where higher number is one less then replaced vehicle route
                     // must be replaced on the same position
@@ -107,13 +125,10 @@ public class SimAnnealingNeighborhoodSolution extends SolutionFromNeighborhood {
                         //System.out.println("Find new solution");
                         return;
                     }
-
                 }
+            }
 
-                cityIterator++;
-            } while (cityIterator != cities.size());
-            vecIterator++;
+        vecIterator++;
         } while (vecIterator != vehicles.size());
-
     }
 }

@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 public class City extends ModelCommon {
     @Getter @Setter private boolean isVisited;
-    @Getter @Setter private Coords coords = new Coords();
+    @Getter @Setter private Coords coords;
 
 
 /*    @Builder

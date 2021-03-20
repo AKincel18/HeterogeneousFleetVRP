@@ -1,6 +1,5 @@
 package input;
 
-import constants.StringConst;
 import exceptions.NotValidDataException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +26,7 @@ import java.util.List;
 public class DataReader {
 
     private final String fileName;
+    private final String sheetName;
     @Getter private final List<City> cities = new ArrayList<>();
     @Getter private final List<Vehicle> vehicles = new ArrayList<>();
     @Getter private final Depot depot = new Depot();
@@ -37,8 +37,7 @@ public class DataReader {
             FileInputStream inputStream = new FileInputStream(new File(fileName));
 
             Workbook workbook = new XSSFWorkbook(inputStream);
-
-            Sheet sheet = workbook.getSheet(StringConst.NAME_OF_SHEET);
+            Sheet sheet = workbook.getSheet(sheetName);
             boolean header = true;
             int vehicleId = 0;
             for (Row nextRow : sheet) {
@@ -48,39 +47,40 @@ public class DataReader {
                 while (cellIterator.hasNext()) {
                     Cell nextCell = cellIterator.next();
                     int columnIndex = nextCell.getColumnIndex();
-
-                    if (getCellValue(nextCell) == null || header)
+                    Object cellValue = getCellValue(nextCell);
+                    if (columnIndex == 4 || columnIndex == 7)
+                        continue;
+                    if (cellValue == null || header)
                         break;
-
 
                         switch (columnIndex) {
                             case 0:
-                                city.setName((String) getCellValue(nextCell));
+                                city.setName((String) cellValue);
                                 break;
                             case 1:
-                                city.setAmount((double) getCellValue(nextCell));
+                                city.setAmount((double) cellValue);
                                 break;
                             case 2:
-                                city.getCoords().setLatitude((double) getCellValue(nextCell));
+                                city.getCoords().setLatitude((double) cellValue);
                                 break;
                             case 3:
-                                city.getCoords().setLongitude((double) getCellValue(nextCell));
+                                city.getCoords().setLongitude((double) cellValue);
                                 break;
                             case 5:
-                                vehicle.setName((String) getCellValue(nextCell));
+                                vehicle.setName((String) cellValue);
                                 vehicleId++;
                                 break;
                             case 6:
-                                vehicle.setAmount((double) getCellValue(nextCell));
+                                vehicle.setAmount((double) cellValue);
                                 break;
                             case 8:
-                                depot.setName((String) getCellValue(nextCell));
+                                depot.setName((String) cellValue);
                                 break;
                             case 9:
-                                depot.getCoords().setLatitude((double) getCellValue(nextCell));
+                                depot.getCoords().setLatitude((double) cellValue);
                                 break;
                             case 10:
-                                depot.getCoords().setLongitude((double) getCellValue(nextCell));
+                                depot.getCoords().setLongitude((double) cellValue);
                                 break;
                         }
 
@@ -107,7 +107,6 @@ public class DataReader {
 
                 header = false;
             }
-
             workbook.close();
             inputStream.close();
 

@@ -1,11 +1,9 @@
 package model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
-@ToString(callSuper = true)
+@Data
 public class Depot {
-    @Getter @Setter private Coords coords = new Coords();
-    @Getter @Setter private String name;
+    private Coords coords = new Coords();
+    private String name;
 }

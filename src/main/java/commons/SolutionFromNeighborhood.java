@@ -7,7 +7,6 @@ import lombok.Setter;
 import model.City;
 import model.Vehicle;
 import utils.Encoder;
-import utils.Writer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +23,7 @@ public abstract class SolutionFromNeighborhood implements NeighborhoodSolution {
 
     protected Integer[][] currentDecodedResult;
     protected Result bestNeighborhoodResult;
+    protected boolean isFoundSolutionInNeighborhood;
 
     private Integer[][] tmpDecodedResult;
 
@@ -34,20 +34,21 @@ public abstract class SolutionFromNeighborhood implements NeighborhoodSolution {
         //System.out.println("CURRENT BEST RESULT = " + bestNeighborhoodResult.getSum());
         //if new result is better than old and routes are correct
         if (newResult.getSum() < bestNeighborhoodResult.getSum() && checkIsAcceptableWeightAll(newResult.getRoutes())) {
-            Writer.buildTitleOnConsole("Found result");
-            Writer.writeDecodedResultInOneRow(currentDecodedResult);
-            Writer.writeDecodedResultInOneRow(tmpDecodedResult);
-            System.out.print("(" + vehicle1 + "," + city1 +") <-> ");
-            System.out.println("(" + vehicle2 + "," + city2 +") ");
+//            Writer.buildTitleOnConsole("Found result");
+//            Writer.writeDecodedResultInOneRow(currentDecodedResult);
+//            Writer.writeDecodedResultInOneRow(tmpDecodedResult);
+//            System.out.print("(" + vehicle1 + "," + city1 +") <-> ");
+//            System.out.println("(" + vehicle2 + "," + city2 +") ");
             bestNeighborhoodResult = newResult;
+            isFoundSolutionInNeighborhood = true;
             return true;
         }
         else {
-            Writer.buildTitleOnConsole("Reject result");
-            Writer.writeDecodedResultInOneRow(currentDecodedResult);
-            Writer.writeDecodedResultInOneRow(tmpDecodedResult);
-            System.out.print("(" + vehicle1 + "," + city1 +") <-> ");
-            System.out.println("(" + vehicle2 + "," + city2 +") ");
+//            Writer.buildTitleOnConsole("Reject result");
+//            Writer.writeDecodedResultInOneRow(currentDecodedResult);
+//            Writer.writeDecodedResultInOneRow(tmpDecodedResult);
+//            System.out.print("(" + vehicle1 + "," + city1 +") <-> ");
+//            System.out.println("(" + vehicle2 + "," + city2 +") ");
         }
         return false;
     }
@@ -67,6 +68,17 @@ public abstract class SolutionFromNeighborhood implements NeighborhoodSolution {
         return false;
     }
 
+    private boolean isTheSameResult(Integer[][] tmpDecodedResult, Integer[][] currentDecodedResult) {
+        for (int i = 0; i < tmpDecodedResult.length; i++) {
+            for (int j = 0; j < tmpDecodedResult[i].length; j++) {
+                if (!tmpDecodedResult[i][j].equals(currentDecodedResult[i][j])) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     /**
      * Get encoded result
      * @return encoded result, if result is not acceptable return null
@@ -75,14 +87,14 @@ public abstract class SolutionFromNeighborhood implements NeighborhoodSolution {
 
         Result result = new Encoder(cities, tmpDecodedResult).encodeResult(vehicles, depotCity);
         if (checkIsAcceptableWeightAll(result.getRoutes())) {
-            Writer.buildTitleOnConsole("Found result");
-            Writer.writeDecodedResultInOneRow(currentDecodedResult);
-            Writer.writeDecodedResultInOneRow(tmpDecodedResult);
+//            Writer.buildTitleOnConsole("Found result");
+//            Writer.writeDecodedResultInOneRow(currentDecodedResult);
+//            Writer.writeDecodedResultInOneRow(tmpDecodedResult);
             return result;
         }
-        Writer.buildTitleOnConsole("Reject result");
-        Writer.writeDecodedResultInOneRow(currentDecodedResult);
-        Writer.writeDecodedResultInOneRow(tmpDecodedResult);
+//        Writer.buildTitleOnConsole("Reject result");
+//        Writer.writeDecodedResultInOneRow(currentDecodedResult);
+//        Writer.writeDecodedResultInOneRow(tmpDecodedResult);
         return null;
     }
 

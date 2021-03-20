@@ -2,6 +2,7 @@ package algorithms.genetic;
 
 import algorithms.genetic.model.Individual;
 import algorithms.genetic.model.PairIndividuals;
+import commons.Result;
 import exceptions.IndividualNotFoundException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class Selection {
     private final List<Individual> population;
     private List<Individual> selectedIndividuals;
     @Getter private List<PairIndividuals> pairIndividuals;
+    @Getter private Individual theBest;
 
     public void selection() {
         setReproductionProbability();
@@ -27,10 +29,10 @@ public class Selection {
     }
 
     private void setReproductionProbability() {
-        //sorted by distance desc
-        population.sort(Comparator.comparing(Individual::getSum).reversed());
+        population.sort(Comparator.comparing(Result::getSum));
+        theBest = population.stream().findFirst().orElse(new Individual());
         double sumDistance = population.stream().mapToDouble(Individual::getSum).sum();
-        population.forEach(p -> p.setReproductionProbability(p.getSum() / sumDistance));
+        population.forEach(p -> p.setReproductionProbability((1 - (p.getSum() / sumDistance)) / (population.size() - 1)));
     }
 
     private void countCircleSegment() {

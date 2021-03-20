@@ -15,28 +15,28 @@ import input.DataReader;
 public class App {
 
     public static void main(String[] args) {
-        DataReader dataReader = new DataReader(StringConst.FILE_NAME);
+        DataReader dataReader = new DataReader(StringConst.FILE_NAME, StringConst.NAME_OF_SHEET_2);
         dataReader.readData();
 
-        new GeneticAlgorithm(
-                dataReader.getCities(),
-                dataReader.getVehicles(),
-                dataReader.getDepot(),
-                new ParametersGenetic(10, 10, 0.9, 0.05, 10)
-        ).start();
+//        new GeneticAlgorithm(
+//                dataReader.getCities(),
+//                dataReader.getVehicles(),
+//                dataReader.getDepot(),
+//                new ParametersGenetic(10, 100, 0.9, 0.05, 10)
+//        ).start();
 
 //        new LocalSearchAlgorithm(
 //                dataReader.getCities(),
 //                dataReader.getVehicles(),
 //                dataReader.getDepot(),
-//                LocalSearchMethod.GREEDY
+//                LocalSearchMethod.STEEPEST
 //        ).start();
 
 //        new SimulatedAnnealingAlgorithm(
 //                dataReader.getCities(),
 //                dataReader.getVehicles(),
 //                dataReader.getDepot(),
-//                new ParametersSimulatedAnnealing(0.8, 5,  0.9, 5
+//                new ParametersSimulatedAnnealing(0.9, 10,  0.8, 1000
 //                )
 //        ).start();
 
@@ -44,7 +44,7 @@ public class App {
 //                dataReader.getCities(),
 //                dataReader.getVehicles(),
 //                dataReader.getDepot(),
-//                new ParametersTabuSearch(10, 3)
+//                new ParametersTabuSearch(1000, 10)
 //        ).start();
 
 

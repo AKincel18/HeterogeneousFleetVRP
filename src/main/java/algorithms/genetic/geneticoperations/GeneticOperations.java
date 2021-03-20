@@ -3,6 +3,8 @@ package algorithms.genetic.geneticoperations;
 import algorithms.genetic.model.Individual;
 import algorithms.genetic.model.PairIndividuals;
 import algorithms.genetic.model.PairIndividualsDecode;
+import algorithms.genetic.model.ParametersGenetic;
+import commons.Result;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import model.City;
@@ -10,6 +12,7 @@ import model.Vehicle;
 import utils.Decoder;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -18,20 +21,18 @@ public class GeneticOperations {
     private final List<City> cities;
     private final List<Vehicle> vehicles;
     private final City depot;
-    private final double crossoverProbability;
-    private final double mutationProbability;
-    private final double crossoverRepeatingNumber;
+    private final ParametersGenetic params;
+    private final Individual theBestOld;
 
     @Getter
-    private List<Individual> newPopulation;
+    private List<Individual> populationNew;
 
     private int currentId = 0;
 
     public void geneticOperations() {
-        newPopulation = new ArrayList<>();
+        populationNew = new ArrayList<>();
         Decoder decoder = new Decoder(cities);
-        Crossover crossover = new Crossover(cities, vehicles, depot, crossoverProbability,
-                mutationProbability, crossoverRepeatingNumber);
+        Crossover crossover = new Crossover(cities, vehicles, depot, params);
         pairIndividuals.forEach(p -> {
                     if (crossover.isCrossover()) {
                         crossover.setCurrentPair(p);
@@ -48,12 +49,22 @@ public class GeneticOperations {
                     }
                 }
         );
+        exclusivity();
     }
 
     private void addIndividualToNewPopulation(Individual best) {
         best.setId(currentId);
         currentId++;
-        newPopulation.add(best);
+        populationNew.add(best);
+    }
+
+    private void exclusivity() {
+        populationNew.sort(Comparator.comparing(Result::getSum));
+        Individual theBestNew = populationNew.stream().findFirst().orElse(new Individual());
+        if (theBestOld.getSum() < theBestNew.getSum()) {
+            populationNew.remove(params.getPopulationSize() - 1); //remove the worst individual
+            populationNew.add(theBestOld); //add the best in the previous population
+        }
     }
 
 }

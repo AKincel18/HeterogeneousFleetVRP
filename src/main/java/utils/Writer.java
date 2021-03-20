@@ -6,6 +6,7 @@ import model.City;
 import model.Depot;
 import model.Vehicle;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -40,12 +41,9 @@ public class Writer {
 
 
             System.out.print("Vehicle: " + vehicle.getName() + " = ");
-            if (cities.isEmpty())
-                System.out.print("No cities ");
-            else
-                cities.forEach(city -> System.out.print(city.getName() + " "));
-            System.out.print("quality = " + Utils.countQuality(vehicle, cities));
-            System.out.println(", distance = " + Utils.countRouteDistance(cities));
+            cities.forEach(city -> System.out.print(city.getName() + " "));
+            System.out.print("; quality = " + Utils.countQuality(vehicle, cities));
+            System.out.println(" ; distance = " + Utils.countRouteDistance(cities));
 
         });
         System.out.println("Sum of distance = " + Utils.roundNumber(result.getSum()));
@@ -88,7 +86,7 @@ public class Writer {
     public static void writeDecodedResultInOneRow(Integer[][] decodedResult) {
         for (Integer[] row : decodedResult) {
             for (Integer number : row) {
-                System.out.print(number);
+                System.out.print(number + ";");
             }
             System.out.print("|");
         }
@@ -143,6 +141,21 @@ public class Writer {
                 vec++;
             }
             System.out.println();
+        }
+    }
+
+    public static void writeTabuStats(int[][] tabu) {
+        for (int[] row : tabu) {
+            Map<Integer, Integer> map = new HashMap<>();
+            for (int number : row) {
+                if (number != 0) {
+                    map.merge(number, 1, Integer::sum);
+                }
+            }
+            for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+                System.out.println("Key = " + entry.getKey() + ", values = " + entry.getValue());
+            }
+            System.out.println("---------------------------");
         }
     }
 }

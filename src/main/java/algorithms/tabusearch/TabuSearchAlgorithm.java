@@ -33,10 +33,15 @@ public class TabuSearchAlgorithm implements Algorithm {
                 depotCity, currentResultTabu, parameters);
 
         for (int i = 0; i < parameters.getIterationNumber(); i++) {
+            //System.out.println("Iteration nr = " + i);
             neighborhoodSolution.findSolutionFromNeighborhood();
         }
 
+
         Writer.buildTitleOnConsole("Final result");
         Writer.writeResult(neighborhoodSolution.getCurrentResultTabu().getResult());
+
+        //Writer.writeTabuStats(neighborhoodSolution.getTabuArray());
+
     }
 }

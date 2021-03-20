@@ -1,13 +1,9 @@
 package algorithms.genetic.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Data;
 import lombok.Setter;
-import lombok.ToString;
 
-@ToString
-@Getter
-@RequiredArgsConstructor
+@Data
 public class PairIndividuals {
     private final Individual individual1;
     private final Individual individual2;

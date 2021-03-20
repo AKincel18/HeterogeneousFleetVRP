@@ -203,4 +203,35 @@ public class Utils {
         double sum = countSumOfResult(routes);
         return new Result(routes, sum);
     }
+
+    /**
+     * Method to debugging: check if all rules are met
+     *
+     * @param cities cities
+     * @param vehicles vehicles
+     * @param fixedInd individual who should be fixed
+     */
+    public static void check(List<City> cities, List<Vehicle> vehicles, Integer[][] fixedInd) {
+        boolean[] visited = new boolean[cities.size()];
+        for (int i = 0; i < vehicles.size(); i++) {
+            for (int j = 0; j < cities.size(); j++) {
+                if (fixedInd[i][j] != 0) {
+                    if (visited[j]) {
+                        Writer.writeDecodedResultInOneRow(fixedInd);
+                        System.out.println("City is visited more than once");
+                        System.exit(-1);
+                    }
+                    visited[j] = true;
+                }
+            }
+        }
+
+        for (boolean b : visited) {
+            if (!b) {
+                Writer.writeDecodedResultInOneRow(fixedInd);
+                System.out.println("Some city is no visited");
+                System.exit(-1);
+            }
+        }
+    }
 }

@@ -4,7 +4,8 @@ public class StringConst {
     /**
      * Data
      */
-    public static final String NAME_OF_SHEET = "Sheet";
+    public static final String NAME_OF_SHEET_1 = "Data1";
+    public static final String NAME_OF_SHEET_2 = "Data2";
     public static final String FILE_NAME = "input/Data.xlsx";
 
     /**

@@ -17,7 +17,7 @@ public class TabuSearchNeighborhoodSolution extends SolutionFromNeighborhood {
 
     private final ParametersTabuSearch params;
     @Getter private boolean isFoundResult;
-    private final int[][] tabuArray;
+    @Getter private final int[][] tabuArray;
     @Getter private ResultTabu currentResultTabu;
     private int vehicle1;
     private int city1;
@@ -39,8 +39,8 @@ public class TabuSearchNeighborhoodSolution extends SolutionFromNeighborhood {
         isFoundResult = false;
         currentDecodedResult = new Decoder(cities).decodeResult(currentResultTabu.getResult().getRoutes());
 
-        Writer.buildTitleOnConsole("Base result");
-        Writer.writeDecodedResultInOneRow(currentDecodedResult);
+        //Writer.buildTitleOnConsole("Base result");
+        //Writer.writeDecodedResultInOneRow(currentDecodedResult);
 
         for (vehicle1 = 0; vehicle1 < vehicles.size(); vehicle1++) {
             findInTheSameVehicle(vehicle1);
@@ -54,15 +54,15 @@ public class TabuSearchNeighborhoodSolution extends SolutionFromNeighborhood {
 
         //update tabuArray
         if (isFoundResult) {
-            Writer.buildTitleOnConsole("Found result:");
-            Writer.writeResult(currentResultTabu.getResult());
-            System.out.println(currentResultTabu.getTabuCoords());
-            Writer.buildTitleOnConsole("Before update");
-            Writer.writeTabuArray(tabuArray, vehicles.size(), cities.size());
+            //Writer.buildTitleOnConsole("Found result:");
+            //Writer.writeResult(currentResultTabu.getResult());
+            //System.out.println(currentResultTabu.getTabuCoords());
+            //Writer.buildTitleOnConsole("Before update");
+            //Writer.writeTabuArray(tabuArray, vehicles.size(), cities.size());
             updateTabu();
             updateMovementFrequency();
-            Writer.buildTitleOnConsole("After update");
-            Writer.writeTabuArray(tabuArray, vehicles.size(), cities.size());
+            //Writer.buildTitleOnConsole("After update");
+            //Writer.writeTabuArray(tabuArray, vehicles.size(), cities.size());
         }
     }
 
@@ -133,8 +133,8 @@ public class TabuSearchNeighborhoodSolution extends SolutionFromNeighborhood {
     private void checkFoundResult(int vehicle1, int vehicle2, int city1, int city2) {
         ResultTabu result = new ResultTabu(getEncodedResult());
         //System.out.println("Pairs: ");
-        System.out.print("(" + vehicle1 + "," + city1 + ") <-> ");
-        System.out.println("(" + vehicle2 + "," + city2 + ") ");
+//        System.out.print("(" + vehicle1 + "," + city1 + ") <-> ");
+//        System.out.println("(" + vehicle2 + "," + city2 + ") ");
         if (result.getResult() != null) {
 
             TabuCoords tabuCoords = new TabuCoords(vehicle1, city1, vehicle2, city2, cities.size());

@@ -32,7 +32,6 @@ public class GenerationPopulation {
             population.add(individual);
             individual.setSum(countSumOfResult(individual.getRoutes()));
         }
-        Writer.writePopulation(population);
         return population;
     }
 

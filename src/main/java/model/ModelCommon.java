@@ -2,14 +2,10 @@ package model;
 
 import constants.StringConst;
 import exceptions.NotValidDataException;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
-@Getter
-@Setter
-@ToString
+@Data
 @SuperBuilder
 abstract class ModelCommon {
     protected String name;
