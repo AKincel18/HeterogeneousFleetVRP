@@ -81,8 +81,8 @@ public class Crossover {
      * @param best2                 current best second result
      */
     private void analyzeReceivedResults(PairIndividualsDecode pairIndividualsDecode, Individual best1, Individual best2) {
-        Result result1 = new Encoder(cities, pairIndividualsDecode.getIndividual1()).encodeResult(vehicles, depot);
-        Result result2 = new Encoder(cities, pairIndividualsDecode.getIndividual2()).encodeResult(vehicles, depot);
+        Result result1 = new Encoder(vehicles, cities, depot, pairIndividualsDecode.getIndividual1()).encodeResult();
+        Result result2 = new Encoder(vehicles, cities, depot, pairIndividualsDecode.getIndividual2()).encodeResult();
         isAcceptable1 = checkIsAcceptableWeightAll(result1.getRoutes());
         isAcceptable2 = checkIsAcceptableWeightAll(result2.getRoutes());
 
@@ -189,15 +189,12 @@ public class Crossover {
         List<Boolean> visitedPlaces = new ArrayList<>(Arrays.asList(new Boolean[cities.size()]));
         Collections.fill(visitedPlaces, false);
         boolean[] vehicleAnalyzed = new boolean[vehicles.size()];
-        int vecIterator = 0;
-        do {
-            int vehicle = getAnalyzed(vehicleAnalyzed);
+        List<Integer> vehiclesOrder = generateListOfNumbers(vehicles.size());
+
+        for (Integer vehicle : vehiclesOrder) {
             vehicleAnalyzed[vehicle] = true;
-            boolean[] cityAnalyzed = new boolean[cities.size()];
-            int cityIterator = 0;
-            do {
-                int city = getAnalyzed(cityAnalyzed);
-                cityAnalyzed[city] = true;
+            List<Integer> citiesOrder = generateListOfNumbers(cities.size());
+            for (Integer city : citiesOrder) {
                 if (individual[vehicle][city] != 0) {
                     if (visitedPlaces.get(city)) {
                         //System.out.println("repair: vec = " + vehicle + ", city = " + city);
@@ -206,18 +203,13 @@ public class Crossover {
                         visitedPlaces.set(city, true);
                     }
                 }
-                cityIterator++;
-            } while (cityIterator != cities.size());
-
+            }
             repairOrder(ind[vehicle]);
             repairVehicleHasNoRoute(ind, vehicle);
-            vecIterator++;
-        } while (vecIterator != vehicles.size());
-
+        }
         List<Integer> notVisitedCities = getNotVisitedCities(visitedPlaces);
 
         if (notVisitedCities.size() > 0) {
-            //System.out.println("Not city visited!!!");
             repairAllCitiesNotVisited(ind, notVisitedCities);
         }
         return ind;

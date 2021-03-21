@@ -28,7 +28,7 @@ public abstract class SolutionFromNeighborhood implements NeighborhoodSolution {
     private Integer[][] tmpDecodedResult;
 
     protected boolean checkNewResultLocalSearch(int vehicle1, int vehicle2, int city1, int city2) {
-        Result newResult = new Encoder(cities, tmpDecodedResult).encodeResult(vehicles, depotCity);
+        Result newResult = new Encoder(vehicles, cities, depotCity, tmpDecodedResult).encodeResult();
         //Writer.buildTitleOnConsole("NEW RESULT");
         //Writer.writeResult(newResult);
         //System.out.println("CURRENT BEST RESULT = " + bestNeighborhoodResult.getSum());
@@ -54,7 +54,7 @@ public abstract class SolutionFromNeighborhood implements NeighborhoodSolution {
     }
 
     protected boolean checkNewResultSimulatedAnnealing() {
-        Result newResult = new Encoder(cities, tmpDecodedResult).encodeResult(vehicles, depotCity);
+        Result newResult = new Encoder(vehicles, cities, depotCity, tmpDecodedResult).encodeResult();
         //Writer.buildTitleOnConsole("NEW RESULT");
         //Writer.writeResult(newResult);
         if (checkIsAcceptableWeightAll(newResult.getRoutes())) {
@@ -85,7 +85,7 @@ public abstract class SolutionFromNeighborhood implements NeighborhoodSolution {
      */
     protected Result getEncodedResult() {
 
-        Result result = new Encoder(cities, tmpDecodedResult).encodeResult(vehicles, depotCity);
+        Result result = new Encoder(vehicles, cities, depotCity, tmpDecodedResult).encodeResult();
         if (checkIsAcceptableWeightAll(result.getRoutes())) {
 //            Writer.buildTitleOnConsole("Found result");
 //            Writer.writeDecodedResultInOneRow(currentDecodedResult);

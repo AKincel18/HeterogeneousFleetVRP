@@ -13,10 +13,12 @@ import static utils.Utils.countSumOfResult;
 @RequiredArgsConstructor
 public class Encoder {
 
+    private final List<Vehicle> vehicles;
     private final List<City> cities;
+    private final City depot;
     private final Integer[][] decodedResult;
 
-    public Result encodeResult(List<Vehicle> vehicles, City depot) {
+    public Result encodeResult() {
         Map<Vehicle, List<City>> routes = new HashMap<>();
         for (int i = 0; i < decodedResult.length; i++) {
             final int finalI = i;

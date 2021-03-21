@@ -183,21 +183,6 @@ public class Utils {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
-
-    /**
-     * Draws a number to analyze vehicle or city
-     *
-     * @param analyzed array analyzed vehicles or cities
-     * @return number of vehicle or city to analyze
-     */
-    public static int getAnalyzed(boolean[] analyzed) {
-        int pos;
-        do {
-            pos = new Random().nextInt(analyzed.length);
-        } while (analyzed[pos]);
-        return pos;
-    }
-
     public static Result generateRandomResult(List<Vehicle> vehicles, List<City> cities, City depot) {
         Map<Vehicle, List<City>> routes = generateRandomRoutes(vehicles, cities, depot);
         double sum = countSumOfResult(routes);

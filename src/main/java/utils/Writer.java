@@ -74,8 +74,7 @@ public class Writer {
         }
 
         buildTitleOnConsole("Encoding");
-        Encoder encoder = new Encoder(cities, array);
-        Result result = encoder.encodeResult(vehicles, Utils.getDepotByCity(depot));
+        Result result = new Encoder(vehicles, cities, Utils.getDepotByCity(depot), array).encodeResult();
         for (Map.Entry<Vehicle, List<City>> entry : result.getRoutes().entrySet()) {
             System.out.println("Vehicle = " + entry.getKey());
             entry.getValue().forEach(city -> System.out.print(city.getName() + " "));

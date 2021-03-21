@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Random;
 
 import static utils.Utils.generateListOfNumbers;
-import static utils.Utils.getAnalyzed;
 
 public class SimAnnealingNeighborhoodSolution extends SolutionFromNeighborhood {
 
@@ -28,21 +27,13 @@ public class SimAnnealingNeighborhoodSolution extends SolutionFromNeighborhood {
         currentDecodedResult =  new Decoder(cities).decodeResult(currentResult.getRoutes());
         bestNeighborhoodResult = new Result(currentResult);
 
-        int vecIterator = 0;
-        boolean[] vehicleAnalyzed = new boolean[vehicles.size()];
-        do {
-            int vehicle = getAnalyzed(vehicleAnalyzed);
-            boolean findInTheSame = new Random().nextBoolean();
-            if (findInTheSame) {
+        List<Integer> vehiclesOrder = generateListOfNumbers(vehicles.size());
+        for (Integer vehicle : vehiclesOrder) {
+            if (new Random().nextBoolean()) {
                 findInTheSameVehicle(vehicle);
             }
-            vehicleAnalyzed[vehicle] = true;
-            boolean[] cityAnalyzed = new boolean[cities.size()];
-            int cityIterator = 0;
-            do {
-                int city = getAnalyzed(cityAnalyzed);
-                cityAnalyzed[city] = true;
-
+            List<Integer> citiesOrder = generateListOfNumbers(cities.size());
+            for (Integer city : citiesOrder) {
                 int visitOrder = currentDecodedResult[vehicle][city];
                 if (visitOrder != 0) {
                     findInOtherVehiclesRandom(currentDecodedResult, visitOrder, vehicle, city);
@@ -52,11 +43,8 @@ public class SimAnnealingNeighborhoodSolution extends SolutionFromNeighborhood {
                         return;
                     }
                 }
-
-                cityIterator++;
-            } while (cityIterator != cities.size());
-            vecIterator++;
-        } while (vecIterator != vehicles.size());
+            }
+        }
     }
 
     private void findInTheSameVehicle(int vehicle1) {
@@ -93,16 +81,11 @@ public class SimAnnealingNeighborhoodSolution extends SolutionFromNeighborhood {
 
     private void findInOtherVehiclesRandom(Integer[][] decodedResult, int visitOrder,
                                            int vehicle1, int city1) {
-        boolean[] vehicleAnalyzed = new boolean[vehicles.size()];
-        vehicleAnalyzed[vehicle1] = true; //not finding in the same vehicle
-        int vecIterator = 1;
-        do {
-            int vehicle2 = getAnalyzed(vehicleAnalyzed);
-//            if (vehicle1 == vehicle2)
-//                continue;
-            vehicleAnalyzed[vehicle2] = true;
-            //not find in the same vehicle
-            for (int city2 = 0; city2 < cities.size(); city2++) {
+        List<Integer> vehiclesOrder = generateListOfNumbers(vehicles.size());
+        vehiclesOrder.remove(Integer.valueOf(vehicle1)); //not finding in the same vehicle
+        for (Integer vehicle2 : vehiclesOrder) {
+            List<Integer> citiesOrder = generateListOfNumbers(cities.size());
+            for (Integer city2 : citiesOrder) {
                 int foundVisitOrder = decodedResult[vehicle2][city2];
                 //find the same visit order and in vehicle with higher id (with prev id was searched before)
                 if (foundVisitOrder == visitOrder) {
@@ -127,8 +110,6 @@ public class SimAnnealingNeighborhoodSolution extends SolutionFromNeighborhood {
                     }
                 }
             }
-
-        vecIterator++;
-        } while (vecIterator != vehicles.size());
+        }
     }
 }
