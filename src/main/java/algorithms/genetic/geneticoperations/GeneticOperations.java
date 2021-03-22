@@ -49,21 +49,21 @@ public class GeneticOperations {
                     }
                 }
         );
-        exclusivity();
+        elitism();
     }
 
     private void addIndividualToNewPopulation(Individual best) {
         best.setId(currentId);
         currentId++;
-        populationNew.add(best);
+        populationNew.add(new Individual(best));
     }
 
-    private void exclusivity() {
+    private void elitism() {
         populationNew.sort(Comparator.comparing(Result::getSum));
-        Individual theBestNew = populationNew.stream().findFirst().orElse(new Individual());
+        Individual theBestNew = populationNew.stream().findFirst().orElseThrow();
         if (theBestOld.getSum() < theBestNew.getSum()) {
             populationNew.remove(params.getPopulationSize() - 1); //remove the worst individual
-            populationNew.add(theBestOld); //add the best in the previous population
+            populationNew.add(new Individual(theBestOld)); //add the best from the previous population
         }
     }
 

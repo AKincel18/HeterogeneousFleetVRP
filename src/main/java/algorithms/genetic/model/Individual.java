@@ -12,6 +12,7 @@ import model.City;
 public class Individual extends Result {
      @Setter private double reproductionProbability;
      @Setter private double circleSegment;
+     @Setter private double r;
      private City depot;
      @Setter private int id;
 
@@ -23,5 +24,15 @@ public class Individual extends Result {
 
     public Individual(City depot) {
         this.depot = depot;
+    }
+
+    public Individual (Individual individual) {
+        this.sum = individual.getSum();
+        this.routes = individual.getRoutes();
+        this.id = individual.getId();
+        this.depot = individual.getDepot();
+        this.reproductionProbability = 0.0;
+        this.r = 0.0;
+        this.circleSegment = 0.0;
     }
 }

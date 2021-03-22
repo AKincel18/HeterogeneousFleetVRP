@@ -22,7 +22,7 @@ public class Encoder {
         Map<Vehicle, List<City>> routes = new HashMap<>();
         for (int i = 0; i < decodedResult.length; i++) {
             final int finalI = i;
-            Vehicle vehicle = vehicles.stream().filter(v -> v.getId() == finalI).findFirst().orElse(null);
+            Vehicle vehicle = vehicles.stream().filter(v -> v.getId() == finalI).findFirst().orElseThrow();
             List<City> route = new ArrayList<>(Collections.singleton(depot)); //set depot on first in a route
             List<PlaceCity> placeCities = new ArrayList<>();
             for (int j = 0; j < cities.size(); j++) {

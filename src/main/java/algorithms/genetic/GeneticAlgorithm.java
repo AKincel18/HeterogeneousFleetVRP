@@ -3,6 +3,10 @@ package algorithms.genetic;
 import algorithms.genetic.geneticoperations.GeneticOperations;
 import algorithms.genetic.model.Individual;
 import algorithms.genetic.model.ParametersGenetic;
+import algorithms.genetic.selection.RankSelection;
+import algorithms.genetic.selection.RouletteWheelSelection;
+import algorithms.genetic.selection.Selection;
+import algorithms.genetic.selection.TournamentSelection;
 import commons.Algorithm;
 import commons.Result;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +36,7 @@ public class GeneticAlgorithm implements Algorithm {
         population = new GenerationPopulation(cities, vehicles, depot, params.getPopulationSize()).initPopulation();
         population.sort(Comparator.comparing(Result::getSum));
         Writer.buildTitleOnConsole("The best generated individual");
-        Writer.writeResult(population.stream().findFirst().get());
+        Writer.writeResult(population.stream().findFirst().orElseThrow());
 
         for (int i = 0; i < params.getIterationNumber(); i++) {
             //Writer.buildTitleOnConsole("ITERATION = " + i);
@@ -40,15 +44,26 @@ public class GeneticAlgorithm implements Algorithm {
             geneticOperations();
         }
         population.sort(Comparator.comparing(Result::getSum));
-        Individual theBest = population.stream().findFirst().orElse(new Individual());
+        Individual theBest = population.stream().findFirst().orElseThrow();
         Writer.buildTitleOnConsole("Final result");
         Writer.writeResult(theBest);
     }
 
     private void selection() {
         //Writer.buildTitleOnConsole("Selection");
-        selection = new Selection(population);
-        selection.selection();
+        population.sort(Comparator.comparing(Result::getSum));
+        switch (params.getSelectionMethod()) {
+            case ROULETTE_WHEEL:
+                selection = new RouletteWheelSelection(population, params);
+                break;
+            case RANK:
+                selection = new RankSelection(population, params);
+                break;
+            case TOURNAMENT:
+                selection = new TournamentSelection(population, params);
+                break;
+        }
+        selection.makeSelection();
     }
 
     private void geneticOperations() {

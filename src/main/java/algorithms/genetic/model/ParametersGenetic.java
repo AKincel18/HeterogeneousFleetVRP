@@ -11,4 +11,7 @@ public class ParametersGenetic {
     private final double crossoverProbability;
     private final double mutationProbability;
     private final double crossoverRepeatingNumber;
+    private final SelectionMethods selectionMethod;
+    private final int tournamentSize;
+    private final double selectivePressure; // rank selection <1, 2>
 }

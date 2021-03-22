@@ -1,7 +1,7 @@
 package algorithms.genetic.model;
 
 public enum SelectionMethods {
-    RouletteWheel,
+    ROULETTE_WHEEL,
     RANK,
     TOURNAMENT;
 }
