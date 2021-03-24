@@ -6,7 +6,6 @@ import model.City;
 import model.Depot;
 import model.Vehicle;
 import utils.Utils;
-import utils.Writer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +27,8 @@ public class GenerationPopulation {
         Individual individual;
         for (int i = 0; i < populationSize; i++) {
             individual = new Individual(Utils.generateRandomResult(vehicles, cities, startAndEndCity), startAndEndCity, i);
-            //individual.addEndCity();
-            population.add(individual);
             individual.setSum(countSumOfResult(individual.getRoutes()));
+            population.add(individual);
         }
         return population;
     }

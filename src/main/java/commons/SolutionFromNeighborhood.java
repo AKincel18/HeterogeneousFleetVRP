@@ -28,18 +28,18 @@ public abstract class SolutionFromNeighborhood implements NeighborhoodSolution {
     private Integer[][] tmpDecodedResult;
 
     protected boolean checkNewResultLocalSearch(int vehicle1, int vehicle2, int city1, int city2) {
-        Result newResult = new Encoder(vehicles, cities, depotCity, tmpDecodedResult).encodeResult();
+        Result foundResult = new Encoder(vehicles, cities, depotCity, tmpDecodedResult).encodeResult();
         //Writer.buildTitleOnConsole("NEW RESULT");
-        //Writer.writeResult(newResult);
+        //Writer.writeResult(foundResult);
         //System.out.println("CURRENT BEST RESULT = " + bestNeighborhoodResult.getSum());
         //if new result is better than old and routes are correct
-        if (newResult.getSum() < bestNeighborhoodResult.getSum() && checkIsAcceptableWeightAll(newResult.getRoutes())) {
+        if (foundResult.getSum() < bestNeighborhoodResult.getSum() && checkIsAcceptableWeightAll(foundResult.getRoutes())) {
 //            Writer.buildTitleOnConsole("Found result");
 //            Writer.writeDecodedResultInOneRow(currentDecodedResult);
 //            Writer.writeDecodedResultInOneRow(tmpDecodedResult);
 //            System.out.print("(" + vehicle1 + "," + city1 +") <-> ");
 //            System.out.println("(" + vehicle2 + "," + city2 +") ");
-            bestNeighborhoodResult = newResult;
+            bestNeighborhoodResult = foundResult;
             isFoundSolutionInNeighborhood = true;
             return true;
         }
@@ -54,29 +54,18 @@ public abstract class SolutionFromNeighborhood implements NeighborhoodSolution {
     }
 
     protected boolean checkNewResultSimulatedAnnealing() {
-        Result newResult = new Encoder(vehicles, cities, depotCity, tmpDecodedResult).encodeResult();
+        Result foundResult = new Encoder(vehicles, cities, depotCity, tmpDecodedResult).encodeResult();
         //Writer.buildTitleOnConsole("NEW RESULT");
-        //Writer.writeResult(newResult);
-        if (checkIsAcceptableWeightAll(newResult.getRoutes())) {
+        //Writer.writeResult(foundResult);
+        if (checkIsAcceptableWeightAll(foundResult.getRoutes())) {
             //Writer.buildTitleOnConsole("NEW RESULT FOUND!!!");
-            bestNeighborhoodResult = newResult;
+            bestNeighborhoodResult = foundResult;
             return true;
         }
 //        else {
 //            //System.out.println("NO ACCEPTABLE SOLUTION");
 //        }
         return false;
-    }
-
-    private boolean isTheSameResult(Integer[][] tmpDecodedResult, Integer[][] currentDecodedResult) {
-        for (int i = 0; i < tmpDecodedResult.length; i++) {
-            for (int j = 0; j < tmpDecodedResult[i].length; j++) {
-                if (!tmpDecodedResult[i][j].equals(currentDecodedResult[i][j])) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
     /**
@@ -90,8 +79,10 @@ public abstract class SolutionFromNeighborhood implements NeighborhoodSolution {
 //            Writer.buildTitleOnConsole("Found result");
 //            Writer.writeDecodedResultInOneRow(currentDecodedResult);
 //            Writer.writeDecodedResultInOneRow(tmpDecodedResult);
+            //System.out.println("Found");
             return result;
         }
+        //System.out.println("Not acceptable");
 //        Writer.buildTitleOnConsole("Reject result");
 //        Writer.writeDecodedResultInOneRow(currentDecodedResult);
 //        Writer.writeDecodedResultInOneRow(tmpDecodedResult);

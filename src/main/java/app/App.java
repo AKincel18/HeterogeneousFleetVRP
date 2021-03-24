@@ -16,29 +16,31 @@ import input.DataReader;
 public class App {
 
     public static void main(String[] args) {
-        DataReader dataReader = new DataReader(StringConst.FILE_NAME, StringConst.NAME_OF_SHEET_2);
+        DataReader dataReader = new DataReader(StringConst.FILE_NAME, StringConst.NAME_OF_SHEET_STATIC);
         dataReader.readData();
 
-        new GeneticAlgorithm(
-                dataReader.getCities(),
-                dataReader.getVehicles(),
-                dataReader.getDepot(),
-                new ParametersGenetic(10, 1000, 0.9,
-                        0.05, 10, SelectionMethods.RANK, 4, 1.5)
-        ).start();
+        long start = System.currentTimeMillis();
+
+//        new GeneticAlgorithm(
+//                dataReader.getCities(),
+//                dataReader.getVehicles(),
+//                dataReader.getDepot(),
+//                new ParametersGenetic(26, 1000, 0.9,
+//                        0.05, 10, SelectionMethods.TOURNAMENT, 8, 1.5)
+//        ).start();
 
 //        new LocalSearchAlgorithm(
 //                dataReader.getCities(),
 //                dataReader.getVehicles(),
 //                dataReader.getDepot(),
-//                LocalSearchMethod.STEEPEST
+//                LocalSearchMethod.GREEDY
 //        ).start();
 
 //        new SimulatedAnnealingAlgorithm(
 //                dataReader.getCities(),
 //                dataReader.getVehicles(),
 //                dataReader.getDepot(),
-//                new ParametersSimulatedAnnealing(0.9, 10,  0.8, 1000
+//                new ParametersSimulatedAnnealing(0.90, 20,  0.95, 200
 //                )
 //        ).start();
 
@@ -46,10 +48,11 @@ public class App {
 //                dataReader.getCities(),
 //                dataReader.getVehicles(),
 //                dataReader.getDepot(),
-//                new ParametersTabuSearch(1000, 10)
+//                new ParametersTabuSearch(200, 20) //2000, 200
 //        ).start();
 
-
+        float elapsedTime = (System.currentTimeMillis() - start) / 1000.0f;
+        System.out.println("Elapsed time = " + elapsedTime + " sec");
     }
 
 

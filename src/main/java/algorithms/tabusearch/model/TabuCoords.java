@@ -1,16 +1,17 @@
 package algorithms.tabusearch.model;
 
 import lombok.Getter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
-@ToString(exclude = {"rowTabu", "columnTabu"})
+@Getter
+@NoArgsConstructor
 public class TabuCoords {
-    @Getter private final int vehicleHigher;
-    @Getter private final int cityHigher;
-    @Getter private final int vehicleLower;
-    @Getter private final int cityLower;
-    @Getter private final int rowTabu;
-    @Getter private final int columnTabu;
+    private int vehicleHigher;
+    private int cityHigher;
+    private int vehicleLower;
+    private int cityLower;
+    private int rowTabu;
+    private int columnTabu;
 
     public TabuCoords(int vehicle, int city, int vehicle2, int city2, int cityNumber) {
         vehicleHigher = Math.max(vehicle, vehicle2);
@@ -29,4 +30,11 @@ public class TabuCoords {
         columnTabu = vehicleHigher * cityNumber + cityHigher;
     }
 
+    public boolean isSameCoords(TabuCoords coords) {
+        return this.columnTabu == coords.getColumnTabu() && this.rowTabu == coords.getRowTabu();
+    }
+    @Override
+    public String toString() {
+        return "[" + rowTabu + ", " + columnTabu + "]";
+    }
 }

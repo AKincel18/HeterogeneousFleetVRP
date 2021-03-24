@@ -13,6 +13,7 @@ import utils.Writer;
 import java.util.List;
 
 import static utils.Utils.generateRandomResult;
+import static utils.Utils.generateStaticResult;
 
 @RequiredArgsConstructor
 public class SimulatedAnnealingAlgorithm implements Algorithm {
@@ -24,7 +25,7 @@ public class SimulatedAnnealingAlgorithm implements Algorithm {
     public void start() {
         //generate random result
         City depotCity = Utils.getDepotByCity(depot);
-        Result currentResult = generateRandomResult(vehicles, cities, depotCity);
+        Result currentResult = generateStaticResult(vehicles, cities, depotCity);
 
         Writer.buildTitleOnConsole("Generated random solution");
         Writer.writeResult(currentResult);
@@ -63,12 +64,12 @@ public class SimulatedAnnealingAlgorithm implements Algorithm {
             }
 
             currentTemperature *= params.getCoolingFactor();
-            System.out.println("distance = " + currentResult.getSum() + ", t = " + currentTemperature);
+            //System.out.println("distance = " + currentResult.getSum() + ", t = " + currentTemperature);
         } while (!analysis.isStop()); //while (!analysis.isStop() && currentTemperature > 5);
 
         Writer.buildTitleOnConsole("FINAL RESULT");
         Writer.writeResult(currentResult);
-        System.out.println("Iteration = " + iteration);
+        //System.out.println("Iteration = " + iteration);
         System.out.println("Temperature = " + currentTemperature);
 
     }

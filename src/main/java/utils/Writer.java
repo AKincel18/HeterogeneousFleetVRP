@@ -46,7 +46,7 @@ public class Writer {
             System.out.println(" ; distance = " + Utils.countRouteDistance(cities));
 
         });
-        System.out.println("Sum of distance = " + Utils.roundNumber(result.getSum()));
+        System.out.println("Total distance = " + Utils.roundNumber(result.getSum()));
 
     }
 
@@ -156,5 +156,33 @@ public class Writer {
             }
             System.out.println("---------------------------");
         }
+    }
+
+    public static void checkSumFreq(int[][] tabu) {
+        int sum = 0;
+        for (int i = 0; i < tabu.length; i++) {
+            for (int j = 0; j < i; j++) {
+                sum += tabu[i][j];
+            }
+        }
+
+        System.out.println("Suma = " + sum);
+    }
+
+    public static void writeBigNumber(int[][] tabu) {
+        int max = -1;
+        int rowNum = 0;
+        int maxRow = -1;
+        for (int[] row : tabu) {
+            for (int number : row) {
+                if (max < number)
+                {
+                    maxRow = rowNum;
+                    max = number;
+                }
+            }
+            rowNum++;
+        }
+        System.out.println("max num = " + max + ", max row = " + maxRow);
     }
 }

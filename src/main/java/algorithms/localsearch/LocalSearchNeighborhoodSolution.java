@@ -38,8 +38,8 @@ public class LocalSearchNeighborhoodSolution extends SolutionFromNeighborhood {
         for (int vehicle = 0; vehicle < vehicles.size(); vehicle++) {
             findInTheSameVehicle(vehicle);
             if (method == LocalSearchMethod.GREEDY && isFoundBetterResult) {
-                System.out.println("STOP, FOUND BETTER SOLUTION");
-                Writer.writeResult(bestNeighborhoodResult);
+                //System.out.println("STOP, FOUND BETTER SOLUTION");
+                //Writer.writeResult(bestNeighborhoodResult);
                 currentResult = bestNeighborhoodResult;
                 return;
             }
@@ -48,8 +48,8 @@ public class LocalSearchNeighborhoodSolution extends SolutionFromNeighborhood {
                 if (visitOrder != 0) {
                     findInOtherVehicles(currentDecodedResult, visitOrder, vehicle, city);
                     if (method == LocalSearchMethod.GREEDY && isFoundBetterResult) {
-                        System.out.println("STOP, FOUND BETTER SOLUTION");
-                        Writer.writeResult(bestNeighborhoodResult);
+                        //System.out.println("STOP, FOUND BETTER SOLUTION");
+                        //Writer.writeResult(bestNeighborhoodResult);
                         currentResult = bestNeighborhoodResult;
                         return;
                     }
@@ -59,8 +59,8 @@ public class LocalSearchNeighborhoodSolution extends SolutionFromNeighborhood {
 
         if (isFoundSolutionInNeighborhood) {
             isFoundBetterResult = true;
-            System.out.println("Found better solution in steepest: ");
-            Writer.writeResult(bestNeighborhoodResult);
+            //System.out.println("Found better solution in steepest: ");
+            //Writer.writeResult(bestNeighborhoodResult);
             currentResult = bestNeighborhoodResult;
         }
     }

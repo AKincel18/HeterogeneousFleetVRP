@@ -3,6 +3,7 @@ package algorithms.tabusearch;
 import algorithms.tabusearch.model.ParametersTabuSearch;
 import algorithms.tabusearch.model.ResultTabu;
 import algorithms.tabusearch.model.TabuCoords;
+import commons.Result;
 import commons.SolutionFromNeighborhood;
 import lombok.Getter;
 import lombok.NonNull;
@@ -19,10 +20,9 @@ public class TabuSearchNeighborhoodSolution extends SolutionFromNeighborhood {
     @Getter private boolean isFoundResult;
     @Getter private final int[][] tabuArray;
     @Getter private ResultTabu currentResultTabu;
-    private int vehicle1;
-    private int city1;
     private final int sizeTabuArray;
-    private boolean isFirstResult;
+    private ResultTabu bestTabu;
+    private TabuCoords lastTabuCoords;
 
     public TabuSearchNeighborhoodSolution(List<City> cities, List<Vehicle> vehicles,
                                           City depotCity, @NonNull ResultTabu currentResultTabu,
@@ -32,19 +32,20 @@ public class TabuSearchNeighborhoodSolution extends SolutionFromNeighborhood {
         this.currentResultTabu = currentResultTabu;
         this.sizeTabuArray = vehicles.size() * cities.size();
         tabuArray = new int[sizeTabuArray][sizeTabuArray];
+        lastTabuCoords = new TabuCoords();
     }
 
     public void findSolutionFromNeighborhood() {
-        isFirstResult = true;
+        bestTabu = new ResultTabu(null);
         isFoundResult = false;
         currentDecodedResult = new Decoder(cities).decodeResult(currentResultTabu.getResult().getRoutes());
-
+        currentResultTabu.clear();
         //Writer.buildTitleOnConsole("Base result");
         //Writer.writeDecodedResultInOneRow(currentDecodedResult);
 
-        for (vehicle1 = 0; vehicle1 < vehicles.size(); vehicle1++) {
+        for (int vehicle1 = 0; vehicle1 < vehicles.size(); vehicle1++) {
             findInTheSameVehicle(vehicle1);
-            for (city1 = 0; city1 < cities.size(); city1++) {
+            for (int city1 = 0; city1 < cities.size(); city1++) {
                 int visitOrder = currentDecodedResult[vehicle1][city1];
                 if (visitOrder != 0) {
                     findInOtherVehicles(currentDecodedResult, visitOrder, vehicle1, city1);
@@ -52,17 +53,22 @@ public class TabuSearchNeighborhoodSolution extends SolutionFromNeighborhood {
             }
         }
 
+        if (bestTabu.getResult() != null && bestTabu.getZ() < currentResultTabu.getZ() &&
+                bestTabu.getResult().getSum() < currentResult.getSum() ) {
+            currentResultTabu = bestTabu;
+            isFoundResult = true;
+            //System.out.println("Choose tabu result!");
+        }
         //update tabuArray
         if (isFoundResult) {
-            //Writer.buildTitleOnConsole("Found result:");
-            //Writer.writeResult(currentResultTabu.getResult());
-            //System.out.println(currentResultTabu.getTabuCoords());
-            //Writer.buildTitleOnConsole("Before update");
-            //Writer.writeTabuArray(tabuArray, vehicles.size(), cities.size());
             updateTabu();
             updateMovementFrequency();
-            //Writer.buildTitleOnConsole("After update");
-            //Writer.writeTabuArray(tabuArray, vehicles.size(), cities.size());
+            currentResult = currentResultTabu.getResult();
+            lastTabuCoords = currentResultTabu.getTabuCoords();
+            //System.out.println(currentResult.getSum() + ";" + currentResultTabu.getTabuCoords());
+        }
+        else  {
+            System.out.println("result not found");
         }
     }
 
@@ -114,7 +120,7 @@ public class TabuSearchNeighborhoodSolution extends SolutionFromNeighborhood {
                     //find the same visit order and in vehicle with higher id (with prev id was searched before)
                     if (foundVisitOrder == visitOrder && vehicle2 > vehicle1) {
                         exchange(vehicle1, city1, vehicle2, city2, visitOrder);
-                        checkFoundResult(this.vehicle1, vehicle2, this.city1, city2);
+                        checkFoundResult(vehicle1, vehicle2, city1, city2);
 
                         // replaced higher number from one vehicle route to another vehicle route
                         // where higher number is one less then replaced vehicle route
@@ -123,7 +129,7 @@ public class TabuSearchNeighborhoodSolution extends SolutionFromNeighborhood {
                             isMaxVisitOrder(decodedResult[vehicle2], visitOrder) &&
                             isMaxVisitOrderAnalyzed(decodedResult[vehicle1], visitOrder)) {
                         exchangeZero(vehicle1, city1, vehicle2, city2, visitOrder);
-                        checkFoundResult(this.vehicle1, vehicle2, this.city1, city2);
+                        checkFoundResult(vehicle1, vehicle2, city1, city2);
                     }
                 }
             }
@@ -131,29 +137,37 @@ public class TabuSearchNeighborhoodSolution extends SolutionFromNeighborhood {
     }
 
     private void checkFoundResult(int vehicle1, int vehicle2, int city1, int city2) {
-        ResultTabu result = new ResultTabu(getEncodedResult());
+        //ResultTabu result = new ResultTabu(getEncodedResult());
+        Result result = getEncodedResult();
         //System.out.println("Pairs: ");
 //        System.out.print("(" + vehicle1 + "," + city1 + ") <-> ");
 //        System.out.println("(" + vehicle2 + "," + city2 + ") ");
-        if (result.getResult() != null) {
+        TabuCoords tabuCoords = new TabuCoords(vehicle1, city1, vehicle2, city2, cities.size());
+        if (result != null && !tabuCoords.isSameCoords(lastTabuCoords)) {
 
-            TabuCoords tabuCoords = new TabuCoords(vehicle1, city1, vehicle2, city2, cities.size());
-            double z = countZ(result.getResult().getSum(), tabuCoords);
-            if (isFirstResult) {
-                currentResultTabu = result;
-                currentResultTabu.setArgs(z, tabuCoords);
-                isFoundResult = true;
-                isFirstResult = false;
-            } else {
-                //best result
-                if (result.getResult().getSum() < currentResultTabu.getResult().getSum()) {
-                    currentResultTabu = result;
-                    currentResultTabu.setArgs(z, tabuCoords);
+            double z = countZ(result.getSum(), tabuCoords);
+            if (!isFoundResult) {
+                if (isTabu(tabuCoords)) {
+                    bestTabu = new ResultTabu(result, z, tabuCoords);
+                }
+                else {
+                    currentResultTabu = new ResultTabu(result, z, tabuCoords);
                     isFoundResult = true;
-                } else if (!isTabu(tabuCoords) && currentResultTabu.getZ() > z) {
-                    currentResultTabu = result;
-                    currentResultTabu.setArgs(z, tabuCoords);
-                    isFoundResult = true;
+                    //isFirstResult = false;
+                }
+
+            }
+            else {
+                if (currentResultTabu.getZ() > z) {
+                    if (isTabu(tabuCoords)) {
+                        if (bestTabu.getResult() == null || bestTabu.getZ() > z) {
+                            bestTabu = new ResultTabu(result, z, tabuCoords);
+                        }
+
+                    } else {
+                        currentResultTabu = new ResultTabu(result, z, tabuCoords);
+                        isFoundResult = true;
+                    }
                 }
             }
         }
@@ -171,7 +185,7 @@ public class TabuSearchNeighborhoodSolution extends SolutionFromNeighborhood {
         //reverse column and row with tabu array
         int row = tabuCoords.getColumnTabu();
         int col = tabuCoords.getRowTabu();
-        double dx = foundSum - currentResultTabu.getResult().getSum();
+        double dx = foundSum - currentResult.getSum();
         if (tabuArray[row][col] == 0) {
             return dx;
         } else if (dx < 0) {

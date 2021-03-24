@@ -31,6 +31,10 @@ public class SimAnnealingNeighborhoodSolution extends SolutionFromNeighborhood {
         for (Integer vehicle : vehiclesOrder) {
             if (new Random().nextBoolean()) {
                 findInTheSameVehicle(vehicle);
+                if (isFoundNewResult) {
+                    currentResult = bestNeighborhoodResult;
+                    return;
+                }
             }
             List<Integer> citiesOrder = generateListOfNumbers(cities.size());
             for (Integer city : citiesOrder) {

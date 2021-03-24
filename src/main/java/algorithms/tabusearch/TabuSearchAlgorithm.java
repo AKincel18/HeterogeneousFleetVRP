@@ -13,6 +13,7 @@ import utils.Writer;
 import java.util.List;
 
 import static utils.Utils.generateRandomResult;
+import static utils.Utils.generateStaticResult;
 
 @RequiredArgsConstructor
 public class TabuSearchAlgorithm implements Algorithm {
@@ -24,7 +25,8 @@ public class TabuSearchAlgorithm implements Algorithm {
     public void start() {
         //generate random result
         City depotCity = Utils.getDepotByCity(depot);
-        ResultTabu currentResultTabu = new ResultTabu(generateRandomResult(vehicles, cities, depotCity));
+        //ResultTabu currentResultTabu = new ResultTabu(generateRandomResult(vehicles, cities, depotCity));
+        ResultTabu currentResultTabu = new ResultTabu(generateStaticResult(vehicles, cities, depotCity));
 
         Writer.buildTitleOnConsole("Generated random solution");
         Writer.writeResult(currentResultTabu.getResult());
@@ -40,8 +42,10 @@ public class TabuSearchAlgorithm implements Algorithm {
 
         Writer.buildTitleOnConsole("Final result");
         Writer.writeResult(neighborhoodSolution.getCurrentResultTabu().getResult());
-
         //Writer.writeTabuStats(neighborhoodSolution.getTabuArray());
+        //Writer.checkSumFreq(neighborhoodSolution.getTabuArray());
+        //Writer.writeBigNumber(neighborhoodSolution.getTabuArray());
+        //Writer.writeTabuArray(neighborhoodSolution.getTabuArray(), 3, 5);
 
     }
 }

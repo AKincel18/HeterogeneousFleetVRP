@@ -219,4 +219,40 @@ public class Utils {
             }
         }
     }
+    //todo remove after testing
+    public static Result generateStaticResult(List<Vehicle> vehicles, List<City> cities, City depot) {
+        Map<Vehicle, List<City>> routes = new HashMap<>();
+        routes.put(vehicles.get(0), new ArrayList<>());
+        routes.put(vehicles.get(1), new ArrayList<>());
+        routes.put(vehicles.get(2), new ArrayList<>());
+
+        int ii = 0;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 3; j++) {
+                for (int k = 0; k < 5; k++) {
+                    List<City> cities1 = routes.get(vehicles.get(j));
+                    cities1.add(cities.get(ii));
+                    routes.put(vehicles.get(j), cities1);
+                    ii++;
+                }
+            }
+        }
+        List<City> cities1 = routes.get(vehicles.get(0));
+        cities1.add(0, depot);
+        cities1.add(cities1.size(), depot);
+        routes.put(vehicles.get(0), cities1);
+
+        cities1 = routes.get(vehicles.get(1));
+        cities1.add(0, depot);
+        cities1.add(cities1.size(), depot);
+        routes.put(vehicles.get(1), cities1);
+
+        cities1 = routes.get(vehicles.get(2));
+        cities1.add(0, depot);
+        cities1.add(cities1.size(), depot);
+        routes.put(vehicles.get(2), cities1);
+
+        double sum = countSumOfResult(routes);
+        return new Result(routes, sum);
+    }
 }
