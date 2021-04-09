@@ -2,7 +2,6 @@ package algorithms.genetic.selection;
 
 import algorithms.genetic.model.Individual;
 import algorithms.genetic.model.ParametersGenetic;
-import commons.Result;
 
 import java.util.Comparator;
 import java.util.List;
@@ -10,7 +9,8 @@ import java.util.List;
 public class RankSelection extends Selection {
 
     public RankSelection(List<Individual> population, ParametersGenetic params) {
-        super(population, params);
+        super(params);
+        this.population = population;
     }
 
     public void makeSelection() {
@@ -34,6 +34,6 @@ public class RankSelection extends Selection {
         for (Individual ind : population) {
             ind.setReproductionProbability(ind.getR() / sum);
         }
-        population.sort(Comparator.comparing(Result::getSum));
+        population.sort(Comparator.comparing(individual -> individual.getResult().getSum()));
     }
 }

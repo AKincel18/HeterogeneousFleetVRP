@@ -2,7 +2,6 @@ package algorithms.genetic.selection;
 
 import algorithms.genetic.model.Individual;
 import algorithms.genetic.model.ParametersGenetic;
-import commons.Result;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -14,7 +13,8 @@ import static utils.Utils.generateListOfNumbers;
 public class TournamentSelection extends Selection {
 
     public TournamentSelection(List<Individual> population, ParametersGenetic params) {
-        super(population, params);
+        super(params);
+        this.population = population;
     }
 
     public void makeSelection() {
@@ -34,7 +34,7 @@ public class TournamentSelection extends Selection {
     }
 
     private Individual findWinnerTournament(List<Individual> players) {
-        players.sort(Comparator.comparing(Result::getSum));
+        players.sort(Comparator.comparing(individual -> individual.getResult().getSum()));
         return players.stream().findFirst().orElseThrow();
     }
 }

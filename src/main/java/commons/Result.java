@@ -13,8 +13,8 @@ import java.util.Map;
 @Getter
 @Setter
 public class Result {
-    protected Map<Vehicle, List<City>> routes;
-    protected Double sum;
+    private Map<Vehicle, List<City>> routes;
+    private Double sum;
 
     public Result(Map<Vehicle, List<City>> routes, Double sum) {
         this.routes = routes;

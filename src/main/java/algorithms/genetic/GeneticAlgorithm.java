@@ -8,7 +8,6 @@ import algorithms.genetic.selection.RouletteWheelSelection;
 import algorithms.genetic.selection.Selection;
 import algorithms.genetic.selection.TournamentSelection;
 import commons.Algorithm;
-import commons.Result;
 import lombok.RequiredArgsConstructor;
 import model.City;
 import model.Depot;
@@ -18,7 +17,7 @@ import utils.Writer;
 import java.util.Comparator;
 import java.util.List;
 
-import static utils.Utils.getDepotByCity;
+import static utils.Utils.*;
 
 @RequiredArgsConstructor
 public class GeneticAlgorithm implements Algorithm {
@@ -34,24 +33,24 @@ public class GeneticAlgorithm implements Algorithm {
 
     public void start() {
         population = new GenerationPopulation(cities, vehicles, depot, params.getPopulationSize()).initPopulation();
-        population.sort(Comparator.comparing(Result::getSum));
-        Writer.buildTitleOnConsole("The best generated individual");
-        Writer.writeResult(population.stream().findFirst().orElseThrow());
+        population.sort(Comparator.comparing(individual -> individual.getResult().getSum()));
 
+        Writer.buildTitleOnConsole("The best generated individual");
+        Writer.writeResult(population.stream().findFirst().orElseThrow().getResult());
+
+        initSelectionMethod();
         for (int i = 0; i < params.getIterationNumber(); i++) {
-            //Writer.buildTitleOnConsole("ITERATION = " + i);
             selection();
             geneticOperations();
         }
-        population.sort(Comparator.comparing(Result::getSum));
+        population.sort(Comparator.comparing(individual -> individual.getResult().getSum()));
         Individual theBest = population.stream().findFirst().orElseThrow();
+
         Writer.buildTitleOnConsole("Final result");
-        Writer.writeResult(theBest);
+        Writer.writeResult(theBest.getResult());
     }
 
-    private void selection() {
-        //Writer.buildTitleOnConsole("Selection");
-        population.sort(Comparator.comparing(Result::getSum));
+    private void initSelectionMethod() {
         switch (params.getSelectionMethod()) {
             case ROULETTE_WHEEL:
                 selection = new RouletteWheelSelection(population, params);
@@ -63,6 +62,12 @@ public class GeneticAlgorithm implements Algorithm {
                 selection = new TournamentSelection(population, params);
                 break;
         }
+    }
+
+    private void selection() {
+        //Writer.buildTitleOnConsole("Selection");
+        population.sort(Comparator.comparing(individual -> individual.getResult().getSum()));
+        selection.setPopulation(population);
         selection.makeSelection();
     }
 
@@ -73,8 +78,8 @@ public class GeneticAlgorithm implements Algorithm {
                 getDepotByCity(depot), params, selection.getTheBest());
         geneticOperations.geneticOperations();
         population = geneticOperations.getPopulationNew();
-        //Writer.buildTitleOnConsole("New population");
-        //Writer.writePopulation(population);
+//        Writer.buildTitleOnConsole("New population");
+//        Writer.writePopulation(population);
     }
 
 }

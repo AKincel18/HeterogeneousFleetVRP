@@ -6,6 +6,7 @@ public class StringConst {
      */
     public static final String NAME_OF_SHEET_1 = "Data1";
     public static final String NAME_OF_SHEET_2 = "Data2";
+    public static final String NAME_OF_SHEET_3 = "Data3";
     public static final String NAME_OF_SHEET_STATIC = "Data_STATIC";
     public static final String FILE_NAME = "input/Data.xlsx";
 

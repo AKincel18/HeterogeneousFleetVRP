@@ -40,9 +40,10 @@ public class DataReader {
             Sheet sheet = workbook.getSheet(sheetName);
             boolean header = true;
             int vehicleId = 0;
+            int cityId = 1;
             for (Row nextRow : sheet) {
                 Iterator<Cell> cellIterator = nextRow.cellIterator();
-                City city = City.builder().coords(new Coords()).build();
+                City city = City.builder().coords(new Coords()).id(cityId).build();
                 Vehicle vehicle = Vehicle.builder().id(vehicleId).build();
                 while (cellIterator.hasNext()) {
                     Cell nextCell = cellIterator.next();
@@ -56,6 +57,7 @@ public class DataReader {
                         switch (columnIndex) {
                             case 0:
                                 city.setName((String) cellValue);
+                                cityId++;
                                 break;
                             case 1:
                                 city.setAmount((double) cellValue);

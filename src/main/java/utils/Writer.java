@@ -29,7 +29,7 @@ public class Writer {
         population.forEach(
                 p -> {
                     buildTitleOnConsole("Individual: " + index.getAndIncrement());
-                    writeResult(new Result(p.getRoutes(), p.getSum()));
+                    writeResult(p.getResult());
                 }
 
         );
@@ -41,7 +41,7 @@ public class Writer {
 
 
             System.out.print("Vehicle: " + vehicle.getName() + " = ");
-            cities.forEach(city -> System.out.print(city.getName() + " "));
+            cities.forEach(city -> System.out.print(city.getName() + "(" + city.getId() + ")" + " "));
             System.out.print("; quality = " + Utils.countQuality(vehicle, cities));
             System.out.println(" ; distance = " + Utils.countRouteDistance(cities));
 
@@ -55,7 +55,7 @@ public class Writer {
         //int id = 0;
         for (Individual individual : population) {
             buildTitleOnConsole("Test decoding & encoding = " + individual.getId());
-            writeTestDecodingAndEncoding(cities, vehicles, depot, individual.getRoutes());
+            writeTestDecodingAndEncoding(cities, vehicles, depot, individual.getResult().getRoutes());
         }
     }
 
@@ -184,5 +184,21 @@ public class Writer {
             rowNum++;
         }
         System.out.println("max num = " + max + ", max row = " + maxRow);
+    }
+
+    public static void writeDecodedResultInOneRow(List<Integer> decodedResult, List<Integer> cutPoints) {
+        int leftRange = 0, rightRange, index = 0;
+        for (Integer cutPoint : cutPoints) {
+            rightRange = cutPoint;
+            StringBuilder output = new StringBuilder();
+            for (int j = leftRange; j < rightRange; j++) {
+                output.append(decodedResult.get(index)).append(";");
+                index++;
+            }
+            leftRange = rightRange;
+            output.deleteCharAt(output.length() - 1).append("|");
+            System.out.print(output);
+        }
+        System.out.println();
     }
 }

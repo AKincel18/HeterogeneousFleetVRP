@@ -17,6 +17,18 @@ public class Encoder {
     private final List<City> cities;
     private final City depot;
     private final Integer[][] decodedResult;
+    private List<Integer> cutPoints;
+    private Integer[] decodedResult2;
+
+    public Encoder(List<Vehicle> vehicles, List<City> cities, City depot, Integer[][] decodedResult,
+                   List<Integer> cutPoints, Integer[] decodedResult2) {
+        this.vehicles = vehicles;
+        this.cities = cities;
+        this.depot = depot;
+        this.decodedResult = decodedResult;
+        this.cutPoints = cutPoints;
+        this.decodedResult2 = decodedResult2;
+    }
 
     public Result encodeResult() {
         Map<Vehicle, List<City>> routes = new HashMap<>();
@@ -35,6 +47,27 @@ public class Encoder {
                     .collect(Collectors.toList());
 
             route.addAll(placeCities.stream().map(PlaceCity::getCity).collect(Collectors.toList()));
+            route.add(depot); //set depot on last in a route
+            routes.put(vehicle, route);
+        }
+        return new Result(routes, countSumOfResult(routes));
+    }
+
+    public Result encodeResult2() {
+        Map<Vehicle, List<City>> routes = new HashMap<>();
+        int index = 0, leftRange = 0, rightRange;
+        for (int i = 0; i < vehicles.size(); i++) {
+            final int finalI = i;
+            Vehicle vehicle = vehicles.stream().filter(v -> v.getId() == finalI).findFirst().orElseThrow();
+            List<City> route = new ArrayList<>(Collections.singleton(depot)); //set depot on first in a route
+            rightRange = cutPoints.get(i);
+            for (int j = leftRange; j < rightRange; j++) {
+                int cityId = decodedResult2[index];
+                City city = cities.stream().filter(c -> c.getId() == cityId).findFirst().orElseThrow();
+                route.add(city);
+                index++;
+            }
+            leftRange = rightRange;
             route.add(depot); //set depot on last in a route
             routes.put(vehicle, route);
         }

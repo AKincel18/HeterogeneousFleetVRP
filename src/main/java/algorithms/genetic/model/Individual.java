@@ -9,17 +9,25 @@ import model.City;
 
 @NoArgsConstructor
 @Getter
-public class Individual extends Result {
-     @Setter private double reproductionProbability;
-     @Setter private double circleSegment;
-     @Setter private double r;
-     private City depot;
-     @Setter private int id;
+@Setter
+public class Individual {
+    private int id;
+    private Result result;
+    private double reproductionProbability;
+    private double circleSegment;
+    private double r;
+    private City depot;
 
-    public Individual(Result result, City depot, int id) {
-        super(result);
+
+    public Individual(Result result, City depot) {
         this.depot = depot;
+        this.result = result;
+    }
+
+    public Individual(int id, City depot, Result result) {
         this.id = id;
+        this.depot = depot;
+        this.result = result;
     }
 
     public Individual(City depot) {
@@ -27,8 +35,7 @@ public class Individual extends Result {
     }
 
     public Individual (Individual individual) {
-        this.sum = individual.getSum();
-        this.routes = individual.getRoutes();
+        this.result = individual.getResult();
         this.id = individual.getId();
         this.depot = individual.getDepot();
         this.reproductionProbability = 0.0;
