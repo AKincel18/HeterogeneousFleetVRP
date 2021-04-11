@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 abstract class ModelCommon {
     protected String name;
     protected Double amount;
+    protected int id;
 
     public void validData() throws NotValidDataException {
         if (name == null && amount != null)

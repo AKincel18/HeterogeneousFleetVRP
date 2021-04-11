@@ -29,7 +29,7 @@ public class Writer {
         population.forEach(
                 p -> {
                     buildTitleOnConsole("Individual: " + index.getAndIncrement());
-                    writeResult(new Result(p.getRoutes(), p.getSum()));
+                    writeResult(p.getResult());
                 }
 
         );
@@ -41,45 +41,13 @@ public class Writer {
 
 
             System.out.print("Vehicle: " + vehicle.getName() + " = ");
-            cities.forEach(city -> System.out.print(city.getName() + " "));
+            cities.forEach(city -> System.out.print(city.getName() + "(" + city.getId() + ")" + " "));
             System.out.print("; quality = " + Utils.countQuality(vehicle, cities));
             System.out.println(" ; distance = " + Utils.countRouteDistance(cities));
 
         });
         System.out.println("Total distance = " + Utils.roundNumber(result.getSum()));
 
-    }
-
-    public static void writeTestDecodingAndEncodingPopulation(List<Individual> population, List<City> cities,
-                                                              List<Vehicle> vehicles, Depot depot) {
-        //int id = 0;
-        for (Individual individual : population) {
-            buildTitleOnConsole("Test decoding & encoding = " + individual.getId());
-            writeTestDecodingAndEncoding(cities, vehicles, depot, individual.getRoutes());
-        }
-    }
-
-    public static void writeTestDecodingAndEncoding(List<City> cities, List<Vehicle> vehicles, Depot depot,
-                                                    Map<Vehicle, List<City>> routes) {
-        Decoder decoder = new Decoder(cities);
-        Integer [][] array = decoder.decodeResult(routes);
-
-        buildTitleOnConsole("Decoding");
-        for (int i =0; i < vehicles.size(); i++) {
-            System.out.println("Vehicle = " + routes.keySet().toArray()[i].toString());
-            for (int j = 0; j < cities.size(); j++) {
-                System.out.print(array[i][j] + ";");
-            }
-            System.out.println();
-        }
-
-        buildTitleOnConsole("Encoding");
-        Result result = new Encoder(vehicles, cities, Utils.getDepotByCity(depot), array).encodeResult();
-        for (Map.Entry<Vehicle, List<City>> entry : result.getRoutes().entrySet()) {
-            System.out.println("Vehicle = " + entry.getKey());
-            entry.getValue().forEach(city -> System.out.print(city.getName() + " "));
-            System.out.println();System.out.println();
-        }
     }
 
     public static void writeDecodedResultInOneRow(Integer[][] decodedResult) {
@@ -106,38 +74,31 @@ public class Writer {
         }
     }
 
-    public static void writeTabuArray(int[][] tabuArray, int vecNumber, int cityNumber) {
+    public static void writeTabuArray(int[][] tabuArray) {
 
-        System.out.printf("%-10s", "");
-        for (int i = 0; i < vecNumber; i++) {
-            for (int j = 0; j < cityNumber; j++) {
-                String text = String.valueOf(i) + String.valueOf(j);
-                System.out.printf("%-10s", text);
-            }
-        }
+//        System.out.printf("%-10s", "");
+//        for (int i = 0; i < tabuArray.length; i++) {
+//            for (int j = 0; j < tabuArray[i].length; j++) {
+//                String text = String.valueOf(i) + String.valueOf(j);
+//                System.out.printf("%-10s", text);
+//            }
+//        }
+//
+//        System.out.println();
+//        System.out.println();
 
-        System.out.println();
-        System.out.println();
-
-        int vec = 0;
-        int city = 0;
 
         for (int i = 0; i < tabuArray.length; i++) {
-            System.out.printf("%-10s", String.valueOf(vec) + String.valueOf(city));
+            //System.out.printf("%-10s", String.valueOf(vec) + String.valueOf(city));
             for (int j = 0; j < tabuArray[i].length; j++) {
                 if (i == j) {
                     System.out.printf("%-10s", 'X');
                     //System.out.print("X     ");
                 }
                 else {
-                    System.out.printf("%-10s", String.valueOf(tabuArray[i][j]));
+                    System.out.printf("%-10s", tabuArray[i][j]);
                     //System.out.print(tabuArray[i][j] + "     ");
                 }
-            }
-            city++;
-            if (city == cityNumber) {
-                city = 0;
-                vec++;
             }
             System.out.println();
         }
@@ -169,6 +130,16 @@ public class Writer {
         System.out.println("Suma = " + sum);
     }
 
+    public static void checkSumFreq_2(int[][] tabu) {
+        int sum = 0;
+        for (int[] row : tabu) {
+            for (int n : row) {
+                sum += n;
+            }
+        }
+        System.out.println("Suma = " + sum);
+    }
+
     public static void writeBigNumber(int[][] tabu) {
         int max = -1;
         int rowNum = 0;
@@ -184,5 +155,21 @@ public class Writer {
             rowNum++;
         }
         System.out.println("max num = " + max + ", max row = " + maxRow);
+    }
+
+    public static void writeDecodedResultInOneRow(List<Integer> decodedResult, Integer[] cutPoints) {
+        int leftRange = 0, rightRange, index = 0;
+        for (Integer cutPoint : cutPoints) {
+            rightRange = cutPoint;
+            StringBuilder output = new StringBuilder();
+            for (int j = leftRange; j < rightRange; j++) {
+                output.append(decodedResult.get(index)).append(";");
+                index++;
+            }
+            leftRange = rightRange;
+            output.deleteCharAt(output.length() - 1).append("|");
+            System.out.print(output);
+        }
+        System.out.println();
     }
 }

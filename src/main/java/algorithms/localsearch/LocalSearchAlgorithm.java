@@ -12,7 +12,6 @@ import utils.Writer;
 
 import java.util.List;
 
-import static utils.Utils.generateRandomResult;
 import static utils.Utils.generateStaticResult;
 
 @RequiredArgsConstructor
@@ -24,12 +23,14 @@ public class LocalSearchAlgorithm implements Algorithm {
     private final LocalSearchMethod method;
 
     public void start() {
-        //generate random result
-        City depotCity = Utils.getDepotByCity(depot);
-        //Result currentResult = generateRandomResult(vehicles, cities, depotCity);
-        Result currentResult = generateStaticResult(vehicles, cities, depotCity);
 
-        Writer.buildTitleOnConsole("Generated random solution");
+        City depotCity = Utils.getDepotByCity(depot);
+
+//        Result currentResult = generateRandomResult(vehicles, cities, depotCity);
+//        Writer.buildTitleOnConsole("Generated random solution");
+        Result currentResult = generateStaticResult(vehicles, cities, depotCity);
+        Writer.buildTitleOnConsole("Generated static solution");
+
         Writer.writeResult(currentResult);
 
         LocalSearchNeighborhoodSolution solutionFromNeighborhood =
@@ -43,8 +44,6 @@ public class LocalSearchAlgorithm implements Algorithm {
 
         Writer.buildTitleOnConsole("FINAL RESULT");
         Writer.writeResult(solutionFromNeighborhood.getCurrentResult());
-        System.out.println();
-        System.out.println();
         System.out.println("Iteration nr = " + iterationNumber);
     }
 }

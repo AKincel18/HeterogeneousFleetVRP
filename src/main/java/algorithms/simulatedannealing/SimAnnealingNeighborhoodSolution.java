@@ -1,116 +1,85 @@
 package algorithms.simulatedannealing;
 
+import commons.NeighborhoodSolution;
 import commons.Result;
-import commons.SolutionFromNeighborhood;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import model.City;
 import model.Vehicle;
-import utils.Decoder;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
-import static utils.Utils.generateListOfNumbers;
+import static utils.Utils.*;
 
-public class SimAnnealingNeighborhoodSolution extends SolutionFromNeighborhood {
+public class SimAnnealingNeighborhoodSolution extends NeighborhoodSolution {
 
     @Getter private boolean isFoundNewResult;
+    @Getter @Setter private Result currentResult;
 
     public SimAnnealingNeighborhoodSolution(List<City> cities, List<Vehicle> vehicles,
                                             City depotCity, @NonNull Result currentResult) {
-        super(cities, vehicles, depotCity, currentResult);
+        super(cities, vehicles, depotCity);
+        this.currentResult = currentResult;
     }
 
     public void findSolutionFromNeighborhood() {
         isFoundNewResult = false;
-        currentDecodedResult =  new Decoder(cities).decodeResult(currentResult.getRoutes());
-        bestNeighborhoodResult = new Result(currentResult);
+        if (random.nextBoolean())
+            replaceTwoCitiesRandom();
+        else
+            putCityToAnotherVehicleRandom();
+        check(cities.size(), currentResult);
+    }
 
-        List<Integer> vehiclesOrder = generateListOfNumbers(vehicles.size());
-        for (Integer vehicle : vehiclesOrder) {
-            if (new Random().nextBoolean()) {
-                findInTheSameVehicle(vehicle);
-                if (isFoundNewResult) {
-                    currentResult = bestNeighborhoodResult;
+    private void replaceTwoCitiesRandom() {
+        Integer[] decodedResult = coder.codeResultToArray(currentResult.getRoutes());
+        Integer[] positionsToSwapped = generateListOfNumbers(cities.size()).toArray(new Integer[0]);
+        for (int i = 0; i < positionsToSwapped.length - 1; i++) {
+            for (int j = i + 1; j < positionsToSwapped.length; j++) {
+                Integer[] neighborhoodDecodedResult = new Integer[cities.size()];
+                System.arraycopy(decodedResult, 0, neighborhoodDecodedResult, 0, cities.size());
+                int pos1 = positionsToSwapped[i];
+                int pos2 = positionsToSwapped[j];
+                Collections.swap(Arrays.asList(neighborhoodDecodedResult), pos1, pos2);
+                Result resultNew = decoder.decodeResultFromArray(neighborhoodDecodedResult, coder.getCutPoints());
+                if (checkIsAcceptableWeightAll(resultNew.getRoutes())) {
+                    currentResult = resultNew;
+                    isFoundNewResult = true;
                     return;
                 }
             }
-            List<Integer> citiesOrder = generateListOfNumbers(cities.size());
-            for (Integer city : citiesOrder) {
-                int visitOrder = currentDecodedResult[vehicle][city];
-                if (visitOrder != 0) {
-                    findInOtherVehiclesRandom(currentDecodedResult, visitOrder, vehicle, city);
-                    if (isFoundNewResult) {
-                        currentResult = bestNeighborhoodResult;
-                        //System.out.println("STOOOOOOP");
-                        return;
-                    }
-                }
-            }
         }
     }
 
-    private void findInTheSameVehicle(int vehicle1) {
+    private void putCityToAnotherVehicleRandom() {
+        Map<Integer, List<Integer>> decodedResult = coder.codeResultToMap(currentResult.getRoutes());
+        Integer[] vehiclesOrder = generateListOfNumbers(vehicles.size()).toArray(new Integer[0]);
+        for (int i = 0; i < vehiclesOrder.length; i++) {
+            for (int j = 0; j < vehiclesOrder.length; j++) {
+                if (i == j || decodedResult.get(vehiclesOrder[i]).size() == 1) continue;
+                List<Integer> positionsToRemove = generateListOfNumbers(decodedResult.get(vehiclesOrder[i]).size());
+                List<Integer> positionsToAdd = generateListOfNumbers(decodedResult.get(vehiclesOrder[j]).size() + 1);
+                for (Integer posToRemove : positionsToRemove) {
+                    for (Integer posToAdd : positionsToAdd) {
+                        Map<Integer, List<Integer>> neighborhoodDecodedResult = initMap(decodedResult);
+                        List<Integer> removingRoute = neighborhoodDecodedResult.get(vehiclesOrder[i]);
+                        List<Integer> addingRoute = neighborhoodDecodedResult.get(vehiclesOrder[j]);
 
-        int city1 = findFirstVisitedPlace(vehicle1);
-        int city2 = findSecondVisitedPlace(vehicle1, city1);
-        if (city1 != -1 && city2 != -1) {
-            int visitOrder1 = currentDecodedResult[vehicle1][city1];
-            int visitOrder2 = currentDecodedResult[vehicle1][city2];
-            exchangeSameVehicle(vehicle1, city1, city2, visitOrder1, visitOrder2);
-            isFoundNewResult = checkNewResultSimulatedAnnealing();
-        }
-    }
+                        Integer city = removingRoute.get(posToRemove);
+                        removingRoute.remove(city);
 
-    private int findFirstVisitedPlace(int vehicle) {
-        List<Integer> randomCities = generateListOfNumbers(cities.size());
-        for (Integer city : randomCities) {
-            if (currentDecodedResult[vehicle][city] != 0) {
-                return city;
-            }
-        }
-        return -1;
-    }
-
-    private int findSecondVisitedPlace(int vehicle, int city1) {
-        List<Integer> randomCities = generateListOfNumbers(cities.size());
-        for (Integer city : randomCities) {
-            if (currentDecodedResult[vehicle][city] != 0 && city != city1) {
-                return city;
-            }
-        }
-        return -1;
-    }
-
-    private void findInOtherVehiclesRandom(Integer[][] decodedResult, int visitOrder,
-                                           int vehicle1, int city1) {
-        List<Integer> vehiclesOrder = generateListOfNumbers(vehicles.size());
-        vehiclesOrder.remove(Integer.valueOf(vehicle1)); //not finding in the same vehicle
-        for (Integer vehicle2 : vehiclesOrder) {
-            List<Integer> citiesOrder = generateListOfNumbers(cities.size());
-            for (Integer city2 : citiesOrder) {
-                int foundVisitOrder = decodedResult[vehicle2][city2];
-                //find the same visit order and in vehicle with higher id (with prev id was searched before)
-                if (foundVisitOrder == visitOrder) {
-                    exchange(vehicle1, city1, vehicle2, city2, visitOrder);
-                    isFoundNewResult = checkNewResultSimulatedAnnealing();
-                    if (isFoundNewResult) {
-                        //System.out.println("Find new solution");
-                        return;
-                    }
-
-                    // replaced higher number from one vehicle route to another vehicle route
-                    // where higher number is one less then replaced vehicle route
-                    // must be replaced on the same position
-                } else if (city2 == city1 &&
-                        isMaxVisitOrder(decodedResult[vehicle2], visitOrder) &&
-                        isMaxVisitOrderAnalyzed(decodedResult[vehicle1], visitOrder)) {
-                    exchangeZero(vehicle1, city1, vehicle2, city2, visitOrder);
-                    isFoundNewResult = checkNewResultSimulatedAnnealing();
-                    if (isFoundNewResult) {
-                        //System.out.println("Find new solution");
-                        return;
+                        if (posToAdd == positionsToAdd.size()) {
+                            addingRoute.add(city);
+                        } else {
+                            addingRoute.add(posToAdd, city);
+                        }
+                        Result resultNew = decoder.decodeResultFromMap(neighborhoodDecodedResult);
+                        if (checkIsAcceptableWeightAll(resultNew.getRoutes())) {
+                            currentResult = resultNew;
+                            isFoundNewResult = true;
+                            return;
+                        }
                     }
                 }
             }

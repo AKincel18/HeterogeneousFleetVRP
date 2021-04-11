@@ -1,39 +1,56 @@
 package utils;
 
+import commons.Result;
 import lombok.RequiredArgsConstructor;
 import model.City;
 import model.Vehicle;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static utils.Utils.sortRoutesByVehicleId;
+import static utils.Utils.countSumOfResult;
 
 @RequiredArgsConstructor
 public class Decoder {
 
+    private final List<Vehicle> vehicles;
     private final List<City> cities;
-    private Integer[][] decodedResult;
+    private final City depot;
 
-    public Integer[][] decodeResult(Map<Vehicle, List<City>> routes) {
-        initDecoders(routes.keySet().size(), cities.size());
-        routes = sortRoutesByVehicleId(routes);
-        for (int i = 0; i < routes.keySet().size(); i++) {
-            Vehicle vehicle = (Vehicle) routes.keySet().toArray()[i];
-            for (int j = 1; j < routes.get(vehicle).size() - 1; j++) { //iterate without depot: <1, N-1>
-                City foundCity = routes.get(vehicle).get(j);
-                decodedResult[i][cities.indexOf(foundCity)] = j;
+    public Result decodeResultFromArray(Integer[] codedResult, Integer[] cutPoints) {
+        Map<Vehicle, List<City>> routes = new HashMap<>();
+        int index = 0, leftRange = 0, rightRange;
+        for (int i = 0; i < vehicles.size(); i++) {
+            final int finalI = i;
+            Vehicle vehicle = vehicles.stream().filter(v -> v.getId() == finalI).findFirst().orElseThrow();
+            List<City> route = new ArrayList<>(Collections.singleton(depot)); //set depot on first in a route
+            rightRange = cutPoints[i];
+            for (int j = leftRange; j < rightRange; j++) {
+                int cityId = codedResult[index];
+                City city = cities.stream().filter(c -> c.getId() == cityId).findFirst().orElseThrow();
+                route.add(city);
+                index++;
             }
+            leftRange = rightRange;
+            route.add(depot); //set depot on last in a route
+            routes.put(vehicle, route);
         }
-        return decodedResult;
+        return new Result(routes, countSumOfResult(routes));
     }
 
-    private void initDecoders(int numberOfVehicle, int numberOfCity) {
-        decodedResult = new Integer[numberOfVehicle][numberOfCity];
-        for (int i = 0; i < numberOfVehicle; i++) {
-            for (int j = 0; j < numberOfCity; j++) {
-                decodedResult[i][j] = 0;
-            }
-        }
+    public Result decodeResultFromMap(Map<Integer, List<Integer>> codedResult) {
+        Map<Vehicle, List<City>> routes = new HashMap<>();
+
+        codedResult.forEach((vehicleDecoded, citiesDecoded) -> {
+            Vehicle vehicle = vehicles.stream().filter(v -> v.getId() == vehicleDecoded).findFirst().orElseThrow();
+            List<City> route = new ArrayList<>(Collections.singleton(depot)); //set depot on first in a route
+            citiesDecoded.forEach(cityDecoded -> {
+                City city = cities.stream().filter(c -> c.getId() == cityDecoded).findFirst().orElseThrow();
+                route.add(city);
+            });
+            route.add(depot); //set depot on last in a route
+            routes.put(vehicle, route);
+        });
+
+        return new Result(routes, countSumOfResult(routes));
     }
 }

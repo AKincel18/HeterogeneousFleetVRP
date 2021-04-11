@@ -9,7 +9,8 @@ import java.util.List;
 public class RouletteWheelSelection extends Selection {
 
     public RouletteWheelSelection(List<Individual> population, ParametersGenetic params) {
-        super(population, params);
+        super(params);
+        this.population = population;
     }
 
     public void makeSelection() {
@@ -21,8 +22,8 @@ public class RouletteWheelSelection extends Selection {
     }
 
     private void setReproductionProbability() {
-        double sumDistance = population.stream().mapToDouble(Individual::getSum).sum();
-        population.forEach(p -> p.setReproductionProbability((1 - (p.getSum() / sumDistance)) / (population.size() - 1)));
-        population.forEach(p -> System.out.println(p.getId() + " = " + p.getReproductionProbability()));
+        double sumDistance = population.stream().mapToDouble(i -> i.getResult().getSum()).sum();
+        population.forEach(p -> p.setReproductionProbability((1 - (p.getResult().getSum() / sumDistance)) / (population.size() - 1)));
+        //population.forEach(p -> System.out.println(p.getId() + " = " + p.getReproductionProbability()));
     }
 }

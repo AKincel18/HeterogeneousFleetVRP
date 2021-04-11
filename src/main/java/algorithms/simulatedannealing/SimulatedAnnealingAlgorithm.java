@@ -12,9 +12,6 @@ import utils.Writer;
 
 import java.util.List;
 
-import static utils.Utils.generateRandomResult;
-import static utils.Utils.generateStaticResult;
-
 @RequiredArgsConstructor
 public class SimulatedAnnealingAlgorithm implements Algorithm {
     private final List<City> cities;
@@ -23,20 +20,13 @@ public class SimulatedAnnealingAlgorithm implements Algorithm {
     private final ParametersSimulatedAnnealing params;
 
     public void start() {
-        //generate random result
         City depotCity = Utils.getDepotByCity(depot);
-        Result currentResult = generateStaticResult(vehicles, cities, depotCity);
+        InitialConditions initialConditions = new InitialConditions(cities, vehicles, depotCity, params);
+        initialConditions.generateInitialConditions();
+        double currentTemperature = initialConditions.getTemperatureZero();
+        Result currentResult = initialConditions.getGeneratedResult();
 
-        Writer.buildTitleOnConsole("Generated random solution");
-        Writer.writeResult(currentResult);
-        //int stopCondition = 5;
-        //int stopCondition = (vehicles.size() * cities.size());
         int stopCondition = (int) Math.sqrt(vehicles.size() * cities.size());
-
-        double currentTemperature = new TemperatureZero(cities, vehicles, depotCity, currentResult, params).countTemperatureZero();
-        //double currentTemperature = 1000.0;
-
-        Writer.buildTitleOnConsole("t0 = " + currentTemperature);
 
         SimAnnealingNeighborhoodSolution solutionFromNeighborhood = new SimAnnealingNeighborhoodSolution(cities, vehicles,
                 depotCity, currentResult);
@@ -58,18 +48,18 @@ public class SimulatedAnnealingAlgorithm implements Algorithm {
             }
             if (isImprovement) {
                 analysis.setNoImprovementCounter(0);
-            }
-            else {
+            } else {
                 analysis.checkFinish();
             }
 
             currentTemperature *= params.getCoolingFactor();
             //System.out.println("distance = " + currentResult.getSum() + ", t = " + currentTemperature);
-        } while (!analysis.isStop()); //while (!analysis.isStop() && currentTemperature > 5);
+        } while (!analysis.isStop());
+        //} while (!analysis.isStop() && currentTemperature > 5);
 
         Writer.buildTitleOnConsole("FINAL RESULT");
         Writer.writeResult(currentResult);
-        //System.out.println("Iteration = " + iteration);
+        System.out.println("Iteration = " + iteration);
         System.out.println("Temperature = " + currentTemperature);
 
     }

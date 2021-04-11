@@ -12,7 +12,6 @@ import utils.Writer;
 
 import java.util.List;
 
-import static utils.Utils.generateRandomResult;
 import static utils.Utils.generateStaticResult;
 
 @RequiredArgsConstructor
@@ -23,12 +22,11 @@ public class TabuSearchAlgorithm implements Algorithm {
     private final ParametersTabuSearch parameters;
 
     public void start() {
-        //generate random result
         City depotCity = Utils.getDepotByCity(depot);
         //ResultTabu currentResultTabu = new ResultTabu(generateRandomResult(vehicles, cities, depotCity));
         ResultTabu currentResultTabu = new ResultTabu(generateStaticResult(vehicles, cities, depotCity));
 
-        Writer.buildTitleOnConsole("Generated random solution");
+        Writer.buildTitleOnConsole("Generated static solution");
         Writer.writeResult(currentResultTabu.getResult());
 
         TabuSearchNeighborhoodSolution neighborhoodSolution = new TabuSearchNeighborhoodSolution(cities, vehicles,
@@ -43,9 +41,10 @@ public class TabuSearchAlgorithm implements Algorithm {
         Writer.buildTitleOnConsole("Final result");
         Writer.writeResult(neighborhoodSolution.getCurrentResultTabu().getResult());
         //Writer.writeTabuStats(neighborhoodSolution.getTabuArray());
-        //Writer.checkSumFreq(neighborhoodSolution.getTabuArray());
+        //Writer.checkSumFreq(neighborhoodSolution.getTabuArrayReplacingStrategy());
+        //Writer.checkSumFreq_2(neighborhoodSolution.getFreqArrayPuttingStrategy());
         //Writer.writeBigNumber(neighborhoodSolution.getTabuArray());
-        //Writer.writeTabuArray(neighborhoodSolution.getTabuArray(), 3, 5);
+        //Writer.writeTabuArray(neighborhoodSolution.getTabuArray());
 
     }
 }

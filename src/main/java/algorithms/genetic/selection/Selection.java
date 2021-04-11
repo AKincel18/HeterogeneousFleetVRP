@@ -5,6 +5,7 @@ import algorithms.genetic.model.PairIndividuals;
 import algorithms.genetic.model.ParametersGenetic;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import utils.Utils;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import static utils.Utils.generateListOfNumbers;
 @RequiredArgsConstructor
 abstract public class Selection {
 
-    protected final List<Individual> population;
+    @Setter protected List<Individual> population;
     protected final ParametersGenetic params;
 
     protected List<Individual> selectedIndividuals;
@@ -52,22 +53,11 @@ abstract public class Selection {
             } else {
                 stats.put(ind, 1);
             }
-            //System.out.println("Draw number = " + drawNumber + ", chosen = " + ind.getCircleSegment() +
-                 //   ", individual id = " + ind.getId()); //for debugging
             selectedIndividuals.add(ind);
         }
-
-        //Writer.buildTitleOnConsole("Stats");
-//        stats = stats.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toMap(
-//                Map.Entry::getKey, Map.Entry::getValue,
-//                (oldValue, newValue) -> oldValue, LinkedHashMap::new)
-//        );
-        //stats.forEach((ind, number) -> System.out.println("ind " + ind.getId() + " = " + number));
-
     }
 
     protected void generateIndividualsPairs() {
-        //Writer.buildTitleOnConsole("Generate pairs");
         List<Integer> numbers = generateListOfNumbers(population.size());
 
         pairIndividuals = new ArrayList<>();
@@ -75,18 +65,16 @@ abstract public class Selection {
         for (int i = 0; i < population.size(); i += 2) {
 
             PairIndividuals selectedIndividualPair = new PairIndividuals(
+                    id,
                     selectedIndividuals.get(numbers.get(i)),
-                    selectedIndividuals.get(numbers.get(i + 1)),
-                    id);
+                    selectedIndividuals.get(numbers.get(i + 1)));
             id++;
             pairIndividuals.add(selectedIndividualPair);
-            //System.out.println(selectedIndividualPair.getIndividual1().getId() + " - " + selectedIndividualPair.getIndividual2().getId());
         }
 
     }
 
     private Individual findSelectedIndividual(double randomValue) {
-        //System.out.print("random value = " + randomValue + "; ");
         double leftRange = 0.0, rightRange;
         for (Individual individual : population) {
             rightRange = individual.getCircleSegment();

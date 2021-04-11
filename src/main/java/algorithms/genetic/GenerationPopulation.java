@@ -10,8 +10,6 @@ import utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static utils.Utils.countSumOfResult;
-
 @RequiredArgsConstructor
 public class GenerationPopulation {
     private final List<City> cities;
@@ -23,11 +21,10 @@ public class GenerationPopulation {
 
     public List<Individual> initPopulation() {
 
-        City startAndEndCity = Utils.getDepotByCity(depot);
+        City depotCity = Utils.getDepotByCity(depot);
         Individual individual;
         for (int i = 0; i < populationSize; i++) {
-            individual = new Individual(Utils.generateRandomResult(vehicles, cities, startAndEndCity), startAndEndCity, i);
-            individual.setSum(countSumOfResult(individual.getRoutes()));
+            individual = new Individual(i, depotCity, Utils.generateRandomResult(vehicles, cities, depotCity));
             population.add(individual);
         }
         return population;

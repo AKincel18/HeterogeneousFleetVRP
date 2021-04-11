@@ -6,35 +6,30 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class TabuCoords {
-    private int vehicleHigher;
-    private int cityHigher;
-    private int vehicleLower;
-    private int cityLower;
-    private int rowTabu;
-    private int columnTabu;
+    private int row;
+    private int col;
 
-    public TabuCoords(int vehicle, int city, int vehicle2, int city2, int cityNumber) {
-        vehicleHigher = Math.max(vehicle, vehicle2);
-        vehicleLower = Math.min(vehicle, vehicle2);
-
-        if (vehicleHigher == vehicleLower) {
-            cityHigher = Math.max(city, city2);
-            cityLower = Math.min(city, city2);
+    public TabuCoords(int row, int col, NeighborhoodStrategy neighborhoodStrategy) {
+        switch (neighborhoodStrategy) {
+            case REPLACE_CITIES:
+                int lower = Math.min(row, col);
+                int higher = Math.max(row, col);
+                this.row = lower - 1;
+                this.col = higher - 1;
+                break;
+            case PUT_CITY_TO_ANOTHER_VEHICLE:
+                this.row = row;
+                this.col = col - 1;
+                break;
         }
-        else {
-            cityHigher = vehicleHigher == vehicle ? city : city2;
-            cityLower = vehicleLower == vehicle ? city : city2;
-        }
-
-        rowTabu = vehicleLower * cityNumber + cityLower;
-        columnTabu = vehicleHigher * cityNumber + cityHigher;
     }
 
     public boolean isSameCoords(TabuCoords coords) {
-        return this.columnTabu == coords.getColumnTabu() && this.rowTabu == coords.getRowTabu();
+        return this.row == coords.getRow() && this.col == coords.getCol();
     }
+
     @Override
     public String toString() {
-        return "[" + rowTabu + ", " + columnTabu + "]";
+        return "[" + row + ", " + col + "]";
     }
 }

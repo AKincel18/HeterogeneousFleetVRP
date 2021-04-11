@@ -1,59 +1,58 @@
 package algorithms.genetic.geneticoperations;
 
 import lombok.RequiredArgsConstructor;
+import model.City;
+import model.Vehicle;
+import utils.Pair;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import static algorithms.genetic.geneticoperations.Utils.isInRange;
 
 @RequiredArgsConstructor
 public class Mutation {
-    private final int vehicleNumber;
     private final double mutationProbability;
+    private final List<Vehicle> vehicles;
+    private final City depot;
 
-    public void makeMutation(Integer[][] ind) {
+    public void makeMutation(Map<Vehicle, List<City>> routes) {
+        Pair<Integer, Integer> vehiclesToMutation = drawVehicles();
+        Vehicle v1 = vehicles.stream().filter(v -> v.getId() == vehiclesToMutation.getObj1()).findFirst().orElseThrow();
+        List<City> routeVehicle1 = routes.get(v1);
+        if (routeVehicle1.size() == 3) //only one city
+            return;
 
-        int vehicle = new Random().nextInt(vehicleNumber);
-        boolean isMutationPossible = checkMutationPossibility(ind[vehicle]);
-        if (isMutationPossible) {
-            List<Integer> mutationCities = drawMutationCities(ind[vehicle]);
-            int oldValue1 = ind[vehicle][mutationCities.get(0)];
-            int oldValue2 = ind[vehicle][mutationCities.get(1)];
+        Vehicle v2 = vehicles.stream().filter(v -> v.getId() == vehiclesToMutation.getObj2()).findFirst().orElseThrow();
+        List<City> routeVehicle2 = routes.get(v2);
+        if (routeVehicle2.size() == 3) //only one city
+            return;
 
-            ind[vehicle][mutationCities.get(1)] = oldValue1;
-            ind[vehicle][mutationCities.get(0)] = oldValue2;
-        }
+        routeVehicle1.removeIf(c -> c.getId() == 0);
+        routeVehicle2.removeIf(c -> c.getId() == 0);
+
+        int randomCity1 = new Random().nextInt(routeVehicle1.size());
+        City moveCity = routeVehicle1.get(randomCity1);
+        int randomCity2 = new Random().nextInt(routeVehicle2.size());
+        routeVehicle1.remove(moveCity);
+        routeVehicle2.add(randomCity2, moveCity);
+
+        routeVehicle1.add(0, depot);
+        routeVehicle1.add(depot);
+
+        routeVehicle2.add(0, depot);
+        routeVehicle2.add(depot);
     }
 
-    /**
-     * If is only one city in a route -> mutation in impossible
-     *
-     * @param route route
-     * @return is mutation possible
-     */
-    private boolean checkMutationPossibility(Integer[] route) {
-        for (Integer city : route) {
-            if (city > 1)
-                return true;
-        }
-        return false;
-    }
-
-    /**
-     * Draws cities to the mutation
-     *
-     * @param route route
-     * @return two numbers of city
-     */
-    private List<Integer> drawMutationCities(Integer[] route) {
-        int c1, c2;
+    private Pair<Integer, Integer> drawVehicles() {
+        int vec1, vec2;
+        Random random = new Random();
         do {
-            c1 = new Random().nextInt(route.length);
-            c2 = new Random().nextInt(route.length);
-        } while (route[c1] == 0 || route[c2] == 0 || c1 == c2);
-        return Arrays.asList(c1, c2);
+            vec1 = random.nextInt(vehicles.size());
+            vec2 = random.nextInt(vehicles.size());
+        } while (vec1 == vec2);
+        return new Pair<>(vec1, vec2);
     }
 
     public boolean isMutation() {

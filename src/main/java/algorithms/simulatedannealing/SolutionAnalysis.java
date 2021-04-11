@@ -17,7 +17,7 @@ public class SolutionAnalysis {
     public Result findCurrentResult(Result currentResult, Result foundResult, double currentTemperature) {
 
         isNewResult = false;
-        if (currentResult.getSum() >= foundResult.getSum() ||
+        if (foundResult.isBetter(currentResult) ||
                 isAcceptableWorstResult(currentResult.getSum(), foundResult.getSum(), currentTemperature)) {
             isNewResult = true;
             return foundResult;

@@ -1,5 +1,6 @@
 package utils;
 
+import algorithms.genetic.model.Individual;
 import commons.Result;
 import model.City;
 import model.Coords;
@@ -192,33 +193,60 @@ public class Utils {
     /**
      * Method to debugging: check if all rules are met
      *
-     * @param cities cities
-     * @param vehicles vehicles
-     * @param fixedInd individual who should be fixed
      */
-    public static void check(List<City> cities, List<Vehicle> vehicles, Integer[][] fixedInd) {
+    public static void check(List<City> cities, List<Integer> decodedResult, Integer[] cutPoints) {
         boolean[] visited = new boolean[cities.size()];
-        for (int i = 0; i < vehicles.size(); i++) {
-            for (int j = 0; j < cities.size(); j++) {
-                if (fixedInd[i][j] != 0) {
-                    if (visited[j]) {
-                        Writer.writeDecodedResultInOneRow(fixedInd);
-                        System.out.println("City is visited more than once");
-                        System.exit(-1);
-                    }
-                    visited[j] = true;
-                }
+        for (Integer idCity : decodedResult) {
+            if (visited[idCity - 1]) {
+                Writer.writeDecodedResultInOneRow(decodedResult, cutPoints);
+                System.out.println("City {" + idCity + "} is visited more than once");
+                System.exit(-1);
             }
+            visited[idCity - 1] = true;
         }
 
         for (boolean b : visited) {
             if (!b) {
-                Writer.writeDecodedResultInOneRow(fixedInd);
+                Writer.writeDecodedResultInOneRow(decodedResult, cutPoints);
                 System.out.println("Some city is no visited");
                 System.exit(-1);
             }
         }
     }
+
+    /**
+     * Method to debugging: check if all rules are met
+     *
+     */
+    public static void check(int cityNumber, Result result) {
+        boolean[] visited = new boolean[cityNumber];
+        result.getRoutes().forEach((vehicle, cities) -> {
+            cities.forEach(city -> {
+                if (city.getId() != 0) {
+                    if (visited[city.getId() - 1]) {
+                        //Writer.writeDecodedResultInOneRow(decodedResult, cutPoints);
+                        System.out.println("City {" + city + "} is visited more than once");
+                        System.exit(-1);
+                    }
+                    visited[city.getId() - 1] = true;
+                }
+
+            });
+
+
+        });
+
+        for (boolean b : visited) {
+            if (!b) {
+                //Writer.writeDecodedResultInOneRow(decodedResult, cutPoints);
+                System.out.println("Some city is no visited");
+                System.exit(-1);
+            }
+        }
+
+
+    }
+
     //todo remove after testing
     public static Result generateStaticResult(List<Vehicle> vehicles, List<City> cities, City depot) {
         Map<Vehicle, List<City>> routes = new HashMap<>();
@@ -255,4 +283,19 @@ public class Utils {
         double sum = countSumOfResult(routes);
         return new Result(routes, sum);
     }
+
+    public static void checkSizeOfRoutes(int cityNumber, List<Individual> population) {
+        for (Individual individual : population) {
+            int size = 0;
+            for (Map.Entry<Vehicle, List<City>> entry : individual.getResult().getRoutes().entrySet()) {
+                size += entry.getValue().size();
+            }
+            if (cityNumber + 6 != size) {
+                System.out.println("Too low cities at the route");
+                System.exit(-1);
+            }
+        }
+        System.out.println("OK");
+    }
+
 }
