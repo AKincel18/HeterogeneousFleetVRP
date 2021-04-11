@@ -1,56 +1,59 @@
 package algorithms.tabusearch;
 
+import algorithms.tabusearch.model.NeighborhoodStrategy;
 import algorithms.tabusearch.model.ParametersTabuSearch;
 import algorithms.tabusearch.model.ResultTabu;
 import algorithms.tabusearch.model.TabuCoords;
+import commons.NeighborhoodSolution;
 import commons.Result;
-import commons.SolutionFromNeighborhood;
 import lombok.Getter;
 import lombok.NonNull;
 import model.City;
 import model.Vehicle;
-import utils.Decoder;
-import utils.Writer;
 
-import java.util.List;
+import java.util.*;
 
-public class TabuSearchNeighborhoodSolution extends SolutionFromNeighborhood {
+import static utils.Utils.check;
+import static utils.Utils.checkIsAcceptableWeightAll;
+
+public class TabuSearchNeighborhoodSolution extends NeighborhoodSolution {
 
     private final ParametersTabuSearch params;
     @Getter private boolean isFoundResult;
-    @Getter private final int[][] tabuArray;
+    @Getter private final int[][] tabuArrayReplacingStrategy;
+    @Getter private final int[][] tabuArrayPuttingStrategy;
+    @Getter private final int[][] freqArrayPuttingStrategy;
     @Getter private ResultTabu currentResultTabu;
-    private final int sizeTabuArray;
     private ResultTabu bestTabu;
     private TabuCoords lastTabuCoords;
+    private Result currentResult;
+    private NeighborhoodStrategy neighborhoodStrategy;
 
     public TabuSearchNeighborhoodSolution(List<City> cities, List<Vehicle> vehicles,
                                           City depotCity, @NonNull ResultTabu currentResultTabu,
                                           ParametersTabuSearch params) {
-        super(cities, vehicles, depotCity, currentResultTabu.getResult());
+        super(cities, vehicles, depotCity);
         this.params = params;
         this.currentResultTabu = currentResultTabu;
-        this.sizeTabuArray = vehicles.size() * cities.size();
-        tabuArray = new int[sizeTabuArray][sizeTabuArray];
+        this.currentResult = currentResultTabu.getResult();
+        tabuArrayReplacingStrategy = new int[cities.size()][cities.size()];
         lastTabuCoords = new TabuCoords();
+        this.tabuArrayPuttingStrategy = new int[vehicles.size()][cities.size()];
+        this.freqArrayPuttingStrategy = new int[vehicles.size()][cities.size()];
     }
 
     public void findSolutionFromNeighborhood() {
         bestTabu = new ResultTabu(null);
         isFoundResult = false;
-        currentDecodedResult = new Decoder(cities).decodeResult(currentResultTabu.getResult().getRoutes());
-        currentResultTabu.clear();
-        //Writer.buildTitleOnConsole("Base result");
-        //Writer.writeDecodedResultInOneRow(currentDecodedResult);
 
-        for (int vehicle1 = 0; vehicle1 < vehicles.size(); vehicle1++) {
-            findInTheSameVehicle(vehicle1);
-            for (int city1 = 0; city1 < cities.size(); city1++) {
-                int visitOrder = currentDecodedResult[vehicle1][city1];
-                if (visitOrder != 0) {
-                    findInOtherVehicles(currentDecodedResult, visitOrder, vehicle1, city1);
-                }
-            }
+        currentResultTabu.clear();
+        if (random.nextBoolean()) {
+            neighborhoodStrategy = NeighborhoodStrategy.REPLACE_CITIES;
+            replaceTwoCities();
+        }
+        else {
+            neighborhoodStrategy = NeighborhoodStrategy.PUT_CITY_TO_ANOTHER_VEHICLE;
+            putCityToAnotherVehicle();
         }
 
         if (bestTabu.getResult() != null && bestTabu.getZ() < currentResultTabu.getZ() &&
@@ -59,101 +62,126 @@ public class TabuSearchNeighborhoodSolution extends SolutionFromNeighborhood {
             isFoundResult = true;
             //System.out.println("Choose tabu result!");
         }
-        //update tabuArray
+
         if (isFoundResult) {
-            updateTabu();
-            updateMovementFrequency();
+            switch (neighborhoodStrategy) {
+                case REPLACE_CITIES:
+                    updateTabuReplaceCities();
+                    updateMovementFrequencyReplaceCity();
+                    break;
+                case PUT_CITY_TO_ANOTHER_VEHICLE:
+                    updateTabuPutCityToVehicle();
+                    updateMovementFrequencyPutCityToVehicle();
+                    break;
+            }
+
             currentResult = currentResultTabu.getResult();
             lastTabuCoords = currentResultTabu.getTabuCoords();
-            //System.out.println(currentResult.getSum() + ";" + currentResultTabu.getTabuCoords());
         }
         else  {
             System.out.println("result not found");
+            System.exit(-1);
         }
     }
 
-    private void findInTheSameVehicle(int vehicle) {
-        for (int city1 = 0; city1 < cities.size(); city1++) {
-            if (currentDecodedResult[vehicle][city1] != 0) {
-                for (int city2 = city1 + 1; city2 < cities.size(); city2++) {
-                    if (currentDecodedResult[vehicle][city2] != 0) {
-                        int visitOrder1 = currentDecodedResult[vehicle][city1];
-                        int visitOrder2 = currentDecodedResult[vehicle][city2];
-                        exchangeSameVehicle(vehicle, city1, city2, visitOrder1, visitOrder2);
-                        checkFoundResult(vehicle, vehicle, city1, city2);
+    private void replaceTwoCities() {
+        Integer[] decodedResult = coder.codeResultToArray(currentResult.getRoutes());
+        for (int i = 0; i < decodedResult.length - 1; i++) {
+            for (int j = i + 1; j < decodedResult.length; j++) {
+                Integer[] neighborhoodDecodedResult = new Integer[cities.size()];
+                System.arraycopy(decodedResult, 0, neighborhoodDecodedResult, 0, cities.size());
+                Collections.swap(Arrays.asList(neighborhoodDecodedResult), i, j);
+                Result resultNew = decoder.decodeResultFromArray(neighborhoodDecodedResult, coder.getCutPoints());
+                if (checkIsAcceptableWeightAll(resultNew.getRoutes())) {
+                    check(cities, Arrays.asList(neighborhoodDecodedResult), coder.getCutPoints());
+                    checkFoundResult(neighborhoodDecodedResult[i], neighborhoodDecodedResult[j], resultNew);
+                }
+            }
+        }
+    }
+
+    private void putCityToAnotherVehicle() {
+        Map<Integer, List<Integer>> decodedResult = coder.codeResultToMap(currentResult.getRoutes());
+        for (Map.Entry<Integer, List<Integer>> entry : decodedResult.entrySet()) {
+            for (Map.Entry<Integer, List<Integer>> entry2 : decodedResult.entrySet()) {
+                if (entry == entry2 || entry.getValue().size() == 1) continue;
+                for (Integer cityToMove : entry.getValue()) {
+                    for (int i = 0; i <= entry2.getValue().size(); i++) {
+                        Map<Integer, List<Integer>> neighborhoodDecodedResult = initMap(decodedResult);
+
+                        neighborhoodDecodedResult.get(entry.getKey()).remove(cityToMove);
+                        if (i == entry2.getValue().size()) {
+                            neighborhoodDecodedResult.get(entry2.getKey()).add(cityToMove);
+                        } else {
+                            neighborhoodDecodedResult.get(entry2.getKey()).add(i, cityToMove);
+                        }
+                        Result resultNew = decoder.decodeResultFromMap(neighborhoodDecodedResult);
+                        if (checkIsAcceptableWeightAll(resultNew.getRoutes())) {
+                            //System.out.println("Accept");
+                            checkFoundResult(entry2.getKey(), cityToMove, resultNew);
+                        }
                     }
                 }
             }
-
         }
     }
 
-    private void updateTabu() {
+    private void updateTabuReplaceCities() {
         //decrease tabu part of array
-        for (int i = 0; i < sizeTabuArray; i++) {
-            for (int j = i + 1; j < sizeTabuArray; j++) {
-                if (tabuArray[i][j] != 0)
-                    tabuArray[i][j] -= 1;
+        for (int i = 0; i < tabuArrayReplacingStrategy.length; i++) {
+            for (int j = i + 1; j < tabuArrayReplacingStrategy[i].length; j++) {
+                if (tabuArrayReplacingStrategy[i][j] != 0)
+                    tabuArrayReplacingStrategy[i][j] -= 1;
             }
         }
 
         //set tabu number to exchanged position
-        int row = currentResultTabu.getTabuCoords().getRowTabu();
-        int col = currentResultTabu.getTabuCoords().getColumnTabu();
-        tabuArray[row][col] = params.getTabuIterationNumber();
+        int row = currentResultTabu.getTabuCoords().getRow();
+        int col = currentResultTabu.getTabuCoords().getCol();
+        tabuArrayReplacingStrategy[row][col] = params.getTabuIterationNumber();
 
     }
 
-    private void updateMovementFrequency() {
-        int row = currentResultTabu.getTabuCoords().getColumnTabu();
-        int col = currentResultTabu.getTabuCoords().getRowTabu();
-        tabuArray[row][col] += 1;
-    }
-
-    private void findInOtherVehicles(Integer[][] decodedResult, int visitOrder,
-                                     int vehicle1, int city1) {
-        for (int vehicle2 = 0; vehicle2 < vehicles.size(); vehicle2++) {
-            //not find in the same vehicle
-            if (vehicle1 != vehicle2) {
-                for (int city2 = 0; city2 < cities.size(); city2++) {
-                    int foundVisitOrder = decodedResult[vehicle2][city2];
-                    //find the same visit order and in vehicle with higher id (with prev id was searched before)
-                    if (foundVisitOrder == visitOrder && vehicle2 > vehicle1) {
-                        exchange(vehicle1, city1, vehicle2, city2, visitOrder);
-                        checkFoundResult(vehicle1, vehicle2, city1, city2);
-
-                        // replaced higher number from one vehicle route to another vehicle route
-                        // where higher number is one less then replaced vehicle route
-                        // must be replaced on the same position
-                    } else if (city2 == city1 &&
-                            isMaxVisitOrder(decodedResult[vehicle2], visitOrder) &&
-                            isMaxVisitOrderAnalyzed(decodedResult[vehicle1], visitOrder)) {
-                        exchangeZero(vehicle1, city1, vehicle2, city2, visitOrder);
-                        checkFoundResult(vehicle1, vehicle2, city1, city2);
-                    }
-                }
+    private void updateTabuPutCityToVehicle() {
+        //decrease tabu part of array
+        for (int i = 0; i < tabuArrayPuttingStrategy.length; i++) {
+            for (int j = 0; j < tabuArrayPuttingStrategy[i].length; j++) {
+                if (tabuArrayPuttingStrategy[i][j] != 0)
+                    tabuArrayPuttingStrategy[i][j] -= 1;
             }
         }
+
+        //set tabu number to exchanged position
+        int row = currentResultTabu.getTabuCoords().getRow();
+        int col = currentResultTabu.getTabuCoords().getCol();
+        tabuArrayPuttingStrategy[row][col] = params.getTabuIterationNumber();
+
     }
 
-    private void checkFoundResult(int vehicle1, int vehicle2, int city1, int city2) {
-        //ResultTabu result = new ResultTabu(getEncodedResult());
-        Result result = getEncodedResult();
-        //System.out.println("Pairs: ");
-//        System.out.print("(" + vehicle1 + "," + city1 + ") <-> ");
-//        System.out.println("(" + vehicle2 + "," + city2 + ") ");
-        TabuCoords tabuCoords = new TabuCoords(vehicle1, city1, vehicle2, city2, cities.size());
-        if (result != null && !tabuCoords.isSameCoords(lastTabuCoords)) {
+    private void updateMovementFrequencyReplaceCity() {
+        int row = currentResultTabu.getTabuCoords().getCol();
+        int col = currentResultTabu.getTabuCoords().getRow();
+        tabuArrayReplacingStrategy[row][col] += 1;
+    }
 
-            double z = countZ(result.getSum(), tabuCoords);
+    private void updateMovementFrequencyPutCityToVehicle() {
+        int row = currentResultTabu.getTabuCoords().getRow();
+        int col = currentResultTabu.getTabuCoords().getCol();
+        freqArrayPuttingStrategy[row][col] += 1;
+    }
+
+    private void checkFoundResult(int row, int col, Result resultNew) {
+        TabuCoords tabuCoords = new TabuCoords(row, col, neighborhoodStrategy);
+        if (!tabuCoords.isSameCoords(lastTabuCoords)) {
+
+            double z = countZ(resultNew.getSum(), tabuCoords);
             if (!isFoundResult) {
                 if (isTabu(tabuCoords)) {
-                    bestTabu = new ResultTabu(result, z, tabuCoords);
+                    bestTabu = new ResultTabu(resultNew, z, tabuCoords);
                 }
                 else {
-                    currentResultTabu = new ResultTabu(result, z, tabuCoords);
+                    currentResultTabu = new ResultTabu(resultNew, z, tabuCoords);
                     isFoundResult = true;
-                    //isFirstResult = false;
                 }
 
             }
@@ -161,11 +189,11 @@ public class TabuSearchNeighborhoodSolution extends SolutionFromNeighborhood {
                 if (currentResultTabu.getZ() > z) {
                     if (isTabu(tabuCoords)) {
                         if (bestTabu.getResult() == null || bestTabu.getZ() > z) {
-                            bestTabu = new ResultTabu(result, z, tabuCoords);
+                            bestTabu = new ResultTabu(resultNew, z, tabuCoords);
                         }
 
                     } else {
-                        currentResultTabu = new ResultTabu(result, z, tabuCoords);
+                        currentResultTabu = new ResultTabu(resultNew, z, tabuCoords);
                         isFoundResult = true;
                     }
                 }
@@ -175,16 +203,29 @@ public class TabuSearchNeighborhoodSolution extends SolutionFromNeighborhood {
 
 
     private boolean isTabu(TabuCoords tabuCoords) {
-        int row = tabuCoords.getRowTabu();
-        int col = tabuCoords.getColumnTabu();
+        int[][] tabuArray = neighborhoodStrategy == NeighborhoodStrategy.REPLACE_CITIES ?
+                this.tabuArrayReplacingStrategy : this.tabuArrayPuttingStrategy;
+        int row = tabuCoords.getRow();
+        int col = tabuCoords.getCol();
         return tabuArray[row][col] != 0;
     }
 
     private double countZ(double foundSum, TabuCoords tabuCoords) {
 
-        //reverse column and row with tabu array
-        int row = tabuCoords.getColumnTabu();
-        int col = tabuCoords.getRowTabu();
+        int[][] tabuArray;
+        int row, col;
+        if (neighborhoodStrategy == NeighborhoodStrategy.REPLACE_CITIES) {
+            tabuArray = this.tabuArrayReplacingStrategy;
+            //reverse column and row with tabu array
+            row = tabuCoords.getCol();
+            col = tabuCoords.getRow();
+        }
+        else {
+            tabuArray = this.freqArrayPuttingStrategy;
+            row = tabuCoords.getRow();
+            col = tabuCoords.getCol();
+        }
+
         double dx = foundSum - currentResult.getSum();
         if (tabuArray[row][col] == 0) {
             return dx;

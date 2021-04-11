@@ -194,7 +194,7 @@ public class Utils {
      * Method to debugging: check if all rules are met
      *
      */
-    public static void check(List<City> cities, List<Integer> decodedResult, List<Integer> cutPoints) {
+    public static void check(List<City> cities, List<Integer> decodedResult, Integer[] cutPoints) {
         boolean[] visited = new boolean[cities.size()];
         for (Integer idCity : decodedResult) {
             if (visited[idCity - 1]) {
@@ -212,6 +212,39 @@ public class Utils {
                 System.exit(-1);
             }
         }
+    }
+
+    /**
+     * Method to debugging: check if all rules are met
+     *
+     */
+    public static void check(int cityNumber, Result result) {
+        boolean[] visited = new boolean[cityNumber];
+        result.getRoutes().forEach((vehicle, cities) -> {
+            cities.forEach(city -> {
+                if (city.getId() != 0) {
+                    if (visited[city.getId() - 1]) {
+                        //Writer.writeDecodedResultInOneRow(decodedResult, cutPoints);
+                        System.out.println("City {" + city + "} is visited more than once");
+                        System.exit(-1);
+                    }
+                    visited[city.getId() - 1] = true;
+                }
+
+            });
+
+
+        });
+
+        for (boolean b : visited) {
+            if (!b) {
+                //Writer.writeDecodedResultInOneRow(decodedResult, cutPoints);
+                System.out.println("Some city is no visited");
+                System.exit(-1);
+            }
+        }
+
+
     }
 
     //todo remove after testing

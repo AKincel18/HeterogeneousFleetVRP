@@ -25,4 +25,8 @@ public class Result {
         this.routes = currentResult.getRoutes();
         this.sum = currentResult.getSum();
     }
+
+    public boolean isBetter(Result result) {
+        return sum < result.getSum();
+    }
 }

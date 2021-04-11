@@ -18,13 +18,13 @@ public class Mutation {
     private final City depot;
 
     public void makeMutation(Map<Vehicle, List<City>> routes) {
-        Pair<Integer, Integer> numbers = drawVehicles();
-        Vehicle v1 = vehicles.stream().filter(v -> v.getId() == numbers.getObj1()).findFirst().orElseThrow();
+        Pair<Integer, Integer> vehiclesToMutation = drawVehicles();
+        Vehicle v1 = vehicles.stream().filter(v -> v.getId() == vehiclesToMutation.getObj1()).findFirst().orElseThrow();
         List<City> routeVehicle1 = routes.get(v1);
         if (routeVehicle1.size() == 3) //only one city
             return;
 
-        Vehicle v2 = vehicles.stream().filter(v -> v.getId() == numbers.getObj2()).findFirst().orElseThrow();
+        Vehicle v2 = vehicles.stream().filter(v -> v.getId() == vehiclesToMutation.getObj2()).findFirst().orElseThrow();
         List<City> routeVehicle2 = routes.get(v2);
         if (routeVehicle2.size() == 3) //only one city
             return;

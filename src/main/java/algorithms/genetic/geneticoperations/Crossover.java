@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import model.City;
 import model.Vehicle;
-import utils.Encoder;
+import utils.Decoder;
 import utils.Pair;
 
 import java.util.*;
@@ -28,33 +28,21 @@ public class Crossover {
 
     private final PartialMappedCrossover partialMappedCrossover = new PartialMappedCrossover();
 
-    public void startCrossover(PairIndividualsDecode pairIndividualsDecode, List<Integer> cutPoints1, List<Integer> cutPoints2) {
+    public void startCrossover(PairIndividualsDecode pairIndividualsDecode, Integer[] cutPoints1, Integer[] cutPoints2) {
         Pair<Integer, Integer> points = drawCrossoverPoints();
         int leftCutPoints = points.getObj1();
         int rightCutPoints = points.getObj2();
-        Integer[] i1 = pairIndividualsDecode.getIndividual1().toArray(new Integer[0]);
-        Integer[] i2 = pairIndividualsDecode.getIndividual2().toArray(new Integer[0]);
-
-//        System.out.println("Before");
-//        Writer.writeDecodedResultInOneRow(Arrays.asList(i1), cutPoints1);
-//        Writer.writeDecodedResultInOneRow(Arrays.asList(i2), cutPoints2);
+        Integer[] i1 = pairIndividualsDecode.getIndividual1();
+        Integer[] i2 = pairIndividualsDecode.getIndividual2();
 
         partialMappedCrossover.start(leftCutPoints, rightCutPoints, i1, i2);
-
-//        System.out.println("After, points = " + leftCutPoints + ", " + rightCutPoints);
-//        Writer.writeDecodedResultInOneRow(Arrays.asList(i1), cutPoints1);
-//        Writer.writeDecodedResultInOneRow(Arrays.asList(i2), cutPoints2);
 
         //todo remove after testing
         check(cities, Arrays.asList(i1), cutPoints1);
         check(cities, Arrays.asList(i2), cutPoints2);
 
-        Result result1 = new Encoder(vehicles, cities, depot, null, cutPoints1, i1).encodeResult2();
-        Result result2 = new Encoder(vehicles, cities, depot, null, cutPoints2, i2).encodeResult2();
-
-//        System.out.println("Encoded");
-//        Writer.writeResult(result1);
-//        Writer.writeResult(result2);
+        Result result1 = new Decoder(vehicles, cities, depot).decodeResultFromArray(i1, cutPoints1);
+        Result result2 = new Decoder(vehicles, cities, depot).decodeResultFromArray(i2, cutPoints2);
 
         individualNew1 = new Individual(result1, depot);
         individualNew2 = new Individual(result2, depot);

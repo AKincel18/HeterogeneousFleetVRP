@@ -8,6 +8,6 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class PairIndividualsDecode {
-    private List<Integer> individual1;
-    private List<Integer> individual2;
+    private Integer[] individual1;
+    private Integer[] individual2;
 }

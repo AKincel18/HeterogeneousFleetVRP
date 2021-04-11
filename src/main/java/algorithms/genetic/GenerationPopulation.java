@@ -21,10 +21,10 @@ public class GenerationPopulation {
 
     public List<Individual> initPopulation() {
 
-        City startAndEndCity = Utils.getDepotByCity(depot);
+        City depotCity = Utils.getDepotByCity(depot);
         Individual individual;
         for (int i = 0; i < populationSize; i++) {
-            individual = new Individual(i, startAndEndCity, Utils.generateRandomResult(vehicles, cities, startAndEndCity));
+            individual = new Individual(i, depotCity, Utils.generateRandomResult(vehicles, cities, depotCity));
             population.add(individual);
         }
         return population;

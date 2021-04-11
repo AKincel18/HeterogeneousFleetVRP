@@ -2,14 +2,12 @@ package algorithms.genetic.geneticoperations;
 
 import algorithms.genetic.model.Relation;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 @NoArgsConstructor
-@Setter
 public class PartialMappedCrossover {
 
     public void start(int leftCutPoints, int rightCutPoints, Integer[] i1, Integer[] i2) {

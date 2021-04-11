@@ -65,9 +65,9 @@ abstract public class Selection {
         for (int i = 0; i < population.size(); i += 2) {
 
             PairIndividuals selectedIndividualPair = new PairIndividuals(
+                    id,
                     selectedIndividuals.get(numbers.get(i)),
-                    selectedIndividuals.get(numbers.get(i + 1)),
-                    id);
+                    selectedIndividuals.get(numbers.get(i + 1)));
             id++;
             pairIndividuals.add(selectedIndividualPair);
         }

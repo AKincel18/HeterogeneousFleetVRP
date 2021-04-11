@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import model.City;
 import model.Vehicle;
-import utils.Decoder;
+import utils.Coder;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -32,8 +32,8 @@ public class GeneticOperations {
     private int currentId = 0;
     private Crossover crossover;
     private Mutation mutation;
-    private Decoder decoder;
-    private Decoder decoder2;
+    private Coder coder;
+    private Coder coder2;
     private boolean isAcceptable1, isAcceptable2;
 
     public void geneticOperations() {
@@ -52,8 +52,8 @@ public class GeneticOperations {
     private void init() {
         populationNew = new ArrayList<>();
         crossover = new Crossover(cities, vehicles, depot, params);
-        decoder = new Decoder(cities, depot);
-        decoder2 = new Decoder(cities, depot);
+        coder = new Coder(depot);
+        coder2 = new Coder(depot);
         mutation = new Mutation(params.getMutationProbability(), vehicles, depot);
     }
 
@@ -63,11 +63,11 @@ public class GeneticOperations {
         Individual best1 = new Individual(depot);
         Individual best2 = new Individual(depot);
         p.setPairIndividualsDecode(new PairIndividualsDecode(
-                decoder.decodeResult2(p.getIndividual1().getResult().getRoutes()),
-                decoder2.decodeResult2(p.getIndividual2().getResult().getRoutes())
+                coder.codeResultToArray(p.getIndividual1().getResult().getRoutes()),
+                coder2.codeResultToArray(p.getIndividual2().getResult().getRoutes())
         ));
         do {
-            crossover.startCrossover(p.getPairIndividualsDecode(), decoder.getCutPoints(), decoder2.getCutPoints());
+            crossover.startCrossover(p.getPairIndividualsDecode(), coder.getCutPoints(), coder2.getCutPoints());
             individual1 = crossover.getIndividualNew1();
             individual2 = crossover.getIndividualNew2();
 

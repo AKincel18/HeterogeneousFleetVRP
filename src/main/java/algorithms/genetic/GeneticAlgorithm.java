@@ -30,7 +30,6 @@ public class GeneticAlgorithm implements Algorithm {
     private List<Individual> population;
     private Selection selection;
 
-
     public void start() {
         population = new GenerationPopulation(cities, vehicles, depot, params.getPopulationSize()).initPopulation();
         population.sort(Comparator.comparing(individual -> individual.getResult().getSum()));
@@ -65,21 +64,16 @@ public class GeneticAlgorithm implements Algorithm {
     }
 
     private void selection() {
-        //Writer.buildTitleOnConsole("Selection");
         population.sort(Comparator.comparing(individual -> individual.getResult().getSum()));
         selection.setPopulation(population);
         selection.makeSelection();
     }
 
     private void geneticOperations() {
-        //Writer.buildTitleOnConsole("Crossover");
-
         GeneticOperations geneticOperations = new GeneticOperations(selection.getPairIndividuals(), cities, vehicles,
                 getDepotByCity(depot), params, selection.getTheBest());
         geneticOperations.geneticOperations();
         population = geneticOperations.getPopulationNew();
-//        Writer.buildTitleOnConsole("New population");
-//        Writer.writePopulation(population);
     }
 
 }

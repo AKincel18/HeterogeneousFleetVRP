@@ -19,11 +19,6 @@ public class ResultTabu {
         this.tabuCoords = tabuCoords;
     }
 
-    public void setArgs(double z, TabuCoords tabuCoords) {
-        this.z = z;
-        this.tabuCoords = tabuCoords;
-    }
-
     public void clear() {
         this.result = null;
         this.z = 0.0;
