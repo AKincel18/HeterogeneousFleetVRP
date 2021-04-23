@@ -23,18 +23,12 @@ import static constants.StringConst.*;
 
 public class MainScreenController implements Initializable {
 
-    @FXML
-    private Tab geneticTab;
-    @FXML
-    private Tab localSearchTab;
-    @FXML
-    private Tab simAnnealingTab;
-    @FXML
-    private Tab tabuTab;
-    @FXML
-    private ComboBox<ExampleInputName> examplesComboBox;
-    @FXML
-    private Label chooseFileLabel;
+    @FXML private Tab geneticTab;
+    @FXML private Tab localSearchTab;
+    @FXML private Tab simAnnealingTab;
+    @FXML private Tab tabuTab;
+    @FXML private ComboBox<ExampleInputName> examplesComboBox;
+    @FXML private Label chooseFileLabel;
     private PathsHolder holder;
 
     @Override

@@ -2,13 +2,17 @@ package controllers;
 
 import algorithms.simulatedannealing.SimulatedAnnealingAlgorithm;
 import algorithms.simulatedannealing.model.ParametersSimulatedAnnealing;
+import commons.CustomAlert;
 import commons.TextFieldDouble;
 import commons.TextFieldInteger;
 import commons.UtilsController;
+import exceptions.InputException;
 import input.DataReader;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -31,18 +35,23 @@ public class SimAnnealingTabController extends UtilsController implements Initia
     }
 
     private void startAlgorithm() {
-        DataReader dataReader = getInputData();
-        new SimulatedAnnealingAlgorithm(
-                dataReader.getCities(),
-                dataReader.getVehicles(),
-                dataReader.getDepot(),
-                new ParametersSimulatedAnnealing(
-                        probabilityField.getValue(),
-                        t0IterationNumberField.getValue(),
-                        coolingFactorField.getValue(),
-                        iterationNumberField.getValue()
-                )
-        ).start();
+        try {
+            validateInput();
+            DataReader dataReader = getInputData();
+            new SimulatedAnnealingAlgorithm(
+                    dataReader.getCities(),
+                    dataReader.getVehicles(),
+                    dataReader.getDepot(),
+                    new ParametersSimulatedAnnealing(
+                            probabilityField.getValue(),
+                            t0IterationNumberField.getValue(),
+                            coolingFactorField.getValue(),
+                            iterationNumberField.getValue()
+                    )
+            ).start();
+        } catch (InputException e) {
+            new CustomAlert(Alert.AlertType.ERROR, e.getHeaderError(), e.getContentError(), ButtonType.OK).show();
+        }
     }
 
 }

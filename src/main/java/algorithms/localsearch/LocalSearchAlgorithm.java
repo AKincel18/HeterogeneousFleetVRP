@@ -12,7 +12,7 @@ import utils.Writer;
 
 import java.util.List;
 
-import static utils.Utils.generateStaticResult;
+import static utils.Utils.generateRandomResult;
 
 @RequiredArgsConstructor
 public class LocalSearchAlgorithm implements Algorithm {
@@ -26,10 +26,10 @@ public class LocalSearchAlgorithm implements Algorithm {
 
         City depotCity = Utils.getDepotByCity(depot);
 
-//        Result currentResult = generateRandomResult(vehicles, cities, depotCity);
-//        Writer.buildTitleOnConsole("Generated random solution");
-        Result currentResult = generateStaticResult(vehicles, cities, depotCity);
-        Writer.buildTitleOnConsole("Generated static solution");
+        Result currentResult = generateRandomResult(vehicles, cities, depotCity);
+        Writer.buildTitleOnConsole("Generated random solution");
+//        Result currentResult = generateStaticResult(vehicles, cities, depotCity);
+//        Writer.buildTitleOnConsole("Generated static solution");
 
         Writer.writeResult(currentResult);
 

@@ -37,6 +37,16 @@ public class StringConst {
      */
     public static final String APP_TITLE = "VPR App";
 
+    /**
+     * Error messages
+     */
+    public static final String INPUT_NOT_GIVEN_HEADER_ERROR = "Input file not chosen!";
+    public static final String INPUT_NOT_GIVEN_CONTENT_ERROR = "Choose own input file or select from examples.";
+    public static final String SELECTIONS_NOT_FILLED_HEADER_ERROR = "Selection method not filled!";
+    public static final String CHOOSE_A_METHOD = "Please choose a method.";
+    public static final String METHODS_NOT_FILLED_HEADER_ERROR = "Local search method not filled!";
+
+
 
 
 }

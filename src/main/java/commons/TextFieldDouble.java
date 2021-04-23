@@ -7,36 +7,39 @@ import javafx.scene.control.TextField;
 public class TextFieldDouble extends TextField {
 
     private final ObjectProperty<Double> number = new SimpleObjectProperty<>();
+
+    //default values
     private double minValue = 0.0;
     private double maxValue = 1.0;
+
+    @SuppressWarnings("unused")
+    public TextFieldDouble() {
+        super();
+        initHandlers();
+        setValue(0.0);
+    }
 
     public final Double getValue() {
         return number.get();
     }
 
     public final void setValue(Double value) {
+        minValue = value;
         number.set(value);
+    }
+
+    @SuppressWarnings("unused")
+    public final double getMaxValue() {
+        return maxValue;
+    }
+
+    @SuppressWarnings("unused")
+    public final void setMaxValue(double maxValue) {
+        this.maxValue = maxValue;
     }
 
     public ObjectProperty<Double> numberProperty() {
         return number;
-    }
-
-    public void setFieldRanges(double minValue, double maxValue) {
-        this.minValue = minValue;
-        this.maxValue = maxValue;
-    }
-
-    @SuppressWarnings("unused")
-    public TextFieldDouble() {
-        this(0.0);
-    }
-
-
-    public TextFieldDouble(Double value) {
-        super();
-        initHandlers();
-        setValue(value);
     }
 
     private void initHandlers() {
@@ -52,10 +55,6 @@ public class TextFieldDouble extends TextField {
         numberProperty().addListener((observable, oldValue, newValue) -> setText(String.valueOf(newValue)));
     }
 
-    /**
-     * Tries to parse the user input to a number according to the provided
-     * NumberFormat
-     */
     private void parseAndFormatInput() {
         String input = getText();
         if (input == null || input.length() == 0) {
@@ -66,8 +65,8 @@ public class TextFieldDouble extends TextField {
         try {
             newValue = Double.parseDouble(input);
             if (newValue > maxValue) {
-                setValue(maxValue);
-            } else setValue(Math.max(newValue, minValue));
+                number.set(maxValue);
+            } else number.set(Math.max(newValue, minValue));
             setText(String.valueOf(number.get()));
             selectAll();
 

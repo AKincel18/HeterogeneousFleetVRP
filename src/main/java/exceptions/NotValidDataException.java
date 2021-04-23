@@ -1,8 +1,8 @@
 package exceptions;
 
-public class NotValidDataException extends Exception{
+public class NotValidDataException extends InputException {
 
-    public NotValidDataException(String message) {
-        super(message);
+    public NotValidDataException(String headerError, String contentError) {
+        super(headerError, contentError);
     }
 }

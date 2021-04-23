@@ -7,38 +7,39 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.TabuTabController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.TabuTabController">
     <Label layoutX="4.0" layoutY="14.0" prefHeight="25.0" prefWidth="103.0" text="Parameters" translateX="10">
         <font>
-            <Font size="16.0" />
+            <Font size="16.0"/>
         </font>
     </Label>
     <Label layoutX="14.0" layoutY="52.0" prefHeight="25.0" prefWidth="190.0" text="Iteration number:">
         <font>
-            <Font size="14.0" />
+            <Font size="14.0"/>
         </font>
         <padding>
-            <Insets bottom="5.0" />
+            <Insets bottom="5.0"/>
         </padding>
     </Label>
     <Label layoutX="14.0" layoutY="76.0" prefHeight="25.0" prefWidth="186.0" text="Tabu iteration number:">
         <font>
-            <Font size="14.0" />
+            <Font size="14.0"/>
         </font>
         <padding>
-            <Insets bottom="5.0" />
+            <Insets bottom="5.0"/>
         </padding>
     </Label>
-    <TextFieldInteger fx:id="iterationNumberField" layoutX="210.0" layoutY="54.0">
+    <TextFieldInteger fx:id="iterationNumberField" layoutX="210.0" layoutY="54.0" value="1">
         <padding>
-            <Insets bottom="5.0" />
+            <Insets bottom="5.0"/>
         </padding>
     </TextFieldInteger>
-    <TextFieldInteger fx:id="tabuIterationNumberField" layoutX="210.0" layoutY="78.0">
+    <TextFieldInteger fx:id="tabuIterationNumberField" layoutX="210.0" layoutY="78.0" value="1">
         <padding>
-            <Insets bottom="5.0" />
+            <Insets bottom="5.0"/>
         </padding>
     </TextFieldInteger>
 
-    <Button fx:id="startButton" layoutX="280.0" layoutY="374.0" mnemonicParsing="false" text="Start" />
+    <Button fx:id="startButton" layoutX="280.0" layoutY="374.0" mnemonicParsing="false" text="Start"/>
 </AnchorPane>

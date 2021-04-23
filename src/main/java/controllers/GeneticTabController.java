@@ -3,18 +3,22 @@ package controllers;
 import algorithms.genetic.GeneticAlgorithm;
 import algorithms.genetic.model.ParametersGenetic;
 import algorithms.genetic.model.SelectionMethods;
+import commons.CustomAlert;
 import commons.TextFieldDouble;
 import commons.TextFieldInteger;
 import commons.UtilsController;
+import exceptions.ComboBoxNotFilledException;
+import exceptions.InputException;
 import input.DataReader;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import static constants.StringConst.CHOOSE_A_METHOD;
+import static constants.StringConst.SELECTIONS_NOT_FILLED_HEADER_ERROR;
 
 
 public class GeneticTabController extends UtilsController implements Initializable {
@@ -36,7 +40,6 @@ public class GeneticTabController extends UtilsController implements Initializab
     public void initialize(URL location, ResourceBundle resources)
     {
         selectionsComboBox.getItems().addAll(SelectionMethods.values());
-        selectivePressureField.setFieldRanges(1.0, 2.0);
         startButtonListener();
         selectionsComboBoxListener();
     }
@@ -46,18 +49,35 @@ public class GeneticTabController extends UtilsController implements Initializab
     }
 
     private void startAlgorithm() {
-        DataReader dataReader = getInputData();
-        new GeneticAlgorithm(dataReader.getCities(), dataReader.getVehicles(), dataReader.getDepot(),
-                new ParametersGenetic(
-                        populationSizeField.getValue(),
-                        iterationNumberField.getValue(),
-                        crossoverProbField.getValue(),
-                        mutationProbField.getValue(),
-                        repeatingCrossoverNumberField.getValue(),
-                        selectionsComboBox.getValue(),
-                        tournamentSizeField.getValue(),
-                        selectivePressureField.getValue())
-        ).start();
+        try {
+            validate();
+            DataReader dataReader = getInputData();
+            new GeneticAlgorithm(dataReader.getCities(), dataReader.getVehicles(), dataReader.getDepot(),
+                    new ParametersGenetic(
+                            populationSizeField.getValue(),
+                            iterationNumberField.getValue(),
+                            crossoverProbField.getValue(),
+                            mutationProbField.getValue(),
+                            repeatingCrossoverNumberField.getValue(),
+                            selectionsComboBox.getValue(),
+                            tournamentSizeField.getValue(),
+                            selectivePressureField.getValue())
+            ).start();
+        } catch (InputException e) {
+            new CustomAlert(Alert.AlertType.ERROR, e.getHeaderError(), e.getContentError(), ButtonType.OK).show();
+        }
+
+    }
+
+    private void validate() throws InputException {
+        validateSelections();
+        validateInput();
+    }
+
+    private void validateSelections() throws InputException {
+        if (selectionsComboBox.getValue() == null) {
+            throw new ComboBoxNotFilledException(SELECTIONS_NOT_FILLED_HEADER_ERROR, CHOOSE_A_METHOD);
+        }
     }
 
     private void selectionsComboBoxListener() {
