@@ -37,7 +37,7 @@ public class DataReader {
             FileInputStream inputStream = new FileInputStream(new File(fileName));
 
             Workbook workbook = new XSSFWorkbook(inputStream);
-            Sheet sheet = workbook.getSheet(sheetName);
+            Sheet sheet = sheetName != null ? workbook.getSheet(sheetName) : workbook.getSheetAt(0);
             boolean header = true;
             int vehicleId = 0;
             int cityId = 1;

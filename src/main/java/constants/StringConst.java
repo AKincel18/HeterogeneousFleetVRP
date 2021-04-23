@@ -23,5 +23,20 @@ public class StringConst {
      */
     public static final String INDIVIDUAL_NOT_FOUND = "Individual not found!";
 
+    /**
+     * Screen name
+     */
+    public static final String MainFXML = "/MainScreen.fxml";
+    public static final String GeneticFXML = "/GeneticTab.fxml";
+    public static final String LocalSearchFXML = "/LocalSearchTab.fxml";
+    public static final String SimAnnealingFXML = "/SimAnnealingTab.fxml";
+    public static final String TabuFXML = "/TabuTab.fxml";
+
+    /**
+     * App title
+     */
+    public static final String APP_TITLE = "VPR App";
+
+
 
 }
