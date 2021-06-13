@@ -8,6 +8,8 @@ import algorithms.genetic.selection.RouletteWheelSelection;
 import algorithms.genetic.selection.Selection;
 import algorithms.genetic.selection.TournamentSelection;
 import commons.Algorithm;
+import commons.Result;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import model.City;
 import model.Depot;
@@ -30,6 +32,8 @@ public class GeneticAlgorithm implements Algorithm {
     private List<Individual> population;
     private Selection selection;
 
+    @Getter private Result result;
+
     public void start() {
         population = new GenerationPopulation(cities, vehicles, depot, params.getPopulationSize()).initPopulation();
         population.sort(Comparator.comparing(individual -> individual.getResult().getSum()));
@@ -47,6 +51,8 @@ public class GeneticAlgorithm implements Algorithm {
 
         Writer.buildTitleOnConsole("Final result");
         Writer.writeResult(theBest.getResult());
+
+        result = theBest.getResult();
     }
 
     private void initSelectionMethod() {

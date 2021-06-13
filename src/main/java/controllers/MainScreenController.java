@@ -6,12 +6,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -29,6 +27,8 @@ public class MainScreenController implements Initializable {
     @FXML private Tab tabuTab;
     @FXML private ComboBox<ExampleInputName> examplesComboBox;
     @FXML private Label chooseFileLabel;
+    @FXML private Label saveLocationLabel;
+    @FXML private TextField outputFileTextField;
     private PathsHolder holder;
 
     @Override
@@ -52,6 +52,8 @@ public class MainScreenController implements Initializable {
             examplesComboBox.getItems().addAll(ExampleInputName.values());
             examplesComboBox.setOnAction(event -> holder.setExampleInputName(examplesComboBox.getValue()));
 
+            outputFileTextField.textProperty().addListener((observable, oldValue, newValue) -> holder.setOutputFile(newValue));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -68,6 +70,20 @@ public class MainScreenController implements Initializable {
             chooseFileLabel.setStyle("-fx-border-color: green");
             chooseFileLabel.setTooltip(new Tooltip(path));
             holder.setInputPath(path);
+        }
+    }
+
+    public void openDirectoryChooser(MouseEvent mouseEvent) {
+
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+
+        //Set extension filter for text files
+        File selectedDirectoryFile = directoryChooser.showDialog(((Node)mouseEvent.getSource()).getScene().getWindow());
+        if (selectedDirectoryFile != null) {
+            String directory = selectedDirectoryFile.getAbsolutePath();
+            saveLocationLabel.setText(directory);
+            saveLocationLabel.setTooltip(new Tooltip(directory));
+            holder.setOutputPath(directory);
         }
     }
 

@@ -3,6 +3,8 @@ package algorithms.tabusearch;
 import algorithms.tabusearch.model.ParametersTabuSearch;
 import algorithms.tabusearch.model.ResultTabu;
 import commons.Algorithm;
+import commons.Result;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import model.City;
 import model.Depot;
@@ -20,6 +22,8 @@ public class TabuSearchAlgorithm implements Algorithm {
     private final List<Vehicle> vehicles;
     private final Depot depot;
     private final ParametersTabuSearch parameters;
+
+    @Getter private Result result;
 
     public void start() {
         City depotCity = Utils.getDepotByCity(depot);
@@ -41,6 +45,8 @@ public class TabuSearchAlgorithm implements Algorithm {
 
         Writer.buildTitleOnConsole("Final result");
         Writer.writeResult(neighborhoodSolution.getCurrentResultTabu().getResult());
+
+        result = neighborhoodSolution.getCurrentResultTabu().getResult();
         //Writer.writeTabuStats(neighborhoodSolution.getTabuArray());
         //Writer.checkSumFreq(neighborhoodSolution.getTabuArrayReplacingStrategy());
         //Writer.checkSumFreq_2(neighborhoodSolution.getFreqArrayPuttingStrategy());

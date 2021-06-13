@@ -9,10 +9,7 @@ import exceptions.InputException;
 import input.DataReader;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -25,27 +22,30 @@ public class LocalSearchTabController extends UtilsController implements Initial
 
     @FXML ComboBox<LocalSearchMethod> methodsComboBox;
     @FXML private Button startButton;
+    @FXML private ProgressBar progressBar;
+    @FXML private Label runningLabel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         methodsComboBox.getItems().addAll(LocalSearchMethod.values());
-        startButtonListener();
+        startButton.setOnAction(event -> onStartButtonClicked());
     }
 
-    private void startButtonListener() {
-        startButton.setOnAction(event -> startAlgorithm());
-    }
-
-    private void startAlgorithm() {
+    private void onStartButtonClicked() {
         try {
             validate();
             DataReader dataReader = getInputData();
-            new LocalSearchAlgorithm(
+            changeFieldsProperties(true);
+
+            LocalSearchAlgorithm localSearchAlgorithm = new LocalSearchAlgorithm(
                     dataReader.getCities(),
                     dataReader.getVehicles(),
                     dataReader.getDepot(),
                     methodsComboBox.getValue()
-            ).start();
+            );
+
+            startAlgorithm(localSearchAlgorithm);
+            setOnSucceeded();
         } catch (InputException e) {
             new CustomAlert(Alert.AlertType.ERROR, e.getHeaderError(), e.getContentError(), ButtonType.OK).show();
         }
@@ -54,12 +54,27 @@ public class LocalSearchTabController extends UtilsController implements Initial
 
     private void validate() throws InputException {
         validateMethods();
-        validateInput();
+        validateCommon();
     }
 
     private void validateMethods() throws InputException {
         if (methodsComboBox.getValue() == null) {
             throw new ComboBoxNotFilledException(METHODS_NOT_FILLED_HEADER_ERROR, CHOOSE_A_METHOD);
         }
+    }
+
+    private void setOnSucceeded() {
+        currentTask.setOnSucceeded(event -> {
+            changeFieldsProperties(false);
+            showConfirmMessage();
+        });
+    }
+
+    private void changeFieldsProperties(boolean isEnabled) {
+        startButton.setDisable(isEnabled);
+        methodsComboBox.setDisable(isEnabled);
+
+        runningLabel.setVisible(isEnabled);
+        progressBar.setVisible(isEnabled);
     }
 }

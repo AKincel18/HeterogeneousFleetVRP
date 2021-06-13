@@ -3,6 +3,7 @@ package algorithms.localsearch;
 import algorithms.localsearch.model.LocalSearchMethod;
 import commons.Algorithm;
 import commons.Result;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import model.City;
 import model.Depot;
@@ -21,6 +22,8 @@ public class LocalSearchAlgorithm implements Algorithm {
     private final List<Vehicle> vehicles;
     private final Depot depot;
     private final LocalSearchMethod method;
+
+    @Getter private Result result;
 
     public void start() {
 
@@ -45,6 +48,7 @@ public class LocalSearchAlgorithm implements Algorithm {
         Writer.buildTitleOnConsole("FINAL RESULT");
         Writer.writeResult(solutionFromNeighborhood.getCurrentResult());
         System.out.println("Iteration nr = " + iterationNumber);
+        result = solutionFromNeighborhood.getCurrentResult();
     }
 }
 

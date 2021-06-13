@@ -9,9 +9,7 @@ import exceptions.InputException;
 import input.DataReader;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -21,30 +19,49 @@ public class TabuTabController extends UtilsController implements Initializable 
     @FXML private TextFieldInteger iterationNumberField;
     @FXML private TextFieldInteger tabuIterationNumberField;
     @FXML private Button startButton;
+    @FXML private ProgressBar progressBar;
+    @FXML private Label runningLabel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        startButtonListener();
+        startButton.setOnAction(event -> onStartButtonClicked());
     }
 
-    private void startButtonListener() {
-        startButton.setOnAction(event -> startAlgorithm());
-    }
-
-    private void startAlgorithm() {
+    private void onStartButtonClicked() {
         try {
-            validateInput();
+            validateCommon();
             DataReader dataReader = getInputData();
-            new TabuSearchAlgorithm(
+            changeFieldsProperties(true);
+
+            TabuSearchAlgorithm tabuSearchAlgorithm = new TabuSearchAlgorithm(
                     dataReader.getCities(),
                     dataReader.getVehicles(),
                     dataReader.getDepot(),
                     new ParametersTabuSearch(
                             iterationNumberField.getValue(),
                             tabuIterationNumberField.getValue())
-            ).start();
+            );
+
+            startAlgorithm(tabuSearchAlgorithm);
+            setOnSucceededTask();
         } catch (InputException e) {
             new CustomAlert(Alert.AlertType.ERROR, e.getHeaderError(), e.getContentError(), ButtonType.OK).show();
         }
+    }
+
+    private void setOnSucceededTask() {
+        currentTask.setOnSucceeded(event -> {
+            changeFieldsProperties(false);
+            showConfirmMessage();
+        });
+    }
+
+    private void changeFieldsProperties(boolean isEnabled) {
+        startButton.setDisable(isEnabled);
+        iterationNumberField.setDisable(isEnabled);
+        tabuIterationNumberField.setDisable(isEnabled);
+        
+        progressBar.setVisible(isEnabled);
+        runningLabel.setVisible(isEnabled);
     }
 }

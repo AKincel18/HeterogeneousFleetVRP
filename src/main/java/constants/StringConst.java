@@ -45,7 +45,23 @@ public class StringConst {
     public static final String SELECTIONS_NOT_FILLED_HEADER_ERROR = "Selection method not filled!";
     public static final String CHOOSE_A_METHOD = "Please choose a method.";
     public static final String METHODS_NOT_FILLED_HEADER_ERROR = "Local search method not filled!";
+    public static final String PROBABILITY_CANNOT_BE_ZERO_HEADER_ERROR = "Probability cannot be zero!";
+    public static final String PROBABILITY_CANNOT_BE_ZERO_CONTENT_ERROR = "Please enter other value.";
+    public static final String SAVE_LOCATION_NOT_GIVEN_HEADER_ERROR = "Save location not given!";
+    public static final String SAVE_LOCATION_NOT_GIVEN_CONTENT_ERROR = "Choose save location.";
+    public static final String OUTPUT_FILE_NOT_GIVEN_HEADER_ERROR = "Output file not given!";
+    public static final String OUTPUT_FILE_NOT_GIVEN_CONTENT_ERROR = "Choose output file.";
 
+    /**
+     * Output
+     */
+    public static final String SUM_OF_DISTANCES = "Sum of distances";
+
+    /**
+     * Info messages
+     */
+    public static final String CONFIRM_HEADER_INFO = "Program was ended successfully";
+    public static final String CONFIRM_CONTENT_INFO = "The program has finished running. Saved result to the file: ";
 
 
 

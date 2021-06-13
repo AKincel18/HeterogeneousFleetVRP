@@ -10,6 +10,7 @@ public class PathsHolder {
     private String inputPath;
     private String outputPath;
     private ExampleInputName exampleInputName;
+    private String outputFile;
 
     public static PathsHolder getInstance() {
         if (INSTANCE == null) {

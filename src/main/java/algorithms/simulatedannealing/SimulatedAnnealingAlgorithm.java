@@ -3,6 +3,7 @@ package algorithms.simulatedannealing;
 import algorithms.simulatedannealing.model.ParametersSimulatedAnnealing;
 import commons.Algorithm;
 import commons.Result;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import model.City;
 import model.Depot;
@@ -18,6 +19,8 @@ public class SimulatedAnnealingAlgorithm implements Algorithm {
     private final List<Vehicle> vehicles;
     private final Depot depot;
     private final ParametersSimulatedAnnealing params;
+
+    @Getter private Result result;
 
     public void start() {
         City depotCity = Utils.getDepotByCity(depot);
@@ -61,6 +64,8 @@ public class SimulatedAnnealingAlgorithm implements Algorithm {
         Writer.writeResult(currentResult);
         System.out.println("Iteration = " + iteration);
         System.out.println("Temperature = " + currentTemperature);
+
+        result = currentResult;
 
     }
 

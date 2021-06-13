@@ -34,25 +34,25 @@ public class GeneticTabController extends UtilsController implements Initializab
     @FXML private TextFieldInteger tournamentSizeField;
     @FXML private TextFieldDouble selectivePressureField;
     @FXML private Button startButton;
+    @FXML private ProgressBar progressBar;
+    @FXML private Label runningLabel;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
         selectionsComboBox.getItems().addAll(SelectionMethods.values());
-        startButtonListener();
+        startButton.setOnAction(event -> onStartButtonClicked());
         selectionsComboBoxListener();
     }
 
-    private void startButtonListener() {
-        startButton.setOnAction(event -> startAlgorithm());
-    }
-
-    private void startAlgorithm() {
+    private void onStartButtonClicked() {
         try {
             validate();
             DataReader dataReader = getInputData();
-            new GeneticAlgorithm(dataReader.getCities(), dataReader.getVehicles(), dataReader.getDepot(),
+            changeFieldsProperties(true);
+
+            GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(dataReader.getCities(), dataReader.getVehicles(), dataReader.getDepot(),
                     new ParametersGenetic(
                             populationSizeField.getValue(),
                             iterationNumberField.getValue(),
@@ -62,7 +62,10 @@ public class GeneticTabController extends UtilsController implements Initializab
                             selectionsComboBox.getValue(),
                             tournamentSizeField.getValue(),
                             selectivePressureField.getValue())
-            ).start();
+            );
+
+            startAlgorithm(geneticAlgorithm);
+            setOnSucceeded();
         } catch (InputException e) {
             new CustomAlert(Alert.AlertType.ERROR, e.getHeaderError(), e.getContentError(), ButtonType.OK).show();
         }
@@ -71,7 +74,7 @@ public class GeneticTabController extends UtilsController implements Initializab
 
     private void validate() throws InputException {
         validateSelections();
-        validateInput();
+        validateCommon();
     }
 
     private void validateSelections() throws InputException {
@@ -108,6 +111,26 @@ public class GeneticTabController extends UtilsController implements Initializab
         selectivePressureField.setVisible(enable);
     }
 
+    private void setOnSucceeded() {
+        currentTask.setOnSucceeded(event -> {
+            changeFieldsProperties(false);
+            showConfirmMessage();
+        });
+    }
 
+    private void changeFieldsProperties(boolean isEnabled) {
+        startButton.setDisable(isEnabled);
+        populationSizeField.setDisable(isEnabled);
+        iterationNumberField.setDisable(isEnabled);
+        crossoverProbField.setDisable(isEnabled);
+        mutationProbField.setDisable(isEnabled);
+        repeatingCrossoverNumberField.setDisable(isEnabled);
+        selectionsComboBox.setDisable(isEnabled);
+        tournamentSizeField.setDisable(isEnabled);
+        selectivePressureField.setDisable(isEnabled);
+
+        progressBar.setVisible(isEnabled);
+        runningLabel.setVisible(isEnabled);
+    }
 
 }

@@ -6,22 +6,22 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Light.Distant?>
 <?import javafx.scene.effect.Lighting?>
 <?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="448.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controllers.MainScreenController">
+<AnchorPane prefHeight="452.0" prefWidth="619.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainScreenController">
 
-    <TabPane prefHeight="448.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+    <TabPane prefHeight="493.0" prefWidth="619.0" tabClosingPolicy="UNAVAILABLE">
         <Tab fx:id="geneticTab" text="Genetic" />
         <Tab fx:id="localSearchTab" text="Local search" />
         <Tab fx:id="simAnnealingTab" text="Simulated annealing" />
         <Tab fx:id="tabuTab" text="Tabu" />
     </TabPane>
-    <ComboBox fx:id="examplesComboBox" layoutX="127.0" layoutY="364.0" prefHeight="30.0" prefWidth="372.0" promptText="Select example input" />
-    <Label fx:id="chooseFileLabel" layoutX="127.0" layoutY="318.0" onMouseClicked="#openFileChooser" prefHeight="36.0" prefWidth="372.0" style="-fx-border-color: black;" text="Click to choose input file" underline="true">
+    <ComboBox fx:id="examplesComboBox" layoutX="14.0" layoutY="396.0" prefHeight="30.0" prefWidth="289.0" promptText="Select example input" />
+    <Label fx:id="chooseFileLabel" layoutX="14.0" layoutY="346.0" onMouseClicked="#openFileChooser" prefHeight="36.0" prefWidth="289.0" style="-fx-border-color: black;" text="Click to choose input file" underline="true">
         <effect>
             <Lighting>
                 <bumpInput>
@@ -39,5 +39,25 @@
             <Insets left="5.0" />
         </padding>
     </Label>
-   <Label layoutX="127.0" layoutY="288.0" prefHeight="30.0" prefWidth="372.0" text="Choose own input file or select from examples input:" />
+   <Label layoutX="14.0" layoutY="316.0" prefHeight="30.0" prefWidth="289.0" text="Choose own input file or select from examples input:" />
+   <Label fx:id="saveLocationLabel" layoutX="316.0" layoutY="346.0" onMouseClicked="#openDirectoryChooser" prefHeight="36.0" prefWidth="289.0" style="-fx-border-color: black;" text="Click to choose save location" underline="true">
+      <effect>
+         <Lighting>
+            <bumpInput>
+               <Shadow />
+            </bumpInput>
+            <light>
+               <Light.Distant />
+            </light>
+         </Lighting>
+      </effect>
+      <cursor>
+         <Cursor fx:constant="CLOSED_HAND" />
+      </cursor>
+      <padding>
+         <Insets left="5.0" />
+      </padding>
+   </Label>
+   <Label layoutX="316.0" layoutY="316.0" prefHeight="30.0" prefWidth="289.0" text="Choose save location and name of the output file:" />
+   <TextField fx:id="outputFileTextField" layoutX="316.0" layoutY="396.0" prefHeight="30.0" prefWidth="289.0" promptText="Enter output file name" />
 </AnchorPane>
