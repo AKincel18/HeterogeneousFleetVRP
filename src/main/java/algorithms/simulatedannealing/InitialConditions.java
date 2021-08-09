@@ -24,16 +24,16 @@ public class InitialConditions {
 
     public void generateInitialConditions() {
         do {
-            System.out.println("START");
+            //System.out.println("START");
             //generatedResult = generateRandomResult(vehicles, cities, depotCity);
             //Writer.buildTitleOnConsole("Generated static solution");
             generatedResult = generateRandomResult(vehicles, cities, depotCity);
-            Writer.buildTitleOnConsole("Generated random solution");
+            //Writer.buildTitleOnConsole("Generated random solution");
             temperatureZero = countTemperatureZero();
         } while (temperatureZero == 0.0);
 
-        Writer.writeResult(generatedResult);
-        Writer.buildTitleOnConsole("t0 = " + temperatureZero);
+        //Writer.writeResult(generatedResult);
+        //Writer.buildTitleOnConsole("t0 = " + temperatureZero);
     }
 
     private double countTemperatureZero() {

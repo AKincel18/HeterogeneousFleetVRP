@@ -1,7 +1,7 @@
 package controllers;
 
-import commons.ExampleInputName;
 import commons.PathsHolder;
+import input.DataReader;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,6 +15,7 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import static constants.StringConst.*;
@@ -25,7 +26,7 @@ public class MainScreenController implements Initializable {
     @FXML private Tab localSearchTab;
     @FXML private Tab simAnnealingTab;
     @FXML private Tab tabuTab;
-    @FXML private ComboBox<ExampleInputName> examplesComboBox;
+    @FXML private ComboBox<String> sheetsComboBox;
     @FXML private Label chooseFileLabel;
     @FXML private Label saveLocationLabel;
     @FXML private TextField outputFileTextField;
@@ -49,9 +50,6 @@ public class MainScreenController implements Initializable {
 
             holder = PathsHolder.getInstance();
 
-            examplesComboBox.getItems().addAll(ExampleInputName.values());
-            examplesComboBox.setOnAction(event -> holder.setExampleInputName(examplesComboBox.getValue()));
-
             outputFileTextField.textProperty().addListener((observable, oldValue, newValue) -> holder.setOutputFile(newValue));
 
         } catch (IOException e) {
@@ -61,7 +59,7 @@ public class MainScreenController implements Initializable {
 
     public void openFileChooser(MouseEvent mouseEvent) {
         FileChooser fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Files: xlsx, csv", "*.xlsx", "*.csv");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("File: xlsx", "*.xlsx");
         fileChooser.getExtensionFilters().add(extFilter);
         File selectedFile = fileChooser.showOpenDialog(((Node) mouseEvent.getSource()).getScene().getWindow());
         if (selectedFile != null) {
@@ -70,6 +68,13 @@ public class MainScreenController implements Initializable {
             chooseFileLabel.setStyle("-fx-border-color: green");
             chooseFileLabel.setTooltip(new Tooltip(path));
             holder.setInputPath(path);
+            sheetsComboBox.getItems().addAll(new DataReader(path, null).getSheets());
+            sheetsComboBox.setOnAction(event -> holder.setSheet(sheetsComboBox.getValue()));
+            sheetsComboBox.setDisable(false);
+        }
+        else {
+            sheetsComboBox.getItems().addAll(new ArrayList<>());
+            sheetsComboBox.setDisable(true);
         }
     }
 

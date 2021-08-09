@@ -15,13 +15,13 @@
 <AnchorPane prefHeight="452.0" prefWidth="619.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainScreenController">
 
     <TabPane prefHeight="493.0" prefWidth="619.0" tabClosingPolicy="UNAVAILABLE">
-        <Tab fx:id="geneticTab" text="Genetic" />
         <Tab fx:id="localSearchTab" text="Local search" />
         <Tab fx:id="simAnnealingTab" text="Simulated annealing" />
         <Tab fx:id="tabuTab" text="Tabu" />
+        <Tab fx:id="geneticTab" text="Genetic" />
     </TabPane>
-    <ComboBox fx:id="examplesComboBox" layoutX="14.0" layoutY="396.0" prefHeight="30.0" prefWidth="289.0" promptText="Select example input" />
-    <Label fx:id="chooseFileLabel" layoutX="14.0" layoutY="346.0" onMouseClicked="#openFileChooser" prefHeight="36.0" prefWidth="289.0" style="-fx-border-color: black;" text="Click to choose input file" underline="true">
+    <ComboBox fx:id="sheetsComboBox" disable="true" layoutX="14.0" layoutY="396.0" prefHeight="30.0" prefWidth="289.0" promptText="Select a sheet" />
+    <Label fx:id="chooseFileLabel" layoutX="14.0" layoutY="346.0" onMouseClicked="#openFileChooser" prefHeight="36.0" prefWidth="289.0" style="-fx-border-color: black;" text="Click to choose an input file" underline="true">
         <effect>
             <Lighting>
                 <bumpInput>
@@ -39,7 +39,7 @@
             <Insets left="5.0" />
         </padding>
     </Label>
-   <Label layoutX="14.0" layoutY="316.0" prefHeight="30.0" prefWidth="289.0" text="Choose own input file or select from examples input:" />
+   <Label layoutX="14.0" layoutY="316.0" prefHeight="30.0" prefWidth="289.0" text="Choose an input file and select a sheet:" />
    <Label fx:id="saveLocationLabel" layoutX="316.0" layoutY="346.0" onMouseClicked="#openDirectoryChooser" prefHeight="36.0" prefWidth="289.0" style="-fx-border-color: black;" text="Click to choose save location" underline="true">
       <effect>
          <Lighting>

@@ -9,7 +9,6 @@ import model.City;
 import model.Depot;
 import model.Vehicle;
 import utils.Utils;
-import utils.Writer;
 
 import java.util.List;
 
@@ -27,27 +26,27 @@ public class LocalSearchAlgorithm implements Algorithm {
 
     public void start() {
 
-        City depotCity = Utils.getDepotByCity(depot);
+        City depotCity = Utils.getCityByDepot(depot);
 
         Result currentResult = generateRandomResult(vehicles, cities, depotCity);
-        Writer.buildTitleOnConsole("Generated random solution");
+
+        //Writer.buildTitleOnConsole("Generated random solution");
 //        Result currentResult = generateStaticResult(vehicles, cities, depotCity);
 //        Writer.buildTitleOnConsole("Generated static solution");
 
-        Writer.writeResult(currentResult);
+        //Writer.writeResult(currentResult);
 
         LocalSearchNeighborhoodSolution solutionFromNeighborhood =
                 new LocalSearchNeighborhoodSolution(cities, vehicles, depotCity, method, currentResult);
         int iterationNumber = 0;
         do {
-            //Writer.buildTitleOnConsole("Iteration nr = " + iterationNumber);
             solutionFromNeighborhood.findSolutionFromNeighborhood();
             iterationNumber++;
         } while (solutionFromNeighborhood.isFoundBetterResult());
 
-        Writer.buildTitleOnConsole("FINAL RESULT");
-        Writer.writeResult(solutionFromNeighborhood.getCurrentResult());
-        System.out.println("Iteration nr = " + iterationNumber);
+        //Writer.buildTitleOnConsole("FINAL RESULT");
+        //Writer.writeResult(solutionFromNeighborhood.getCurrentResult());
+        //System.out.println("Iteration nr = " + iterationNumber);
         result = solutionFromNeighborhood.getCurrentResult();
     }
 }

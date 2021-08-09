@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-//@Slf4j
 @RequiredArgsConstructor
 public class DataReader {
 
@@ -30,14 +29,15 @@ public class DataReader {
     @Getter private final List<City> cities = new ArrayList<>();
     @Getter private final List<Vehicle> vehicles = new ArrayList<>();
     @Getter private final Depot depot = new Depot();
+    @Getter private boolean isDataValid = false;
 
     public void readData(){
         try {
 
             FileInputStream inputStream = new FileInputStream(new File(fileName));
-
             Workbook workbook = new XSSFWorkbook(inputStream);
-            Sheet sheet = sheetName != null ? workbook.getSheet(sheetName) : workbook.getSheetAt(0);
+
+            Sheet sheet = workbook.getSheet(sheetName);
             boolean header = true;
             int vehicleId = 0;
             int cityId = 1;
@@ -94,16 +94,14 @@ public class DataReader {
                     if (!city.isNullCity())
                         cities.add(city);
                 } catch (NotValidDataException e) {
-                    System.out.println(e.getMessage());
                     return;
                 }
 
-                try{
+                try {
                     vehicle.validData();
                     if (!vehicle.isNull())
                         vehicles.add(vehicle);
                 } catch (NotValidDataException e) {
-                    System.out.println(e.getMessage());
                     return;
                 }
 
@@ -113,14 +111,27 @@ public class DataReader {
             inputStream.close();
 
             Writer.writeInputData(cities, vehicles, depot);
+            isDataValid = true;
 
         }
-        catch (IOException e) {
-            //log.error("not loaded data");
-            System.out.println("not loaded data");
+        catch (IOException | ClassCastException ignored) {}
+
+    }
+
+    public List<String> getSheets() {
+        try {
+            FileInputStream inputStream = new FileInputStream(new File(fileName));
+            Workbook workbook = new XSSFWorkbook(inputStream);
+
+            List<String> sheets = new ArrayList<>();
+            for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+                sheets.add(workbook.getSheetName(i));
+            }
+            return sheets;
+        } catch (IOException e) {
+            System.out.println("...");
+            return null;
         }
-
-
     }
 
     private Object getCellValue(Cell cell) {

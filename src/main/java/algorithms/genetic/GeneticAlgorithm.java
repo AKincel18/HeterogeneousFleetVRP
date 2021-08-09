@@ -38,9 +38,6 @@ public class GeneticAlgorithm implements Algorithm {
         population = new GenerationPopulation(cities, vehicles, depot, params.getPopulationSize()).initPopulation();
         population.sort(Comparator.comparing(individual -> individual.getResult().getSum()));
 
-        Writer.buildTitleOnConsole("The best generated individual");
-        Writer.writeResult(population.stream().findFirst().orElseThrow().getResult());
-
         initSelectionMethod();
         for (int i = 0; i < params.getIterationNumber(); i++) {
             selection();
@@ -48,9 +45,6 @@ public class GeneticAlgorithm implements Algorithm {
         }
         population.sort(Comparator.comparing(individual -> individual.getResult().getSum()));
         Individual theBest = population.stream().findFirst().orElseThrow();
-
-        Writer.buildTitleOnConsole("Final result");
-        Writer.writeResult(theBest.getResult());
 
         result = theBest.getResult();
     }
@@ -77,7 +71,7 @@ public class GeneticAlgorithm implements Algorithm {
 
     private void geneticOperations() {
         GeneticOperations geneticOperations = new GeneticOperations(selection.getPairIndividuals(), cities, vehicles,
-                getDepotByCity(depot), params, selection.getTheBest());
+                getCityByDepot(depot), params, selection.getTheBest());
         geneticOperations.geneticOperations();
         population = geneticOperations.getPopulationNew();
     }

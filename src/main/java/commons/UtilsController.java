@@ -1,16 +1,11 @@
 package commons;
 
-import constants.StringConst;
-import exceptions.InputException;
-import exceptions.InputFilesNotGivenException;
-import exceptions.OutputFileNotGivenException;
-import exceptions.SaveLocationNotGivenException;
+import exceptions.*;
 import input.DataReader;
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import output.DataWriter;
-import utils.Pair;
 
 import static constants.StringConst.*;
 
@@ -19,29 +14,20 @@ abstract public class UtilsController {
     private PathsHolder holder;
     protected Task<Void> currentTask;
 
-    protected DataReader getInputData() {
-        Pair<String, String> inputs = getInputsName();
-        DataReader dataReader = new DataReader(inputs.getObj1(), inputs.getObj2());
+    protected DataReader getInputData() throws InputException {
+        DataReader dataReader = new DataReader(holder.getInputPath(), holder.getSheet());
         dataReader.readData();
+        if (!dataReader.isDataValid())
+            throw new NotValidDataException(INPUT_DATA_IS_NOT_VALID_HEADER_ERROR, INPUT_DATA_IS_NOT_VALID_CONTENT_ERROR);
         return dataReader;
-    }
-
-    private Pair<String, String> getInputsName() {
-        holder = PathsHolder.getInstance();
-        Pair<String, String> inputs = new Pair<>();
-        if (holder.getInputPath() != null) {
-            inputs.setObj1(holder.getInputPath());
-        } else {
-            inputs.setObj1(StringConst.FILE_NAME);
-            inputs.setObj2(holder.getExampleInputName().toString());
-        }
-        return inputs;
     }
 
     private void validateInputFile() throws InputException {
         holder = PathsHolder.getInstance();
-        if (holder.getInputPath() == null && holder.getExampleInputName() == null)
+        if (holder.getInputPath() == null)
             throw new InputFilesNotGivenException(INPUT_NOT_GIVEN_HEADER_ERROR, INPUT_NOT_GIVEN_CONTENT_ERROR);
+        if (holder.getSheet() == null)
+            throw new InputFilesNotGivenException(SHEET_NOT_SELECTED_HEADER_ERROR, SHEET_NOT_SELECTED_CONTENT_ERROR);
 
     }
 

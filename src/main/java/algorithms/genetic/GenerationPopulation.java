@@ -21,7 +21,7 @@ public class GenerationPopulation {
 
     public List<Individual> initPopulation() {
 
-        City depotCity = Utils.getDepotByCity(depot);
+        City depotCity = Utils.getCityByDepot(depot);
         Individual individual;
         for (int i = 0; i < populationSize; i++) {
             individual = new Individual(i, depotCity, Utils.generateRandomResult(vehicles, cities, depotCity));

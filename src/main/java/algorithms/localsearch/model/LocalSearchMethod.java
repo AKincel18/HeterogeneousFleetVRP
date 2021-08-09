@@ -2,7 +2,7 @@ package algorithms.localsearch.model;
 
 public enum LocalSearchMethod {
     GREEDY ("Greedy"),
-    STEEPEST ("Steeptest");
+    STEEPEST ("Steepest");
 
     private final String name;
 

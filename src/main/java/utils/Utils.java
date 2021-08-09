@@ -87,7 +87,7 @@ public class Utils {
         return Utils.roundNumber(sumDistance);
     }
 
-    public static City getDepotByCity(Depot depot) {
+    public static City getCityByDepot(Depot depot) {
         return City.builder()
                 .coords(depot.getCoords())
                 .amount(0.0)

@@ -9,7 +9,6 @@ import model.City;
 import model.Depot;
 import model.Vehicle;
 import utils.Utils;
-import utils.Writer;
 
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class SimulatedAnnealingAlgorithm implements Algorithm {
     @Getter private Result result;
 
     public void start() {
-        City depotCity = Utils.getDepotByCity(depot);
+        City depotCity = Utils.getCityByDepot(depot);
         InitialConditions initialConditions = new InitialConditions(cities, vehicles, depotCity, params);
         initialConditions.generateInitialConditions();
         double currentTemperature = initialConditions.getTemperatureZero();
@@ -34,11 +33,10 @@ public class SimulatedAnnealingAlgorithm implements Algorithm {
         SimAnnealingNeighborhoodSolution solutionFromNeighborhood = new SimAnnealingNeighborhoodSolution(cities, vehicles,
                 depotCity, currentResult);
         SolutionAnalysis analysis = new SolutionAnalysis(stopCondition);
-        int iteration = 0;
+
         do {
             boolean isImprovement = false;
             for (int i = 0; i < params.getIterationNumber(); i++) {
-                iteration++;
                 solutionFromNeighborhood.findSolutionFromNeighborhood();
                 if (solutionFromNeighborhood.isFoundNewResult()) {
                     currentResult = analysis.findCurrentResult(currentResult,
@@ -54,16 +52,8 @@ public class SimulatedAnnealingAlgorithm implements Algorithm {
             } else {
                 analysis.checkFinish();
             }
-
             currentTemperature *= params.getCoolingFactor();
-            //System.out.println("distance = " + currentResult.getSum() + ", t = " + currentTemperature);
         } while (!analysis.isStop());
-        //} while (!analysis.isStop() && currentTemperature > 5);
-
-        Writer.buildTitleOnConsole("FINAL RESULT");
-        Writer.writeResult(currentResult);
-        System.out.println("Iteration = " + iteration);
-        System.out.println("Temperature = " + currentTemperature);
 
         result = currentResult;
 

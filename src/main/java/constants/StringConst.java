@@ -4,11 +4,17 @@ public class StringConst {
     /**
      * Data
      */
+    public static final String FILE_NAME = "input/Data.xlsx";
+
     public static final String NAME_OF_SHEET_1 = "Data1";
     public static final String NAME_OF_SHEET_2 = "Data2";
     public static final String NAME_OF_SHEET_3 = "Data3";
     public static final String NAME_OF_SHEET_STATIC = "Data_STATIC";
-    public static final String FILE_NAME = "input/Data.xlsx";
+
+    public static final String NAME_OF_SHEET_60 = "Data60";
+    public static final String NAME_OF_SHEET_80 = "Data80";
+    public static final String NAME_OF_SHEET_100 = "Data100";
+    public static final String NAME_OF_SHEET_EUROPE = "Europe";
 
     /**
      * Valid data
@@ -35,13 +41,17 @@ public class StringConst {
     /**
      * App title
      */
-    public static final String APP_TITLE = "VPR App";
+    public static final String APP_TITLE = "Heterogeneous Fleet VPR";
 
     /**
      * Error messages
      */
     public static final String INPUT_NOT_GIVEN_HEADER_ERROR = "Input file not chosen!";
-    public static final String INPUT_NOT_GIVEN_CONTENT_ERROR = "Choose own input file or select from examples.";
+    public static final String INPUT_NOT_GIVEN_CONTENT_ERROR = "Choose input file.";
+    public static final String SHEET_NOT_SELECTED_HEADER_ERROR = "Sheet not chosen!";
+    public static final String SHEET_NOT_SELECTED_CONTENT_ERROR = "Select a sheet.";
+    public static final String INPUT_DATA_IS_NOT_VALID_HEADER_ERROR = "Input data is not valid!";
+    public static final String INPUT_DATA_IS_NOT_VALID_CONTENT_ERROR = "Choose valid data.";
     public static final String SELECTIONS_NOT_FILLED_HEADER_ERROR = "Selection method not filled!";
     public static final String CHOOSE_A_METHOD = "Please choose a method.";
     public static final String METHODS_NOT_FILLED_HEADER_ERROR = "Local search method not filled!";
