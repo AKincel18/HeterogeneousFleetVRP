@@ -24,10 +24,10 @@ public class City extends ModelCommon {
     public void validDataCity() throws NotValidDataException {
         validData();
         if (coords.getLongitude() == null && coords.getLatitude() != null)
-            throw new NotValidDataException(StringConst.LONGITUDE_NOT_VALID);
+            throw new NotValidDataException(StringConst.LONGITUDE_NOT_VALID, null);
 
         if (coords.getLongitude() != null && coords.getLatitude() == null) {
-            throw new NotValidDataException(StringConst.LATITUDE_NOT_VALID);
+            throw new NotValidDataException(StringConst.LATITUDE_NOT_VALID, null);
         }
     }
 

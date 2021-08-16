@@ -29,7 +29,7 @@ public class SimAnnealingNeighborhoodSolution extends NeighborhoodSolution {
             replaceTwoCitiesRandom();
         else
             putCityToAnotherVehicleRandom();
-        check(cities.size(), currentResult);
+        //check(cities.size(), currentResult);
     }
 
     private void replaceTwoCitiesRandom() {

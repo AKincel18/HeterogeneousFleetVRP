@@ -10,7 +10,7 @@ import utils.Writer;
 
 import java.util.List;
 
-import static utils.Utils.generateStaticResult;
+import static utils.Utils.generateRandomResult;
 
 @RequiredArgsConstructor
 public class InitialConditions {
@@ -24,15 +24,16 @@ public class InitialConditions {
 
     public void generateInitialConditions() {
         do {
-            System.out.println("START");
+            //System.out.println("START");
             //generatedResult = generateRandomResult(vehicles, cities, depotCity);
-            generatedResult = generateStaticResult(vehicles, cities, depotCity);
+            //Writer.buildTitleOnConsole("Generated static solution");
+            generatedResult = generateRandomResult(vehicles, cities, depotCity);
+            //Writer.buildTitleOnConsole("Generated random solution");
             temperatureZero = countTemperatureZero();
         } while (temperatureZero == 0.0);
 
-        Writer.buildTitleOnConsole("Generated static solution");
-        Writer.writeResult(generatedResult);
-        Writer.buildTitleOnConsole("t0 = " + temperatureZero);
+        //Writer.writeResult(generatedResult);
+        //Writer.buildTitleOnConsole("t0 = " + temperatureZero);
     }
 
     private double countTemperatureZero() {

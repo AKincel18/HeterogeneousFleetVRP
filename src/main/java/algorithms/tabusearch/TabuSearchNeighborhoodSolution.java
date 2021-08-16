@@ -11,9 +11,11 @@ import lombok.NonNull;
 import model.City;
 import model.Vehicle;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
-import static utils.Utils.check;
 import static utils.Utils.checkIsAcceptableWeightAll;
 
 public class TabuSearchNeighborhoodSolution extends NeighborhoodSolution {
@@ -26,7 +28,7 @@ public class TabuSearchNeighborhoodSolution extends NeighborhoodSolution {
     @Getter private ResultTabu currentResultTabu;
     private ResultTabu bestTabu;
     private TabuCoords lastTabuCoords;
-    private Result currentResult;
+    @Getter private Result currentResult;
     private NeighborhoodStrategy neighborhoodStrategy;
 
     public TabuSearchNeighborhoodSolution(List<City> cities, List<Vehicle> vehicles,
@@ -78,10 +80,6 @@ public class TabuSearchNeighborhoodSolution extends NeighborhoodSolution {
             currentResult = currentResultTabu.getResult();
             lastTabuCoords = currentResultTabu.getTabuCoords();
         }
-        else  {
-            System.out.println("result not found");
-            System.exit(-1);
-        }
     }
 
     private void replaceTwoCities() {
@@ -93,7 +91,6 @@ public class TabuSearchNeighborhoodSolution extends NeighborhoodSolution {
                 Collections.swap(Arrays.asList(neighborhoodDecodedResult), i, j);
                 Result resultNew = decoder.decodeResultFromArray(neighborhoodDecodedResult, coder.getCutPoints());
                 if (checkIsAcceptableWeightAll(resultNew.getRoutes())) {
-                    check(cities, Arrays.asList(neighborhoodDecodedResult), coder.getCutPoints());
                     checkFoundResult(neighborhoodDecodedResult[i], neighborhoodDecodedResult[j], resultNew);
                 }
             }

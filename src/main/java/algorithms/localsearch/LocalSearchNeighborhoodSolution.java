@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static utils.Utils.check;
 import static utils.Utils.checkIsAcceptableWeightAll;
 
 
@@ -36,7 +35,6 @@ public class LocalSearchNeighborhoodSolution extends NeighborhoodSolution {
             replaceTwoCities();
         else
             putCityToAnotherVehicle();
-        check(cities.size(), currentResult);
     }
 
     private void replaceTwoCities() {

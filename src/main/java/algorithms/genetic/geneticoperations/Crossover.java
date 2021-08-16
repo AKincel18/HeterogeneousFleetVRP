@@ -11,10 +11,10 @@ import model.Vehicle;
 import utils.Decoder;
 import utils.Pair;
 
-import java.util.*;
+import java.util.List;
+import java.util.Random;
 
 import static algorithms.genetic.geneticoperations.Utils.isInRange;
-import static utils.Utils.check;
 
 @RequiredArgsConstructor
 public class Crossover {
@@ -36,10 +36,6 @@ public class Crossover {
         Integer[] i2 = pairIndividualsDecode.getIndividual2();
 
         partialMappedCrossover.start(leftCutPoints, rightCutPoints, i1, i2);
-
-        //todo remove after testing
-        check(cities, Arrays.asList(i1), cutPoints1);
-        check(cities, Arrays.asList(i2), cutPoints2);
 
         Result result1 = new Decoder(vehicles, cities, depot).decodeResultFromArray(i1, cutPoints1);
         Result result2 = new Decoder(vehicles, cities, depot).decodeResultFromArray(i2, cutPoints2);

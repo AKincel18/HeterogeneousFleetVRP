@@ -14,9 +14,9 @@ abstract class ModelCommon {
 
     public void validData() throws NotValidDataException {
         if (name == null && amount != null)
-            throw new NotValidDataException(StringConst.NAME_NOT_VALID);
+            throw new NotValidDataException(StringConst.NAME_NOT_VALID, null);
         if (name != null && amount == null)
-            throw new NotValidDataException(StringConst.AMOUNT_NOT_VALID);
+            throw new NotValidDataException(StringConst.AMOUNT_NOT_VALID, null);
     }
 
     public boolean isNull() {

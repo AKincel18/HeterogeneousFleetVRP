@@ -41,7 +41,7 @@ public class Writer {
 
 
             System.out.print("Vehicle: " + vehicle.getName() + " = ");
-            cities.forEach(city -> System.out.print(city.getName() + "(" + city.getId() + ")" + " "));
+            cities.forEach(city -> System.out.print(city.getName() + ", "));
             System.out.print("; quality = " + Utils.countQuality(vehicle, cities));
             System.out.println(" ; distance = " + Utils.countRouteDistance(cities));
 
