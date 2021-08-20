@@ -1,33 +1,6 @@
 package constants;
 
 public class StringConst {
-    /**
-     * Data
-     */
-    public static final String FILE_NAME = "input/Data.xlsx";
-
-    public static final String NAME_OF_SHEET_1 = "Data1";
-    public static final String NAME_OF_SHEET_2 = "Data2";
-    public static final String NAME_OF_SHEET_3 = "Data3";
-    public static final String NAME_OF_SHEET_STATIC = "Data_STATIC";
-
-    public static final String NAME_OF_SHEET_60 = "Data60";
-    public static final String NAME_OF_SHEET_80 = "Data80";
-    public static final String NAME_OF_SHEET_100 = "Data100";
-    public static final String NAME_OF_SHEET_EUROPE = "Europe";
-
-    /**
-     * Valid data
-     */
-    public static final String NAME_NOT_VALID = "NAME_NOT_VALID";
-    public static final String AMOUNT_NOT_VALID = "AMOUNT_NOT_VALID";
-    public static final String LATITUDE_NOT_VALID = "LATITUDE_NOT_VALID";
-    public static final String LONGITUDE_NOT_VALID = "LONGITUDE_NOT_VALID";
-
-    /**
-     * Genetic algorithm
-     */
-    public static final String INDIVIDUAL_NOT_FOUND = "Individual not found!";
 
     /**
      * Screen name
@@ -51,6 +24,15 @@ public class StringConst {
     public static final String SHEET_NOT_SELECTED_HEADER_ERROR = "Sheet not chosen!";
     public static final String SHEET_NOT_SELECTED_CONTENT_ERROR = "Select a sheet.";
     public static final String INPUT_DATA_IS_NOT_VALID_HEADER_ERROR = "Input data is not valid!";
+    public static final String CITY_LATITUDE_NOT_GIVEN_HEADER_ERROR = "City latitude is not given, row: ";
+    public static final String DEPOT_LATITUDE_NOT_GIVEN_HEADER_ERROR = "Depot latitude is not given, row: ";
+    public static final String CITY_LONGITUDE_NOT_GIVEN_HEADER_ERROR = "City longitude is not given, row: ";
+    public static final String DEPOT_LONGITUDE_NOT_GIVEN_HEADER_ERROR = "Depot longitude is not given, row: ";
+    public static final String CITY_NAME_NOT_GIVEN_HEADER_ERROR = "City name is not given, row: ";
+    public static final String VEHICLE_NAME_NOT_GIVEN_HEADER_ERROR = "Vehicle name is not given, row: ";
+    public static final String DEPOT_NAME_NOT_GIVEN_HEADER_ERROR = "Depot name is not given, row: ";
+    public static final String CITY_AMOUNT_NOT_GIVEN_HEADER_ERROR = "City amount is not given, row: ";
+    public static final String VEHICLE_AMOUNT_NOT_GIVEN_HEADER_ERROR = "Vehicle amount is not given, row: ";
     public static final String INPUT_DATA_IS_NOT_VALID_CONTENT_ERROR = "Choose valid data.";
     public static final String SELECTIONS_NOT_FILLED_HEADER_ERROR = "Selection method not filled!";
     public static final String CHOOSE_A_METHOD = "Please choose a method.";

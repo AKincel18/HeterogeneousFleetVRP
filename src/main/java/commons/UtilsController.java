@@ -17,8 +17,9 @@ abstract public class UtilsController {
     protected DataReader getInputData() throws InputException {
         DataReader dataReader = new DataReader(holder.getInputPath(), holder.getSheet());
         dataReader.readData();
-        if (!dataReader.isDataValid())
-            throw new NotValidDataException(INPUT_DATA_IS_NOT_VALID_HEADER_ERROR, INPUT_DATA_IS_NOT_VALID_CONTENT_ERROR);
+        if (!dataReader.getValidationResult().isValid()) {
+            throw dataReader.getValidationResult().getException();
+        }
         return dataReader;
     }
 
