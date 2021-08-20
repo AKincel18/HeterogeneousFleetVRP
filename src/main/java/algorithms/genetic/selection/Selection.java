@@ -30,17 +30,14 @@ abstract public class Selection {
 
 
     protected void countCircleSegment() {
-        //Writer.buildTitleOnConsole("Count circle segment");
         AtomicReference<Double> sum = new AtomicReference<>(0.0);
         population.forEach(i -> {
             sum.updateAndGet(v -> v + i.getReproductionProbability());
             i.setCircleSegment(Utils.roundNumber(sum.get()));
-            //System.out.println("id = " + i.getId() + ", circle element = " + Utils.roundNumber(sum.get()));
         });
     }
 
     protected void selectIndividuals() {
-        //Writer.buildTitleOnConsole("SELECTION NOW");
         selectedIndividuals = new ArrayList<>();
         Random random = new Random();
         HashMap<Individual, Integer> stats = new HashMap<>();
@@ -86,6 +83,5 @@ abstract public class Selection {
         }
         return population.get(population.size() - 1); //worst individual
     }
-
 
 }

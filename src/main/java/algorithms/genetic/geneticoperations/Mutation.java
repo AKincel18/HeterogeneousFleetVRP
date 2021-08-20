@@ -21,12 +21,12 @@ public class Mutation {
         Pair<Integer, Integer> vehiclesToMutation = drawVehicles();
         Vehicle v1 = vehicles.stream().filter(v -> v.getId() == vehiclesToMutation.getObj1()).findFirst().orElseThrow();
         List<City> routeVehicle1 = routes.get(v1);
-        if (routeVehicle1.size() == 3) //only one city
+        if (routeVehicle1.size() == 3) //only one city (plus two depots)
             return;
 
         Vehicle v2 = vehicles.stream().filter(v -> v.getId() == vehiclesToMutation.getObj2()).findFirst().orElseThrow();
         List<City> routeVehicle2 = routes.get(v2);
-        if (routeVehicle2.size() == 3) //only one city
+        if (routeVehicle2.size() == 3) //only one city (plus two depots)
             return;
 
         routeVehicle1.removeIf(c -> c.getId() == 0);

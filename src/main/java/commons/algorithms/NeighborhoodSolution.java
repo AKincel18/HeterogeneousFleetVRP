@@ -1,4 +1,4 @@
-package commons;
+package commons.algorithms;
 
 import model.City;
 import model.Vehicle;
@@ -38,19 +38,5 @@ public abstract class NeighborhoodSolution implements SolutionFromNeighborhood {
         }
         return mapNew;
     }
-
-//    protected void printMap(Map<Integer, List<Integer>> neighborhoodDecodedResult) {
-//        neighborhoodDecodedResult.forEach((k, v) -> System.out.println("vec = " + k + ", route = " + v.toString()));
-//    }
-//
-//    protected void printSwapInfo(Integer[] decodedResult, List<Integer> neighborhoodDecodedResult, int i, int j,
-//                                 Integer[] cutPoints, Integer[] updatedCutPoints) {
-//        Writer.buildTitleOnConsole("Swapping info");
-//        System.out.println(i + "<->" + j);
-//        System.out.print("Base = ");
-//        Writer.writeDecodedResultInOneRow(Arrays.asList(decodedResult), cutPoints);
-//        System.out.print("New  = ");
-//        Writer.writeDecodedResultInOneRow(neighborhoodDecodedResult, updatedCutPoints);
-//    }
 
 }

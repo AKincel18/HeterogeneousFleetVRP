@@ -15,39 +15,12 @@
     </properties>
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>org.openjfx</groupId>-->
-<!--            <artifactId>javafx-controls</artifactId>-->
-<!--            <version>11</version>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>11.0.2</version>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>org.openjfx</groupId>-->
-<!--            <artifactId>javafx-media</artifactId>-->
-<!--            <version>11</version>-->
-<!--            <classifier>win</classifier>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>org.openjfx</groupId>-->
-<!--            <artifactId>javafx-graphics</artifactId>-->
-<!--            <version>11</version>-->
-<!--            <classifier>win</classifier>-->
-<!--        </dependency>-->
-
-        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
-<!--        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>3.11</version>
-        </dependency>-->
-
 
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -97,7 +70,22 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass><app class="AppFx"/>AppFx</mainClass>
+                    <mainClass><app class="AppFx"/>AppFx
+                    </mainClass>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>app.AppFx</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
                 </configuration>
             </plugin>
         </plugins>

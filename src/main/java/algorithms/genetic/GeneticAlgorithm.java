@@ -7,19 +7,18 @@ import algorithms.genetic.selection.RankSelection;
 import algorithms.genetic.selection.RouletteWheelSelection;
 import algorithms.genetic.selection.Selection;
 import algorithms.genetic.selection.TournamentSelection;
-import commons.Algorithm;
-import commons.Result;
+import commons.algorithms.Algorithm;
+import commons.algorithms.Result;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import model.City;
 import model.Depot;
 import model.Vehicle;
-import utils.Writer;
 
 import java.util.Comparator;
 import java.util.List;
 
-import static utils.Utils.*;
+import static utils.Utils.getCityByDepot;
 
 @RequiredArgsConstructor
 public class GeneticAlgorithm implements Algorithm {

@@ -2,9 +2,9 @@ package controllers;
 
 import algorithms.tabusearch.TabuSearchAlgorithm;
 import algorithms.tabusearch.model.ParametersTabuSearch;
-import commons.CustomAlert;
-import commons.TextFieldInteger;
-import commons.UtilsController;
+import commons.client.CustomAlert;
+import commons.client.TextFieldInteger;
+import commons.client.UtilsController;
 import exceptions.InputException;
 import input.DataReader;
 import javafx.fxml.FXML;

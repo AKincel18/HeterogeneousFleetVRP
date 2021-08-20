@@ -3,7 +3,7 @@ package algorithms.genetic.geneticoperations;
 import algorithms.genetic.model.Individual;
 import algorithms.genetic.model.PairIndividualsDecode;
 import algorithms.genetic.model.ParametersGenetic;
-import commons.Result;
+import commons.algorithms.Result;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import model.City;

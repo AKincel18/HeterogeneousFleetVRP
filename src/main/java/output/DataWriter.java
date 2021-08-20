@@ -1,6 +1,6 @@
 package output;
 
-import commons.Result;
+import commons.algorithms.Result;
 import model.City;
 import model.Vehicle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;

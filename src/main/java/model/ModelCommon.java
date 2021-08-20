@@ -9,5 +9,4 @@ abstract class ModelCommon {
     protected String name;
     protected Double amount;
     protected int id;
-
 }

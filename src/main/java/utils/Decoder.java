@@ -1,6 +1,6 @@
 package utils;
 
-import commons.Result;
+import commons.algorithms.Result;
 import lombok.RequiredArgsConstructor;
 import model.City;
 import model.Vehicle;

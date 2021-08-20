@@ -1,6 +1,6 @@
 package controllers;
 
-import commons.PathsHolder;
+import commons.client.PathsHolder;
 import input.DataReader;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

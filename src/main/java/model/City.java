@@ -12,8 +12,4 @@ import lombok.experimental.SuperBuilder;
 public class City extends ModelCommon {
     private boolean isVisited;
     private Coords coords;
-
-
-
-
 }

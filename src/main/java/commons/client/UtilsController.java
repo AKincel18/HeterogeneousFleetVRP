@@ -1,5 +1,8 @@
-package commons;
+package commons.client;
 
+import commons.algorithms.Algorithm;
+import commons.client.CustomAlert;
+import commons.client.PathsHolder;
 import exceptions.*;
 import input.DataReader;
 import javafx.concurrent.Task;

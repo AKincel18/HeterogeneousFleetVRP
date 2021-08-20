@@ -1,6 +1,6 @@
 package input;
 
-import commons.ValidationResult;
+import commons.client.ValidationResult;
 import exceptions.NotValidDataException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import utils.Writer;
 import validators.CityValidator;
 import validators.DepotValidator;
 import validators.VehicleValidator;
@@ -121,7 +120,6 @@ public class DataReader {
             workbook.close();
             inputStream.close();
 
-            Writer.writeInputData(cities, vehicles, depot);
             validationResult = new ValidationResult(true, null);
 
         } catch (IOException | ClassCastException ignored) {

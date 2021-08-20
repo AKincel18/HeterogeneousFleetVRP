@@ -1,4 +1,4 @@
-package commons;
+package commons.algorithms;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

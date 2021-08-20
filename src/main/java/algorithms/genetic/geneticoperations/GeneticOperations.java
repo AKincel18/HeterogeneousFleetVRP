@@ -4,7 +4,7 @@ import algorithms.genetic.model.Individual;
 import algorithms.genetic.model.PairIndividuals;
 import algorithms.genetic.model.PairIndividualsDecode;
 import algorithms.genetic.model.ParametersGenetic;
-import commons.Result;
+import commons.algorithms.Result;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import model.City;
@@ -26,8 +26,7 @@ public class GeneticOperations {
     private final ParametersGenetic params;
     private final Individual theBestOld;
 
-    @Getter
-    private List<Individual> populationNew;
+    @Getter private List<Individual> populationNew;
 
     private int currentId = 0;
     private Crossover crossover;
@@ -38,6 +37,7 @@ public class GeneticOperations {
 
     public void geneticOperations() {
         init();
+
         pairIndividuals.forEach(p -> {
             if (crossover.isCrossover()) {
                 crossover(p);
@@ -87,7 +87,6 @@ public class GeneticOperations {
     }
 
     private void addIndividuals(Individual oldIndividual1, Individual oldIndividual2, Individual best1, Individual best2) {
-
 
         if (best1.getResult() == null) { //not found any new individuals
             addIndividualToNewPopulation(oldIndividual1);

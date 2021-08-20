@@ -1,4 +1,4 @@
-package commons;
+package commons.client;
 
 import exceptions.NotValidDataException;
 import lombok.Getter;
