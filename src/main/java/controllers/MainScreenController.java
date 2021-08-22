@@ -66,6 +66,7 @@ public class MainScreenController implements Initializable {
             chooseFileLabel.setStyle("-fx-border-color: green");
             chooseFileLabel.setTooltip(new Tooltip(path));
             holder.setInputPath(path);
+            sheetsComboBox.getItems().clear();
             sheetsComboBox.getItems().addAll(new DataReader(path, null).getSheets());
             sheetsComboBox.setOnAction(event -> holder.setSheet(sheetsComboBox.getValue()));
             sheetsComboBox.setDisable(false);
