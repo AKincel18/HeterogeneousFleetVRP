@@ -12,5 +12,4 @@ import lombok.Setter;
 public class Pair<T1, T2> {
     private T1 obj1;
     private T2 obj2;
-
 }

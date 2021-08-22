@@ -1,6 +1,6 @@
 package output;
 
-import commons.Result;
+import commons.algorithms.Result;
 import model.City;
 import model.Vehicle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -32,9 +32,7 @@ public class DataWriter {
 
         try (FileOutputStream outputStream = new FileOutputStream(saveLocation + "/" + outputFile + ".xls")) {
             workbook.write(outputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException ignore) {}
     }
 
     private void writeRoute(Map.Entry<Vehicle, List<City>> route, Row row) {

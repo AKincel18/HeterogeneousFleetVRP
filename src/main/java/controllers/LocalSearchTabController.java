@@ -2,8 +2,8 @@ package controllers;
 
 import algorithms.localsearch.LocalSearchAlgorithm;
 import algorithms.localsearch.model.LocalSearchMethod;
-import commons.CustomAlert;
-import commons.UtilsController;
+import commons.client.CustomAlert;
+import commons.client.UtilsController;
 import exceptions.ComboBoxNotFilledException;
 import exceptions.InputException;
 import input.DataReader;

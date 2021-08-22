@@ -1,6 +1,6 @@
 package algorithms.simulatedannealing;
 
-import commons.Result;
+import commons.algorithms.Result;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -33,7 +33,7 @@ public class SolutionAnalysis {
 
     public void checkFinish() {
         this.noImprovementCounter++;
-        if (noImprovementCounter == stopCondition){
+        if (noImprovementCounter == stopCondition) {
             stop = true;
         }
     }

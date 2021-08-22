@@ -1,6 +1,6 @@
 package controllers;
 
-import commons.PathsHolder;
+import commons.client.PathsHolder;
 import input.DataReader;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -52,9 +52,7 @@ public class MainScreenController implements Initializable {
 
             outputFileTextField.textProperty().addListener((observable, oldValue, newValue) -> holder.setOutputFile(newValue));
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException ignore) {}
     }
 
     public void openFileChooser(MouseEvent mouseEvent) {

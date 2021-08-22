@@ -2,10 +2,10 @@ package controllers;
 
 import algorithms.simulatedannealing.SimulatedAnnealingAlgorithm;
 import algorithms.simulatedannealing.model.ParametersSimulatedAnnealing;
-import commons.CustomAlert;
-import commons.TextFieldDouble;
-import commons.TextFieldInteger;
-import commons.UtilsController;
+import commons.client.CustomAlert;
+import commons.client.TextFieldDouble;
+import commons.client.TextFieldInteger;
+import commons.client.UtilsController;
 import exceptions.FieldsNotValidException;
 import exceptions.InputException;
 import input.DataReader;

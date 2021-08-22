@@ -1,44 +1,43 @@
-package commons;
+package commons.client;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.TextField;
 
-public class TextFieldInteger extends TextField {
+public class TextFieldDouble extends TextField {
 
-    private final ObjectProperty<Integer> number = new SimpleObjectProperty<>();
-
+    private final ObjectProperty<Double> number = new SimpleObjectProperty<>();
     //default values
-    private int minValue = 0;
-    private boolean even = false;
+    private double minValue = 0.0;
+    private double maxValue = 1.0;
 
     @SuppressWarnings("unused")
-    public TextFieldInteger() {
+    public TextFieldDouble() {
         super();
         initHandlers();
-        setValue(0);
+        setValue(0.0);
     }
 
-    public final Integer getValue() {
+    public final Double getValue() {
         return number.get();
     }
 
-    public final void setValue(Integer value) {
+    public final void setValue(Double value) {
         minValue = value;
         number.set(value);
     }
 
     @SuppressWarnings("unused")
-    public final Boolean getEven() {
-        return even;
+    public final double getMaxValue() {
+        return maxValue;
     }
 
     @SuppressWarnings("unused")
-    public final void setEven(Boolean even) {
-        this.even = even;
+    public final void setMaxValue(double maxValue) {
+        this.maxValue = maxValue;
     }
 
-    public ObjectProperty<Integer> numberProperty() {
+    public ObjectProperty<Double> numberProperty() {
         return number;
     }
 
@@ -61,24 +60,19 @@ public class TextFieldInteger extends TextField {
             return;
         }
 
-        int newValue;
+        double newValue;
         try {
-            newValue = Integer.parseInt(input);
-            newValue = even ? getEvenValue(newValue) : newValue;
-            number.set(Math.max(newValue, minValue));
+            newValue = Double.parseDouble(input);
+            if (newValue > maxValue) {
+                number.set(maxValue);
+            } else number.set(Math.max(newValue, minValue));
             setText(String.valueOf(number.get()));
             selectAll();
+
         } catch (NumberFormatException e) {
             setText(String.valueOf(number.get()));
 
         }
-    }
-
-    private int getEvenValue(int newValue) {
-        if (newValue % 2 != 0) {
-            return ++newValue;
-        }
-        return newValue;
     }
 
 }

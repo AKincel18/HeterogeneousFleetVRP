@@ -1,6 +1,6 @@
 package algorithms.genetic.model;
 
-import commons.Result;
+import commons.algorithms.Result;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

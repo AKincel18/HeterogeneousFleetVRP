@@ -24,6 +24,5 @@ public class RouletteWheelSelection extends Selection {
     private void setReproductionProbability() {
         double sumDistance = population.stream().mapToDouble(i -> i.getResult().getSum()).sum();
         population.forEach(p -> p.setReproductionProbability((1 - (p.getResult().getSum() / sumDistance)) / (population.size() - 1)));
-        //population.forEach(p -> System.out.println(p.getId() + " = " + p.getReproductionProbability()));
     }
 }

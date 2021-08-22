@@ -1,8 +1,8 @@
 package algorithms.localsearch;
 
 import algorithms.localsearch.model.LocalSearchMethod;
-import commons.NeighborhoodSolution;
-import commons.Result;
+import commons.algorithms.NeighborhoodSolution;
+import commons.algorithms.Result;
 import lombok.Getter;
 import lombok.NonNull;
 import model.City;

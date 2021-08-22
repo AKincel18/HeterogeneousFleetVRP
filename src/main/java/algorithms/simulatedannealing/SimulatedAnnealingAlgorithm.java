@@ -1,8 +1,8 @@
 package algorithms.simulatedannealing;
 
 import algorithms.simulatedannealing.model.ParametersSimulatedAnnealing;
-import commons.Algorithm;
-import commons.Result;
+import commons.algorithms.Algorithm;
+import commons.algorithms.Result;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import model.City;

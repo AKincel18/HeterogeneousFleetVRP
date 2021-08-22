@@ -4,8 +4,8 @@ import algorithms.tabusearch.model.NeighborhoodStrategy;
 import algorithms.tabusearch.model.ParametersTabuSearch;
 import algorithms.tabusearch.model.ResultTabu;
 import algorithms.tabusearch.model.TabuCoords;
-import commons.NeighborhoodSolution;
-import commons.Result;
+import commons.algorithms.NeighborhoodSolution;
+import commons.algorithms.Result;
 import lombok.Getter;
 import lombok.NonNull;
 import model.City;
@@ -62,7 +62,6 @@ public class TabuSearchNeighborhoodSolution extends NeighborhoodSolution {
                 bestTabu.getResult().getSum() < currentResult.getSum() ) {
             currentResultTabu = bestTabu;
             isFoundResult = true;
-            //System.out.println("Choose tabu result!");
         }
 
         if (isFoundResult) {
@@ -114,7 +113,6 @@ public class TabuSearchNeighborhoodSolution extends NeighborhoodSolution {
                         }
                         Result resultNew = decoder.decodeResultFromMap(neighborhoodDecodedResult);
                         if (checkIsAcceptableWeightAll(resultNew.getRoutes())) {
-                            //System.out.println("Accept");
                             checkFoundResult(entry2.getKey(), cityToMove, resultNew);
                         }
                     }
@@ -124,6 +122,7 @@ public class TabuSearchNeighborhoodSolution extends NeighborhoodSolution {
     }
 
     private void updateTabuReplaceCities() {
+
         //decrease tabu part of array
         for (int i = 0; i < tabuArrayReplacingStrategy.length; i++) {
             for (int j = i + 1; j < tabuArrayReplacingStrategy[i].length; j++) {
@@ -136,10 +135,10 @@ public class TabuSearchNeighborhoodSolution extends NeighborhoodSolution {
         int row = currentResultTabu.getTabuCoords().getRow();
         int col = currentResultTabu.getTabuCoords().getCol();
         tabuArrayReplacingStrategy[row][col] = params.getTabuIterationNumber();
-
     }
 
     private void updateTabuPutCityToVehicle() {
+
         //decrease tabu part of array
         for (int i = 0; i < tabuArrayPuttingStrategy.length; i++) {
             for (int j = 0; j < tabuArrayPuttingStrategy[i].length; j++) {
@@ -175,14 +174,12 @@ public class TabuSearchNeighborhoodSolution extends NeighborhoodSolution {
             if (!isFoundResult) {
                 if (isTabu(tabuCoords)) {
                     bestTabu = new ResultTabu(resultNew, z, tabuCoords);
-                }
-                else {
+                } else {
                     currentResultTabu = new ResultTabu(resultNew, z, tabuCoords);
                     isFoundResult = true;
                 }
 
-            }
-            else {
+            } else {
                 if (currentResultTabu.getZ() > z) {
                     if (isTabu(tabuCoords)) {
                         if (bestTabu.getResult() == null || bestTabu.getZ() > z) {
@@ -216,8 +213,7 @@ public class TabuSearchNeighborhoodSolution extends NeighborhoodSolution {
             //reverse column and row with tabu array
             row = tabuCoords.getCol();
             col = tabuCoords.getRow();
-        }
-        else {
+        } else {
             tabuArray = this.freqArrayPuttingStrategy;
             row = tabuCoords.getRow();
             col = tabuCoords.getCol();
@@ -233,6 +229,5 @@ public class TabuSearchNeighborhoodSolution extends NeighborhoodSolution {
         }
         return 0.0;
     }
-
-
+    
 }

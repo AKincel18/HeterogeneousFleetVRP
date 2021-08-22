@@ -1,4 +1,4 @@
-package commons;
+package commons.client;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;

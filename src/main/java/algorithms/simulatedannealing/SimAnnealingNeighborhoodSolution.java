@@ -1,16 +1,20 @@
 package algorithms.simulatedannealing;
 
-import commons.NeighborhoodSolution;
-import commons.Result;
+import commons.algorithms.NeighborhoodSolution;
+import commons.algorithms.Result;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import model.City;
 import model.Vehicle;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
-import static utils.Utils.*;
+import static utils.Utils.checkIsAcceptableWeightAll;
+import static utils.Utils.generateListOfNumbers;
 
 public class SimAnnealingNeighborhoodSolution extends NeighborhoodSolution {
 
@@ -29,7 +33,6 @@ public class SimAnnealingNeighborhoodSolution extends NeighborhoodSolution {
             replaceTwoCitiesRandom();
         else
             putCityToAnotherVehicleRandom();
-        //check(cities.size(), currentResult);
     }
 
     private void replaceTwoCitiesRandom() {

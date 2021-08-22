@@ -1,7 +1,8 @@
 package algorithms.tabusearch.model;
 
-import commons.Result;
-import lombok.*;
+import commons.algorithms.Result;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class ResultTabu {

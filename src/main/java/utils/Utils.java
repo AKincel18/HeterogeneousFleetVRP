@@ -1,7 +1,6 @@
 package utils;
 
-import algorithms.genetic.model.Individual;
-import commons.Result;
+import commons.algorithms.Result;
 import model.City;
 import model.Coords;
 import model.Depot;
@@ -62,19 +61,6 @@ public class Utils {
         return Math.round(number * 100.0) / 100.0;
     }
 
-    /**
-     * count quality of the route
-     *
-     * @param vehicle vehicle
-     * @param cities  route
-     * @return quality
-     */
-    public static double countQuality(Vehicle vehicle, List<City> cities) {
-        double amount = countRouteAmount(cities);
-        double quality = amount / vehicle.getAmount();
-        return Utils.roundNumber(quality);
-    }
-
     public static double countRouteAmount(List<City> routeVehicle) {
         return routeVehicle.stream().mapToDouble(c -> c.getAmount()).sum();
     }
@@ -96,10 +82,9 @@ public class Utils {
     }
 
     public static double countSumOfResult(Map<Vehicle, List<City>> routes) {
-
         AtomicReference<Double> sum = new AtomicReference<>(0.0);
         routes.forEach((vehicle, cities) -> {
-            double routeDistance =  Utils.countRouteDistance(cities);
+            double routeDistance = Utils.countRouteDistance(cities);
             sum.updateAndGet(v -> v + routeDistance);
         });
         return roundNumber(sum.get());
@@ -110,8 +95,7 @@ public class Utils {
         Map<Vehicle, List<City>> routes = new HashMap<>();
 
         do {
-            vehicles.forEach( v -> routes.put(v, new ArrayList<>(Collections.singletonList(depot))));
-            //individual.initMap(vehicles, startAndEndCity);
+            vehicles.forEach(v -> routes.put(v, new ArrayList<>(Collections.singletonList(depot))));
             cities.forEach(c -> c.setVisited(false));
             List<Integer> vehiclesNumberGenerated = Utils.generateListOfNumbers(vehicles.size());
             for (int i = 0; i < vehicles.size(); i++) {
@@ -120,7 +104,6 @@ public class Utils {
                     Vehicle vehicle = vehicles.get(vehiclesNumberGenerated.get(i));
                     City city = cities.get(citiesNumberGenerated.get(j));
                     if (checkIsAcceptableWeight(city, vehicle.getAmount(), routes.get(vehicle))) {
-                        //Objects.requireNonNull(individual.getRoutes().computeIfPresent(vehicle, (key, value) -> individual.getRoutes().get(key))).add(city);
                         Objects.requireNonNull(routes.computeIfPresent(vehicle, (key, value) -> routes.get(key))).add(city);
                         city.setVisited(true);
                     }
@@ -139,6 +122,7 @@ public class Utils {
 
     /**
      * Check if route is empty
+     *
      * @param routes routes
      * @return true if consists only one city (depot), otherwise return false
      */
@@ -150,22 +134,20 @@ public class Utils {
 
     /**
      * Check if can adding city to the given route: if vehicle can visit city with given amount
-     * @param city city
+     *
+     * @param city          city
      * @param vehicleAmount amount of vehicle
-     * @param routeVehicle route
+     * @param routeVehicle  route
      * @return true if route is OK, false is route is wrong
      */
     private static boolean checkIsAcceptableWeight(City city, Double vehicleAmount, List<City> routeVehicle) {
-
-        //List<City> routeVehicle = individual.getRoutes().get(vehicle);
-
         double sumAmount = countRouteAmount(routeVehicle);
-
         return vehicleAmount >= sumAmount + city.getAmount() && !city.isVisited();
     }
 
     /**
      * Check if route for all vehicles is correct
+     *
      * @param routes routes
      * @return true if route is OK, false is route is wrong
      */
@@ -189,113 +171,4 @@ public class Utils {
         double sum = countSumOfResult(routes);
         return new Result(routes, sum);
     }
-
-    /**
-     * Method to debugging: check if all rules are met
-     *
-     */
-    public static void check(List<City> cities, List<Integer> decodedResult, Integer[] cutPoints) {
-        boolean[] visited = new boolean[cities.size()];
-        for (Integer idCity : decodedResult) {
-            if (visited[idCity - 1]) {
-                Writer.writeDecodedResultInOneRow(decodedResult, cutPoints);
-                System.out.println("City {" + idCity + "} is visited more than once");
-                System.exit(-1);
-            }
-            visited[idCity - 1] = true;
-        }
-
-        for (boolean b : visited) {
-            if (!b) {
-                Writer.writeDecodedResultInOneRow(decodedResult, cutPoints);
-                System.out.println("Some city is no visited");
-                System.exit(-1);
-            }
-        }
-    }
-
-    /**
-     * Method to debugging: check if all rules are met
-     *
-     */
-    public static void check(int cityNumber, Result result) {
-        boolean[] visited = new boolean[cityNumber];
-        result.getRoutes().forEach((vehicle, cities) -> {
-            cities.forEach(city -> {
-                if (city.getId() != 0) {
-                    if (visited[city.getId() - 1]) {
-                        //Writer.writeDecodedResultInOneRow(decodedResult, cutPoints);
-                        System.out.println("City {" + city + "} is visited more than once");
-                        System.exit(-1);
-                    }
-                    visited[city.getId() - 1] = true;
-                }
-
-            });
-
-
-        });
-
-        for (boolean b : visited) {
-            if (!b) {
-                //Writer.writeDecodedResultInOneRow(decodedResult, cutPoints);
-                System.out.println("Some city is no visited");
-                System.exit(-1);
-            }
-        }
-
-
-    }
-
-    //todo remove after testing
-    public static Result generateStaticResult(List<Vehicle> vehicles, List<City> cities, City depot) {
-        Map<Vehicle, List<City>> routes = new HashMap<>();
-        routes.put(vehicles.get(0), new ArrayList<>());
-        routes.put(vehicles.get(1), new ArrayList<>());
-        routes.put(vehicles.get(2), new ArrayList<>());
-
-        int ii = 0;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 3; j++) {
-                for (int k = 0; k < 5; k++) {
-                    List<City> cities1 = routes.get(vehicles.get(j));
-                    cities1.add(cities.get(ii));
-                    routes.put(vehicles.get(j), cities1);
-                    ii++;
-                }
-            }
-        }
-        List<City> cities1 = routes.get(vehicles.get(0));
-        cities1.add(0, depot);
-        cities1.add(cities1.size(), depot);
-        routes.put(vehicles.get(0), cities1);
-
-        cities1 = routes.get(vehicles.get(1));
-        cities1.add(0, depot);
-        cities1.add(cities1.size(), depot);
-        routes.put(vehicles.get(1), cities1);
-
-        cities1 = routes.get(vehicles.get(2));
-        cities1.add(0, depot);
-        cities1.add(cities1.size(), depot);
-        routes.put(vehicles.get(2), cities1);
-
-        double sum = countSumOfResult(routes);
-        return new Result(routes, sum);
-    }
-
-    public static void checkSizeOfRoutes(int cityNumber, List<Individual> population) {
-        for (Individual individual : population) {
-            int size = 0;
-            for (Map.Entry<Vehicle, List<City>> entry : individual.getResult().getRoutes().entrySet()) {
-                size += entry.getValue().size();
-            }
-            if (cityNumber + 6 != size) {
-                System.out.println("Too low cities at the route");
-                System.exit(-1);
-            }
-        }
-        System.out.println("OK");
-    }
-
 }

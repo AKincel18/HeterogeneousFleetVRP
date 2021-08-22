@@ -1,4 +1,4 @@
-package commons;
+package commons.client;
 
 import lombok.Getter;
 import lombok.Setter;
