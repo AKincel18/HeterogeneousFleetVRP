@@ -1,9 +1,10 @@
 package commons.client;
 
 import commons.algorithms.Algorithm;
-import commons.client.CustomAlert;
-import commons.client.PathsHolder;
-import exceptions.*;
+import exceptions.InputException;
+import exceptions.InputFilesNotGivenException;
+import exceptions.OutputFileNotGivenException;
+import exceptions.SaveLocationNotGivenException;
 import input.DataReader;
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
