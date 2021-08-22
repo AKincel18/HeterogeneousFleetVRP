@@ -15,6 +15,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import validators.CityValidator;
 import validators.DepotValidator;
+import validators.AmountValidator;
 import validators.VehicleValidator;
 
 import java.io.File;
@@ -120,6 +121,12 @@ public class DataReader {
             workbook.close();
             inputStream.close();
 
+            try {
+                new AmountValidator().validateAmount(vehicles, cities);
+            } catch (NotValidDataException exception) {
+                validationResult = new ValidationResult(false, exception);
+                return;
+            }
             validationResult = new ValidationResult(true, null);
 
         } catch (IOException | ClassCastException ignored) {

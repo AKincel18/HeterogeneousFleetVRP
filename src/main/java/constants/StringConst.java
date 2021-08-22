@@ -33,6 +33,7 @@ public class StringConst {
     public static final String DEPOT_NAME_NOT_GIVEN_HEADER_ERROR = "Depot name is not given, row: ";
     public static final String CITY_AMOUNT_NOT_GIVEN_HEADER_ERROR = "City amount is not given, row: ";
     public static final String VEHICLE_AMOUNT_NOT_GIVEN_HEADER_ERROR = "Vehicle amount is not given, row: ";
+    public static final String AMOUNT_HEADER_ERROR = "Sum of the amount of the cities is greater than sum of the amount of the vehicles!";
     public static final String INPUT_DATA_IS_NOT_VALID_CONTENT_ERROR = "Choose valid data.";
     public static final String SELECTIONS_NOT_FILLED_HEADER_ERROR = "Selection method not filled!";
     public static final String CHOOSE_A_METHOD = "Please choose a method.";
