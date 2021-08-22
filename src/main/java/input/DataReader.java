@@ -146,8 +146,7 @@ public class DataReader {
                 sheets.add(workbook.getSheetName(i));
             }
             return sheets;
-        } catch (IOException e) {
-            System.out.println("...");
+        } catch (IOException ignore) {
             return null;
         }
     }

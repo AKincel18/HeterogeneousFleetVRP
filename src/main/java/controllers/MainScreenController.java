@@ -52,9 +52,7 @@ public class MainScreenController implements Initializable {
 
             outputFileTextField.textProperty().addListener((observable, oldValue, newValue) -> holder.setOutputFile(newValue));
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException ignore) {}
     }
 
     public void openFileChooser(MouseEvent mouseEvent) {
