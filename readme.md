@@ -63,4 +63,5 @@ The input file should have an extension compatible with Excel, e.g. xlsx. The fi
 After successful completion of the program, the solution is saved to a file with the same extension as the input file. The first line contains information about the total distance traveled by the vehicles, and the next line shows the individual routes of vehicles.
 
 **Example output file**
+
 ![output](https://user-images.githubusercontent.com/22658595/135891030-5ed7322f-7941-4159-9170-bac55c399e7c.png)
