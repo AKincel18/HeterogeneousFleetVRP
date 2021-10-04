@@ -5,7 +5,7 @@ Java implementation of the Heterogenous Vehicle Routing Problem using four heuri
 - [*tabu search*](https://github.com/AKincel18/HeterogeneousFleetVRP#tabu-search)
 - [*genetic*](https://github.com/AKincel18/HeterogeneousFleetVRP#genetic-algorithm)
 # **Running the program**
-Program can be started by downloading the file **App.jar** and run the command:
+Program can be started by downloading the file **App.jar** (in *app* folder) and run the command:
 
 `java -jar App.jar`
 
