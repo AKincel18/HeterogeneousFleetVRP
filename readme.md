@@ -1,21 +1,22 @@
 # **Vehicle Routing Problem**
+## Description
 Java implementation of the Heterogenous Vehicle Routing Problem using four heuristic algorithms:
 - [*local search*](https://github.com/AKincel18/HeterogeneousFleetVRP#local-search)
 - [*simulated annealing*](https://github.com/AKincel18/HeterogeneousFleetVRP#simulated-annealing)
 - [*tabu search*](https://github.com/AKincel18/HeterogeneousFleetVRP#tabu-search)
 - [*genetic*](https://github.com/AKincel18/HeterogeneousFleetVRP#genetic-algorithm)
-# **Running the program**
+## **Running the program**
 Program can be started by downloading the file **App.jar** (in *app* folder) and run the command:
 
 `java -jar App.jar`
 
 Minimal required java version: **11**
-# **Local search**
+## **Local search**
 ![localSearch](https://user-images.githubusercontent.com/22658595/134400878-1028563b-0587-417d-92d7-cfad0e72b25f.png)
 
 **Parameters:**
 - *Method*: selection of the algorithm version - greedy or steepest
-# **Simulated annealing**
+## **Simulated annealing**
 ![simulatedAnnealing](https://user-images.githubusercontent.com/22658595/134400879-0ccf11d0-7cc1-4068-a2df-89e481661712.png)
 
 **Parameters:**
@@ -24,13 +25,13 @@ Minimal required java version: **11**
 - *Cooling factor:* temperature cooling coefficient
 - *Iteration number*: number of iterations for a given temperature 
 
-# **Tabu search**
+## **Tabu search**
 ![tabuSearch](https://user-images.githubusercontent.com/22658595/134400871-8d5a196f-dd7c-4a87-8f77-96bd2de3cb3d.png)
 
 **Parameters:**
 - *Iteration number*: number of iterations
 - *Tabu iteration number*: the number of iterations in which the use of taboo motion is prohibited
-# **Genetic algorithm**
+## **Genetic algorithm**
 ![genetic](https://user-images.githubusercontent.com/22658595/134400877-6c86a411-1d6c-4ca9-8c52-3cc476f1dc80.png)
 
 **Parameters:**
@@ -43,7 +44,7 @@ Minimal required java version: **11**
 - *Tournament size*: the number of individuals taking part in the tournament. An important parameter when choosing a tournament selection
 - *Selective pressure*: selection coefficient important during ranking selection, the coefficient value is a floating-point number in the range [1.0,2.0]
 
-# **Input**
+## **Input**
 The input file should have an extension compatible with Excel, e.g. xlsx. The first row is a header informing about the values that are in each cell. The values in the columns are as follows:
 - A. City name
 - B. City amount
@@ -59,7 +60,7 @@ The input file should have an extension compatible with Excel, e.g. xlsx. The fi
 
 **Example input file**
 ![input](https://user-images.githubusercontent.com/22658595/135891025-abde086e-0709-420f-89be-e793c2e27bb4.png)
-# **Output**
+## **Output**
 After successful completion of the program, the solution is saved to a file with the same extension as the input file. The first line contains information about the total distance traveled by the vehicles, and the next line shows the individual routes of vehicles.
 
 **Example output file**
